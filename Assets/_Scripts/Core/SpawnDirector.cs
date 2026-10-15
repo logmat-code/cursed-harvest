@@ -28,6 +28,10 @@ namespace CursedHarvest
         private float nextSpawnInterval = 1.8f;
         private int maxConcurrentEnemies = 15;
 
+        [Header("Boss Configuration")]
+        [SerializeField] private GameObject bossPrefab;
+        private bool bossSpawned = false;
+
         public float RunTime => runTime;
         public bool IsEndless => isEndlessMode;
         public int TotalActiveEnemies => EnemyRegistry.Count;
@@ -43,6 +47,30 @@ namespace CursedHarvest
                 if (p != null) playerTransform = p.transform;
             }
         }
+
+        private void OnEnable()
+        {
+            BossController.OnBossDefeated -= HandleBossDefeated;
+            BossController.OnBossDefeated += HandleBossDefeated;
+        }
+
+        private void OnDisable()
+        {
+            BossController.OnBossDefeated -= HandleBossDefeated;
+        }
+
+        public void InitializeDirector()
+        {
+            BossController.OnBossDefeated -= HandleBossDefeated;
+            BossController.OnBossDefeated += HandleBossDefeated;
+        }
+
+        private void HandleBossDefeated(BossController boss)
+        {
+            EnterEndlessMode();
+        }
+
+        public void SetBossPrefab(GameObject prefab) => bossPrefab = prefab;
 
         public void SetPlayer(Transform player)
         {
@@ -64,6 +92,7 @@ namespace CursedHarvest
             lastSpawnTime = 0f;
             isEndlessMode = false;
             isRunning = true;
+            bossSpawned = false;
             nextSpawnInterval = 1.8f;
             maxConcurrentEnemies = 15;
         }
@@ -71,8 +100,23 @@ namespace CursedHarvest
         public void EnterEndlessMode()
         {
             isEndlessMode = true;
+            isRunning = true;
             maxConcurrentEnemies = 120;
             nextSpawnInterval = 0.35f;
+        }
+
+        public GameObject SpawnBoss()
+        {
+            if (bossPrefab == null) return null;
+            Vector3 spawnPos = playerTransform != null ? playerTransform.position + Vector3.forward * 16f : new Vector3(0f, 0.5f, 16f);
+            spawnPos.x = Mathf.Clamp(spawnPos.x, -arenaHalfBounds + 4f, arenaHalfBounds - 4f);
+            spawnPos.z = Mathf.Clamp(spawnPos.z, -arenaHalfBounds + 4f, arenaHalfBounds - 4f);
+            spawnPos.y = 0.5f;
+
+            GameObject bossObj = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+            BossController boss = bossObj.GetComponent<BossController>();
+            if (boss != null) boss.Initialize();
+            return bossObj;
         }
 
         private void Update()
@@ -127,9 +171,10 @@ namespace CursedHarvest
                 maxConcurrentEnemies = (int)Mathf.Lerp(70, 95, p);
                 nextSpawnInterval = Mathf.Lerp(0.5f, 0.35f, p);
             }
-            else // 12:00 Boss spawn
+            else if (!bossSpawned)
             {
-                isRunning = false;
+                bossSpawned = true;
+                SpawnBoss();
                 OnBossTimeReached?.Invoke();
             }
         }

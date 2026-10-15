@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6573454282302594226}
   - component: {fileID: 1964939324324839758}
   - component: {fileID: 609327673046259450}
-  - component: {fileID: 8476094922151856016}
+  - component: {fileID: 1467927341904532681}
   m_Layer: 8
   m_Name: CrossbowBolt
   m_TagString: Projectile
@@ -74,7 +74,7 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 128
---- !u!114 &8476094922151856016
+--- !u!114 &1467927341904532681
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

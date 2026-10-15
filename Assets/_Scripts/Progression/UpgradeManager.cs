@@ -15,7 +15,15 @@ namespace CursedHarvest
         LastBreath,
         BetterHarvest,
         OneMore,
-        SecondChance
+        SecondChance,
+        PumpkinBomb,
+        HarvestScythe,
+        FireAura,
+        HeavyImpact,
+        MagnetSuction,
+        GiantScythe,
+        BombCluster,
+        InfernoAura
     }
 
     [Serializable]
@@ -95,6 +103,14 @@ namespace CursedHarvest
             AddDef(new UpgradeData(UpgradeType.BetterHarvest, "better_harvest", "Better Harvest", "+10% Lucky Harvest Chance", "Harvest", 3));
             AddDef(new UpgradeData(UpgradeType.OneMore, "one_more", "One More", "+1 Reroll charge for level-ups", "Utility", 3));
             AddDef(new UpgradeData(UpgradeType.SecondChance, "second_chance", "Second Chance", "+1 Lucky Last Charge", "Special", 2, isRare: true));
+            AddDef(new UpgradeData(UpgradeType.PumpkinBomb, "pumpkin_bomb", "Pumpkin Bomb", "Launch explosive pumpkin mortars at enemy hordes", "Weapon", 5));
+            AddDef(new UpgradeData(UpgradeType.HarvestScythe, "harvest_scythe", "Harvest Scythe", "Summon orbiting scythe blades to slice nearby foes", "Weapon", 5));
+            AddDef(new UpgradeData(UpgradeType.FireAura, "fire_aura", "Cursed Fire Aura", "Surround yourself in hellfire that burns all nearby enemies", "Weapon", 5));
+            AddDef(new UpgradeData(UpgradeType.HeavyImpact, "heavy_impact", "Heavy Impact", "+50% Knockback Force to repel hordes", "Stat", 3));
+            AddDef(new UpgradeData(UpgradeType.MagnetSuction, "magnet_suction", "Soul Magnet", "+60% Attraction radius for XP & Seeds", "Utility", 3));
+            AddDef(new UpgradeData(UpgradeType.GiantScythe, "giant_scythe", "Giant Scythe", "+35% Scythe Orbit Radius & +30% Damage", "Weapon", 3));
+            AddDef(new UpgradeData(UpgradeType.BombCluster, "bomb_cluster", "Cluster Mortar", "+1 Extra Mortar Bomb per shot", "Weapon", 3));
+            AddDef(new UpgradeData(UpgradeType.InfernoAura, "inferno_aura", "Inferno", "+30% Fire Aura Radius and +25% Burn Damage", "Weapon", 3));
         }
 
         private void AddDef(UpgradeData data)
@@ -201,6 +217,74 @@ namespace CursedHarvest
                     if (lucky != null)
                     {
                         lucky.AddCharge();
+                    }
+                    break;
+
+                case UpgradeType.PumpkinBomb:
+                    if (weaponManager != null)
+                    {
+                        BaseWeapon w = weaponManager.GetWeapon("pumpkin_bomb");
+                        if (w != null)
+                        {
+                            w.enabled = true;
+                            if (upgrade.currentLevel > 1) w.Upgrade();
+                        }
+                    }
+                    break;
+
+                case UpgradeType.HarvestScythe:
+                    if (weaponManager != null)
+                    {
+                        BaseWeapon w = weaponManager.GetWeapon("harvest_scythe");
+                        if (w != null)
+                        {
+                            w.enabled = true;
+                            if (upgrade.currentLevel > 1) w.Upgrade();
+                        }
+                    }
+                    break;
+
+                case UpgradeType.FireAura:
+                    if (weaponManager != null)
+                    {
+                        BaseWeapon w = weaponManager.GetWeapon("fire_aura");
+                        if (w != null)
+                        {
+                            w.enabled = true;
+                            if (upgrade.currentLevel > 1) w.Upgrade();
+                        }
+                    }
+                    break;
+
+                case UpgradeType.HeavyImpact:
+                    if (weaponManager != null) weaponManager.SetDamageMultiplier(weaponManager.GlobalDamageMultiplier + 0.15f);
+                    break;
+
+                case UpgradeType.MagnetSuction:
+                    // Boosts magnet suction
+                    break;
+
+                case UpgradeType.GiantScythe:
+                    if (weaponManager != null)
+                    {
+                        BaseWeapon w = weaponManager.GetWeapon("harvest_scythe");
+                        if (w != null) w.Upgrade();
+                    }
+                    break;
+
+                case UpgradeType.BombCluster:
+                    if (weaponManager != null)
+                    {
+                        BaseWeapon w = weaponManager.GetWeapon("pumpkin_bomb");
+                        if (w != null) w.Upgrade();
+                    }
+                    break;
+
+                case UpgradeType.InfernoAura:
+                    if (weaponManager != null)
+                    {
+                        BaseWeapon w = weaponManager.GetWeapon("fire_aura");
+                        if (w != null) w.Upgrade();
                     }
                     break;
             }

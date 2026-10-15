@@ -27,6 +27,19 @@ namespace CursedHarvest
         [SerializeField] private float separationRadius = 1.2f;
         [SerializeField] private float separationWeight = 1.2f;
 
+        [Header("Charger Ability")]
+        [SerializeField] private bool canCharge = false;
+        [SerializeField] private float chargeTriggerDistance = 8f;
+        [SerializeField] private float chargeTelegraphDuration = 0.65f;
+        [SerializeField] private float chargeSpeed = 13f;
+        [SerializeField] private float chargeDuration = 0.85f;
+        [SerializeField] private float chargeCooldown = 4.0f;
+        [SerializeField] private float chargeDamage = 25f;
+
+        [Header("Elite Summoning")]
+        [SerializeField] private bool canSummonMinions = false;
+        [SerializeField] private float summonCooldown = 8.0f;
+
         [Header("Visual Juice")]
         [SerializeField] private Transform visualRoot;
         [SerializeField] private float bobFrequency = 10f;
@@ -37,6 +50,13 @@ namespace CursedHarvest
         private EnemyHealth enemyHealth;
         private Transform playerTarget;
         private PlayerHealth playerHealthTarget;
+
+        private enum ChargeState { None, Telegraphing, Charging, Recovery }
+        private ChargeState chargeState = ChargeState.None;
+        private float chargeStateTimer;
+        private float lastChargeTime = -10f;
+        private Vector3 lockedChargeDirection;
+        private float lastSummonTime = -5f;
 
         private float speedMultiplier = 1f;
         private float lastAttackTime = -10f;
@@ -154,6 +174,91 @@ namespace CursedHarvest
             Vector3 toPlayer = targetPos - currentPos;
             toPlayer.y = 0f;
             float distToPlayer = toPlayer.magnitude;
+
+            // Elite Minion Summoning
+            if (canSummonMinions && Time.time >= lastSummonTime + summonCooldown)
+            {
+                lastSummonTime = Time.time;
+                if (GameManager.Instance != null && GameManager.Instance.EnemyPool != null)
+                {
+                    for (int s = 0; s < 2; s++)
+                    {
+                        Vector2 offset = UnityEngine.Random.insideUnitCircle * 2.5f;
+                        Vector3 sPos = transform.position + new Vector3(offset.x, 0.2f, offset.y);
+                        GameManager.Instance.EnemyPool.Get(sPos, Quaternion.identity);
+                    }
+                }
+            }
+
+            // Demon Charger State Machine
+            if (canCharge)
+            {
+                if (chargeState == ChargeState.Telegraphing)
+                {
+                    chargeStateTimer -= Time.deltaTime;
+                    if (visualRoot != null)
+                    {
+                        visualRoot.localPosition = visualOriginalPos + UnityEngine.Random.insideUnitSphere * 0.08f;
+                    }
+
+                    if (chargeStateTimer <= 0f)
+                    {
+                        chargeState = ChargeState.Charging;
+                        chargeStateTimer = chargeDuration;
+                        if (visualRoot != null) visualRoot.localPosition = visualOriginalPos;
+                    }
+                    return;
+                }
+                else if (chargeState == ChargeState.Charging)
+                {
+                    chargeStateTimer -= Time.deltaTime;
+                    Vector3 chargeVel = lockedChargeDirection * chargeSpeed;
+                    chargeVel.y = -5f;
+
+                    if (characterController != null && characterController.enabled)
+                    {
+                        characterController.Move(chargeVel * Time.deltaTime);
+                    }
+
+                    // Check hit during charge
+                    if (distToPlayer <= attackRadius * 1.4f && playerHealthTarget != null && playerHealthTarget.IsAlive)
+                    {
+                        DamageData chargeDmg = new DamageData(chargeDamage, gameObject, lockedChargeDirection, 10f, transform.position);
+                        playerHealthTarget.TakeDamage(chargeDmg);
+                        chargeState = ChargeState.Recovery;
+                        chargeStateTimer = 0.5f;
+                        lastChargeTime = Time.time;
+                        return;
+                    }
+
+                    if (chargeStateTimer <= 0f)
+                    {
+                        chargeState = ChargeState.Recovery;
+                        chargeStateTimer = 0.4f;
+                        lastChargeTime = Time.time;
+                    }
+                    return;
+                }
+                else if (chargeState == ChargeState.Recovery)
+                {
+                    chargeStateTimer -= Time.deltaTime;
+                    if (chargeStateTimer <= 0f)
+                    {
+                        chargeState = ChargeState.None;
+                    }
+                    return;
+                }
+                else if (chargeState == ChargeState.None)
+                {
+                    if (distToPlayer <= chargeTriggerDistance && distToPlayer >= 3f && Time.time >= lastChargeTime + chargeCooldown)
+                    {
+                        lockedChargeDirection = toPlayer.normalized;
+                        chargeState = ChargeState.Telegraphing;
+                        chargeStateTimer = chargeTelegraphDuration;
+                        return;
+                    }
+                }
+            }
 
             // Check contact attack
             if (distToPlayer <= attackRadius)

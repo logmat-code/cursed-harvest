@@ -22,7 +22,31 @@ namespace CursedHarvest
         public int GlobalBonusProjectiles => globalBonusProjectiles;
         public int GlobalBonusPierce => globalBonusPierce;
 
-        public IReadOnlyList<BaseWeapon> ActiveWeapons => activeWeapons;
+        private void Awake()
+        {
+            EnsureWeaponsInitialized();
+        }
+
+        public void EnsureWeaponsInitialized()
+        {
+            if (activeWeapons.Count == 0)
+            {
+                BaseWeapon[] weapons = GetComponents<BaseWeapon>();
+                for (int i = 0; i < weapons.Length; i++)
+                {
+                    AddWeapon(weapons[i]);
+                }
+            }
+        }
+
+        public IReadOnlyList<BaseWeapon> ActiveWeapons
+        {
+            get
+            {
+                EnsureWeaponsInitialized();
+                return activeWeapons;
+            }
+        }
 
         public void SetDamageMultiplier(float mult) => globalDamageMultiplier = Mathf.Max(0.1f, mult);
         public void SetCooldownMultiplier(float mult) => globalCooldownMultiplier = Mathf.Max(0.2f, mult);
@@ -52,6 +76,7 @@ namespace CursedHarvest
 
         public BaseWeapon GetWeapon(string weaponId)
         {
+            EnsureWeaponsInitialized();
             for (int i = 0; i < activeWeapons.Count; i++)
             {
                 if (activeWeapons[i].WeaponId == weaponId)

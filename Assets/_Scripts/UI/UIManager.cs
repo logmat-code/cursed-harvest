@@ -37,6 +37,11 @@ namespace CursedHarvest
         [SerializeField] private Text gameOverStatsText;
         [SerializeField] private Button retryButton;
 
+        [Header("Boss HUD")]
+        [SerializeField] private GameObject bossBarRoot;
+        [SerializeField] private Image bossBarFill;
+        [SerializeField] private Text bossNameText;
+
         [Header("Boss Victory / Endless Modal")]
         [SerializeField] private GameObject victoryModal;
         [SerializeField] private Text victoryTitleText;
@@ -334,6 +339,27 @@ namespace CursedHarvest
             Time.timeScale = 1f;
             SpawnDirector sd = FindFirstObjectByType<SpawnDirector>();
             if (sd != null) sd.EnterEndlessMode();
+        }
+
+        // ==================== BOSS HUD ====================
+        public void ShowBossBar(string name, float currentHp, float maxHp)
+        {
+            if (bossBarRoot != null) bossBarRoot.SetActive(true);
+            if (bossNameText != null) bossNameText.text = name;
+            UpdateBossBar(currentHp, maxHp);
+        }
+
+        public void UpdateBossBar(float currentHp, float maxHp)
+        {
+            if (bossBarFill != null)
+            {
+                bossBarFill.fillAmount = Mathf.Clamp01(currentHp / Mathf.Max(1f, maxHp));
+            }
+        }
+
+        public void HideBossBar()
+        {
+            if (bossBarRoot != null) bossBarRoot.SetActive(false);
         }
     }
 }

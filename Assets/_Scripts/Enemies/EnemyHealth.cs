@@ -10,6 +10,9 @@ namespace CursedHarvest
         [SerializeField] private float maxHealth = 35f;
         [SerializeField] private float xpDropValue = 10f;
         [SerializeField] private float seedDropChance = 0.25f;
+        [SerializeField] private bool guaranteedSeedDrop = false;
+        [SerializeField] private float knockbackResistance = 0f;
+        [SerializeField] private GameObject onDeathHazardPrefab;
 
         [Header("Visual Feedback")]
         [SerializeField] private Renderer[] renderersToFlash;
@@ -80,9 +83,9 @@ namespace CursedHarvest
             currentHealth -= damage.amount;
 
             // Apply knockback
-            if (enemyController != null && damage.knockbackForce > 0f)
+            if (enemyController != null && damage.knockbackForce > 0f && knockbackResistance < 1f)
             {
-                enemyController.ApplyKnockback(damage.hitDirection, damage.knockbackForce);
+                enemyController.ApplyKnockback(damage.hitDirection, damage.knockbackForce * (1f - knockbackResistance));
             }
 
             PlayHitFlash();
@@ -108,6 +111,11 @@ namespace CursedHarvest
                 Instantiate(deathEffectPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
             }
 
+            if (onDeathHazardPrefab != null)
+            {
+                Instantiate(onDeathHazardPrefab, transform.position, Quaternion.identity);
+            }
+
             OnDied?.Invoke();
             OnAnyEnemyDied?.Invoke(this, damage);
 
@@ -123,7 +131,8 @@ namespace CursedHarvest
             }
 
             // Drop Cursed Seed
-            if (UnityEngine.Random.value <= seedDropChance && GameManager.Instance != null && GameManager.Instance.SeedPool != null)
+            bool dropSeed = guaranteedSeedDrop || (UnityEngine.Random.value <= seedDropChance);
+            if (dropSeed && GameManager.Instance != null && GameManager.Instance.SeedPool != null)
             {
                 GameManager.Instance.SeedPool.Get(transform.position + Vector3.up * 0.3f, Quaternion.identity);
             }

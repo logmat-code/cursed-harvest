@@ -16,27 +16,102 @@ namespace CursedHarvest.Editor
         [MenuItem("Cursed Harvest/1. Build Phase 1 Core")]
         public static void BuildPhase1()
         {
-            BuildPhase4();
+            BuildCompleteGame();
         }
 
         [MenuItem("Cursed Harvest/2. Build Phase 2 Survivor Loop")]
         public static void BuildPhase2()
         {
-            BuildPhase4();
+            BuildCompleteGame();
         }
 
         [MenuItem("Cursed Harvest/3. Build Phase 4 Harvest")]
         public static void BuildPhase4()
         {
+            BuildCompleteGame();
+        }
+
+        [MenuItem("Cursed Harvest/Build Complete Game (All Phases)")]
+        public static void BuildCompleteGame()
+        {
             EnsureDirectories();
             GameObject boltPrefab = CreateBoltPrefab();
+            GameObject bombPrefab = CreatePumpkinBombPrefab();
             GameObject xpPrefab = CreateXpPickupPrefab();
             GameObject seedPrefab = CreateCursedSeedPrefab();
             GameObject plotPrefab = CreateHarvestPlotPrefab();
+            GameObject puddlePrefab = CreatePlaguePuddlePrefab();
+
             GameObject playerPrefab = CreatePlayerPrefab(boltPrefab);
+
+            // Enemies
             GameObject gruntPrefab = CreatePumpkinGruntPrefab();
-            CreateMainScene(playerPrefab, boltPrefab, gruntPrefab, xpPrefab, seedPrefab, plotPrefab);
-            Debug.Log("[CursedHarvest] Phase 4 Harvest Build Complete!");
+
+            GameObject chaserPrefab = CreateGenericEnemyPrefab(
+                "Enemy_MaskedChaser",
+                EnemyType.MaskedChaser,
+                "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Skeleton_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_LED_Mask_01.prefab",
+                null,
+                1.0f, 25f, 4.8f, 12f, false, 0f, false, 0f, false, null);
+
+            GameObject plaguePrefab = CreateGenericEnemyPrefab(
+                "Enemy_PlagueWalker",
+                EnemyType.PlagueWalker,
+                "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Female_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Plague_Mask_01.prefab",
+                null,
+                1.0f, 55f, 2.7f, 10f, false, 0f, false, 0.1f, false, puddlePrefab);
+
+            GameObject chargerPrefab = CreateGenericEnemyPrefab(
+                "Enemy_DemonCharger",
+                EnemyType.DemonCharger,
+                "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Charred_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Demonic_Mask_01.prefab",
+                null,
+                1.05f, 70f, 3.2f, 15f, true, 25f, false, 0.2f, false, null);
+
+            GameObject farmerPrefab = CreateGenericEnemyPrefab(
+                "Enemy_CursedFarmer",
+                EnemyType.CursedFarmer,
+                "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Male_01.prefab",
+                null,
+                "Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Axe_01.prefab",
+                1.1f, 130f, 2.2f, 26f, false, 0f, false, 0.5f, false, null);
+
+            GameObject scarecrowPrefab = CreateGenericEnemyPrefab(
+                "Enemy_EliteScarecrow",
+                EnemyType.EliteScarecrow,
+                "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Male_01.prefab",
+                "Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_01.prefab",
+                null,
+                1.45f, 380f, 2.0f, 20f, false, 0f, true, 0.75f, true, null);
+
+            GameObject brutePrefab = CreateGenericEnemyPrefab(
+                "Enemy_HarvestBrute",
+                EnemyType.HarvestBrute,
+                "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Charred_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Demonic_Mask_01.prefab",
+                "Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Pickaxe_01.prefab",
+                1.55f, 480f, 2.1f, 32f, false, 0f, false, 1.0f, true, null);
+
+            GameObject bossPrefab = CreateBossPrefab(bombPrefab);
+
+            CreateMainScene(
+                playerPrefab,
+                boltPrefab,
+                gruntPrefab,
+                chaserPrefab,
+                plaguePrefab,
+                chargerPrefab,
+                farmerPrefab,
+                bossPrefab,
+                bombPrefab,
+                xpPrefab,
+                seedPrefab,
+                plotPrefab);
+
+            Debug.Log("[CursedHarvest] Complete Game Build (Phases 1-6) Finished Successfully!");
         }
 
         private static void EnsureDirectories()
@@ -304,6 +379,25 @@ namespace CursedHarvest.Editor
             if (firePoint != null) crossbow.SetFirePoint(firePoint);
             wm.AddWeapon(crossbow);
 
+            // Additional Weapons (unlocked via upgrades)
+            GameObject pickaxeModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Pickaxe_01.prefab");
+            GameObject explosionEffect = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Explosion_Rubble.prefab");
+
+            PumpkinBombWeapon bombWeapon = root.AddComponent<PumpkinBombWeapon>();
+            bombWeapon.SetExplosionVfx(explosionEffect);
+            bombWeapon.enabled = false;
+            wm.AddWeapon(bombWeapon);
+
+            HarvestScytheWeapon scytheWeapon = root.AddComponent<HarvestScytheWeapon>();
+            if (pickaxeModel != null) scytheWeapon.SetBladeModel(pickaxeModel);
+            scytheWeapon.enabled = false;
+            wm.AddWeapon(scytheWeapon);
+
+            FireAuraWeapon fireAuraWeapon = root.AddComponent<FireAuraWeapon>();
+            if (firePrefab != null) fireAuraWeapon.SetAuraVfx(firePrefab);
+            fireAuraWeapon.enabled = false;
+            wm.AddWeapon(fireAuraWeapon);
+
             GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, targetPath);
             UnityEngine.Object.DestroyImmediate(root);
             return saved;
@@ -382,7 +476,273 @@ namespace CursedHarvest.Editor
             return saved;
         }
 
-        private static void CreateMainScene(GameObject playerPrefab, GameObject boltPrefab, GameObject gruntPrefab, GameObject xpPrefab, GameObject seedPrefab, GameObject plotPrefab)
+        private static GameObject CreatePumpkinBombPrefab()
+        {
+            string targetPath = $"{PrefabsPath}/PumpkinBomb.prefab";
+            GameObject pumpkinSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_02.prefab");
+            GameObject explosionEffect = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Explosion_Rubble.prefab");
+
+            GameObject instance = new GameObject("PumpkinBomb");
+            instance.tag = "Projectile";
+
+            if (pumpkinSource != null)
+            {
+                GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(pumpkinSource, instance.transform);
+                model.transform.localPosition = Vector3.zero;
+                model.transform.localScale = Vector3.one * 0.45f;
+            }
+
+            SphereCollider col = instance.AddComponent<SphereCollider>();
+            col.isTrigger = true;
+            col.radius = 0.35f;
+
+            PumpkinBombProjectile proj = instance.AddComponent<PumpkinBombProjectile>();
+            instance.AddComponent<PooledObjectTracker>();
+
+            GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, targetPath);
+            UnityEngine.Object.DestroyImmediate(instance);
+            return saved;
+        }
+
+        private static GameObject CreatePlaguePuddlePrefab()
+        {
+            string targetPath = $"{PrefabsPath}/PlaguePuddle.prefab";
+            GameObject steamEffect = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Steam.prefab");
+
+            GameObject instance = new GameObject("PlaguePuddle");
+
+            if (steamEffect != null)
+            {
+                GameObject fx = (GameObject)PrefabUtility.InstantiatePrefab(steamEffect, instance.transform);
+                fx.transform.localPosition = Vector3.zero;
+                fx.transform.localScale = Vector3.one * 0.8f;
+            }
+
+            GameObject lightObj = new GameObject("PuddleLight");
+            lightObj.transform.SetParent(instance.transform, false);
+            lightObj.transform.localPosition = new Vector3(0f, 0.2f, 0f);
+            Light l = lightObj.AddComponent<Light>();
+            l.type = LightType.Point;
+            l.color = new Color(0.2f, 1f, 0.2f);
+            l.range = 3.5f;
+            l.intensity = 1.5f;
+
+            PlaguePuddle puddle = instance.AddComponent<PlaguePuddle>();
+            puddle.Initialize(5f, 2.2f, 6f);
+
+            GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, targetPath);
+            UnityEngine.Object.DestroyImmediate(instance);
+            return saved;
+        }
+
+        private static GameObject CreateGenericEnemyPrefab(
+            string prefabName,
+            EnemyType type,
+            string bodyPath,
+            string headAttachPath,
+            string handAttachPath,
+            float scale,
+            float hp,
+            float speed,
+            float contactDmg,
+            bool canCharge,
+            float chargeDmg,
+            bool canSummon,
+            float knockbackRes,
+            bool guaranteedSeed,
+            GameObject hazardPrefab)
+        {
+            string targetPath = $"{PrefabsPath}/{prefabName}.prefab";
+            GameObject bodySource = AssetDatabase.LoadAssetAtPath<GameObject>(bodyPath);
+            GameObject headSource = !string.IsNullOrEmpty(headAttachPath) ? AssetDatabase.LoadAssetAtPath<GameObject>(headAttachPath) : null;
+            GameObject handSource = !string.IsNullOrEmpty(handAttachPath) ? AssetDatabase.LoadAssetAtPath<GameObject>(handAttachPath) : null;
+            GameObject explosionEffect = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Explosion_Rubble.prefab");
+
+            GameObject root = new GameObject(prefabName);
+            root.tag = "Enemy";
+            int enemyLayer = LayerMask.NameToLayer("Enemy");
+            if (enemyLayer >= 0) root.layer = enemyLayer;
+
+            CharacterController cc = root.AddComponent<CharacterController>();
+            cc.height = 1.6f * scale;
+            cc.radius = 0.4f * scale;
+            cc.center = new Vector3(0f, 0.8f * scale, 0f);
+
+            GameObject visual = new GameObject("Visual");
+            visual.transform.SetParent(root.transform, false);
+            visual.transform.localScale = Vector3.one * scale;
+
+            Transform headBone = null;
+            Transform handBone = null;
+
+            if (bodySource != null)
+            {
+                GameObject body = (GameObject)PrefabUtility.InstantiatePrefab(bodySource, visual.transform);
+                body.transform.localPosition = Vector3.zero;
+                body.transform.localRotation = Quaternion.identity;
+
+                Transform[] bones = body.GetComponentsInChildren<Transform>(true);
+                foreach (Transform b in bones)
+                {
+                    if (headBone == null && (b.name.Contains("Head") || b.name.Contains("Neck")))
+                    {
+                        headBone = b;
+                    }
+                    if (handBone == null && (b.name.Contains("Hand_R") || b.name.Contains("RightHand")))
+                    {
+                        handBone = b;
+                    }
+                }
+            }
+
+            if (headSource != null)
+            {
+                Transform parent = headBone != null ? headBone : visual.transform;
+                GameObject head = (GameObject)PrefabUtility.InstantiatePrefab(headSource, parent);
+                if (headBone != null)
+                {
+                    head.transform.localPosition = new Vector3(0f, 0.12f, 0.05f);
+                    head.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                    head.transform.localScale = Vector3.one * 0.5f;
+                }
+                else
+                {
+                    head.transform.localPosition = new Vector3(0f, 1.45f, 0f);
+                    head.transform.localRotation = Quaternion.identity;
+                    head.transform.localScale = Vector3.one * 0.55f;
+                }
+            }
+
+            if (handSource != null && handBone != null)
+            {
+                GameObject handItem = (GameObject)PrefabUtility.InstantiatePrefab(handSource, handBone);
+                handItem.transform.localPosition = new Vector3(0.05f, 0.05f, 0.1f);
+                handItem.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
+                handItem.transform.localScale = Vector3.one * 0.85f;
+            }
+
+            EnemyController ec = root.AddComponent<EnemyController>();
+            SerializedObject soEc = new SerializedObject(ec);
+            soEc.FindProperty("enemyType").enumValueIndex = (int)type;
+            soEc.FindProperty("baseMoveSpeed").floatValue = speed;
+            soEc.FindProperty("contactDamage").floatValue = contactDmg;
+            soEc.FindProperty("canCharge").boolValue = canCharge;
+            soEc.FindProperty("chargeDamage").floatValue = chargeDmg;
+            soEc.FindProperty("canSummonMinions").boolValue = canSummon;
+            soEc.ApplyModifiedProperties();
+
+            EnemyHealth eh = root.AddComponent<EnemyHealth>();
+            SerializedObject soEh = new SerializedObject(eh);
+            soEh.FindProperty("maxHealth").floatValue = hp;
+            soEh.FindProperty("xpDropValue").floatValue = hp * 0.35f;
+            soEh.FindProperty("seedDropChance").floatValue = 0.25f;
+            soEh.FindProperty("guaranteedSeedDrop").boolValue = guaranteedSeed;
+            soEh.FindProperty("knockbackResistance").floatValue = knockbackRes;
+            if (hazardPrefab != null) soEh.FindProperty("onDeathHazardPrefab").objectReferenceValue = hazardPrefab;
+            if (explosionEffect != null) soEh.FindProperty("deathEffectPrefab").objectReferenceValue = explosionEffect;
+            soEh.ApplyModifiedProperties();
+
+            root.AddComponent<PooledObjectTracker>();
+
+            GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, targetPath);
+            UnityEngine.Object.DestroyImmediate(root);
+            return saved;
+        }
+
+        private static GameObject CreateBossPrefab(GameObject bombPrefab)
+        {
+            string targetPath = $"{PrefabsPath}/Boss_TheLastHarvest.prefab";
+            GameObject charredSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Charred_01.prefab");
+            GameObject pumpkinSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_01.prefab");
+            GameObject pickaxeSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Pickaxe_01.prefab");
+            GameObject explosionEffect = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Explosion_Rubble.prefab");
+
+            GameObject root = new GameObject("Boss_TheLastHarvest");
+            root.tag = "Enemy";
+            int enemyLayer = LayerMask.NameToLayer("Enemy");
+            if (enemyLayer >= 0) root.layer = enemyLayer;
+
+            CharacterController cc = root.AddComponent<CharacterController>();
+            cc.height = 3.6f;
+            cc.radius = 1.0f;
+            cc.center = new Vector3(0f, 1.8f, 0f);
+
+            GameObject visual = new GameObject("Visual");
+            visual.transform.SetParent(root.transform, false);
+            visual.transform.localScale = Vector3.one * 2.2f;
+
+            Transform headBone = null;
+            Transform handBone = null;
+
+            if (charredSource != null)
+            {
+                GameObject charred = (GameObject)PrefabUtility.InstantiatePrefab(charredSource, visual.transform);
+                charred.transform.localPosition = Vector3.zero;
+                charred.transform.localRotation = Quaternion.identity;
+
+                Transform[] bones = charred.GetComponentsInChildren<Transform>(true);
+                foreach (Transform b in bones)
+                {
+                    if (headBone == null && (b.name.Contains("Head") || b.name.Contains("Neck"))) headBone = b;
+                    if (handBone == null && (b.name.Contains("Hand_R") || b.name.Contains("RightHand"))) handBone = b;
+                }
+            }
+
+            if (pumpkinSource != null && headBone != null)
+            {
+                GameObject pumpkin = (GameObject)PrefabUtility.InstantiatePrefab(pumpkinSource, headBone);
+                pumpkin.transform.localPosition = new Vector3(0f, 0.15f, 0.05f);
+                pumpkin.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                pumpkin.transform.localScale = Vector3.one * 0.65f;
+            }
+
+            if (pickaxeSource != null && handBone != null)
+            {
+                GameObject pick = (GameObject)PrefabUtility.InstantiatePrefab(pickaxeSource, handBone);
+                pick.transform.localPosition = new Vector3(0.05f, 0.05f, 0.1f);
+                pick.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
+                pick.transform.localScale = Vector3.one * 1.0f;
+            }
+
+            EnemyHealth eh = root.AddComponent<EnemyHealth>();
+            SerializedObject soEh = new SerializedObject(eh);
+            soEh.FindProperty("maxHealth").floatValue = 2000f;
+            soEh.FindProperty("xpDropValue").floatValue = 300f;
+            soEh.FindProperty("seedDropChance").floatValue = 1.0f;
+            soEh.FindProperty("guaranteedSeedDrop").boolValue = true;
+            soEh.FindProperty("knockbackResistance").floatValue = 1.0f;
+            if (explosionEffect != null) soEh.FindProperty("deathEffectPrefab").objectReferenceValue = explosionEffect;
+            soEh.ApplyModifiedProperties();
+
+            BossController bc = root.AddComponent<BossController>();
+            SerializedObject soBc = new SerializedObject(bc);
+            soBc.FindProperty("bossName").stringValue = "THE LAST HARVEST";
+            soBc.FindProperty("moveSpeed").floatValue = 2.6f;
+            soBc.FindProperty("contactDamage").floatValue = 30f;
+            soBc.FindProperty("slamRadius").floatValue = 6.5f;
+            soBc.FindProperty("slamDamage").floatValue = 35f;
+            if (explosionEffect != null) soBc.FindProperty("slamVfxPrefab").objectReferenceValue = explosionEffect;
+            if (bombPrefab != null) soBc.FindProperty("bombPrefab").objectReferenceValue = bombPrefab;
+            soBc.ApplyModifiedProperties();
+
+            GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, targetPath);
+            UnityEngine.Object.DestroyImmediate(root);
+            return saved;
+        }
+
+        private static void CreateMainScene(
+            GameObject playerPrefab,
+            GameObject boltPrefab,
+            GameObject gruntPrefab,
+            GameObject chaserPrefab,
+            GameObject plaguePrefab,
+            GameObject chargerPrefab,
+            GameObject farmerPrefab,
+            GameObject bossPrefab,
+            GameObject bombPrefab,
+            GameObject xpPrefab,
+            GameObject seedPrefab,
+            GameObject plotPrefab)
         {
             string scenePath = $"{ScenesPath}/MainGame.unity";
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -512,9 +872,14 @@ namespace CursedHarvest.Editor
             // 5. Pools
             GameObject poolsRoot = new GameObject("Pools");
             ObjectPool boltPool = CreatePool(poolsRoot.transform, "BoltPool", boltPrefab, 30);
-            ObjectPool enemyPool = CreatePool(poolsRoot.transform, "EnemyPool", gruntPrefab, 30);
-            ObjectPool xpPool = CreatePool(poolsRoot.transform, "XpPool", xpPrefab, 50);
-            ObjectPool seedPool = CreatePool(poolsRoot.transform, "SeedPool", seedPrefab, 20);
+            ObjectPool gruntPool = CreatePool(poolsRoot.transform, "GruntPool", gruntPrefab, 40);
+            ObjectPool chaserPool = chaserPrefab != null ? CreatePool(poolsRoot.transform, "ChaserPool", chaserPrefab, 25) : null;
+            ObjectPool plaguePool = plaguePrefab != null ? CreatePool(poolsRoot.transform, "PlaguePool", plaguePrefab, 20) : null;
+            ObjectPool chargerPool = chargerPrefab != null ? CreatePool(poolsRoot.transform, "ChargerPool", chargerPrefab, 15) : null;
+            ObjectPool farmerPool = farmerPrefab != null ? CreatePool(poolsRoot.transform, "FarmerPool", farmerPrefab, 15) : null;
+            ObjectPool bombPool = bombPrefab != null ? CreatePool(poolsRoot.transform, "BombPool", bombPrefab, 20) : null;
+            ObjectPool xpPool = CreatePool(poolsRoot.transform, "XpPool", xpPrefab, 60);
+            ObjectPool seedPool = CreatePool(poolsRoot.transform, "SeedPool", seedPrefab, 25);
 
             // 6. Player Instance
             GameObject playerInstance = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab);
@@ -527,13 +892,20 @@ namespace CursedHarvest.Editor
                 crossbow.SetBoltPool(boltPool);
             }
 
+            PumpkinBombWeapon bombWeapon = playerInstance.GetComponent<PumpkinBombWeapon>();
+            if (bombWeapon != null && bombPool != null)
+            {
+                bombWeapon.SetBombPool(bombPool);
+            }
+
             camFollow.SetTarget(playerInstance.transform);
 
             // 7. SpawnDirector
             GameObject sdObj = new GameObject("SpawnDirector");
             SpawnDirector spawnDirector = sdObj.AddComponent<SpawnDirector>();
             spawnDirector.SetPlayer(playerInstance.transform);
-            spawnDirector.SetPools(enemyPool);
+            spawnDirector.SetPools(gruntPool, chaserPool, plaguePool, chargerPool, farmerPool);
+            if (bossPrefab != null) spawnDirector.SetBossPrefab(bossPrefab);
 
             // 8. UI Canvas & HUD
             CreateUICanvas();
@@ -545,7 +917,7 @@ namespace CursedHarvest.Editor
             SerializedObject soGm = new SerializedObject(gm);
             soGm.FindProperty("player").objectReferenceValue = playerInstance.GetComponent<PlayerController>();
             soGm.FindProperty("boltPool").objectReferenceValue = boltPool;
-            soGm.FindProperty("enemyPool").objectReferenceValue = enemyPool;
+            soGm.FindProperty("enemyPool").objectReferenceValue = gruntPool;
             soGm.FindProperty("xpPool").objectReferenceValue = xpPool;
             soGm.FindProperty("seedPool").objectReferenceValue = seedPool;
             soGm.FindProperty("cameraFollow").objectReferenceValue = camFollow;
@@ -685,6 +1057,45 @@ namespace CursedHarvest.Editor
 
             goModal.SetActive(false);
 
+            // Boss HUD
+            GameObject bossBarRoot = CreateUIObject("BossHUD", canvasObj.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(600, 50), new Vector2(0, -90));
+            GameObject bossBg = CreateImage(bossBarRoot, "BossBg", new Color(0.1f, 0.1f, 0.15f, 0.9f));
+            RectTransform rtBossBg = bossBg.GetComponent<RectTransform>();
+            rtBossBg.sizeDelta = new Vector2(600, 24);
+            rtBossBg.anchoredPosition = new Vector2(0, -12);
+
+            GameObject bossFill = CreateImage(bossBg, "BossFill", new Color(0.85f, 0.15f, 0.15f, 1f));
+            Image imgBossFill = bossFill.GetComponent<Image>();
+            imgBossFill.type = Image.Type.Filled;
+            imgBossFill.fillMethod = Image.FillMethod.Horizontal;
+            imgBossFill.fillAmount = 1f;
+            RectTransform rtBossFill = bossFill.GetComponent<RectTransform>();
+            rtBossFill.anchorMin = Vector2.zero;
+            rtBossFill.anchorMax = Vector2.one;
+            rtBossFill.sizeDelta = Vector2.zero;
+
+            Text bossName = CreateText(bossBarRoot, "BossName", "THE LAST HARVEST", 20, TextAnchor.MiddleCenter, Color.red, defaultFont);
+            bossName.rectTransform.anchoredPosition = new Vector2(0, 10);
+            bossBarRoot.SetActive(false);
+
+            // Victory / Endless Modal
+            GameObject vicModal = CreateUIObject("VictoryModal", canvasObj.transform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+            CreateImage(vicModal, "DarkOverlay", new Color(0.05f, 0.15f, 0.05f, 0.88f));
+
+            Text vicTitle = CreateText(vicModal, "Title", "THE LAST HARVEST DEFEATED!", 44, TextAnchor.MiddleCenter, Color.yellow, defaultFont);
+            vicTitle.rectTransform.anchoredPosition = new Vector2(0, 140);
+
+            Text vicSub = CreateText(vicModal, "Sub", "YOU SURVIVED THE CURSED HARVEST!\n\nEnter Endless Mode to test your power against limitless hordes.", 24, TextAnchor.MiddleCenter, Color.white, defaultFont);
+            vicSub.rectTransform.sizeDelta = new Vector2(800, 120);
+            vicSub.rectTransform.anchoredPosition = new Vector2(0, 20);
+
+            GameObject vicBtnObj = CreateButton(vicModal.transform, "EndlessButton", "ENTER ENDLESS MODE [ENTER]", new Color(0.2f, 0.7f, 0.3f), defaultFont);
+            vicBtnObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -120);
+            vicBtnObj.GetComponent<RectTransform>().sizeDelta = new Vector2(360, 55);
+            Button btnVic = vicBtnObj.GetComponent<Button>();
+
+            vicModal.SetActive(false);
+
             // Hook into UIManager
             UIManager uim = canvasObj.AddComponent<UIManager>();
             SerializedObject soUim = new SerializedObject(uim);
@@ -708,6 +1119,14 @@ namespace CursedHarvest.Editor
             soUim.FindProperty("gameOverModal").objectReferenceValue = goModal;
             soUim.FindProperty("gameOverStatsText").objectReferenceValue = goStats;
             soUim.FindProperty("retryButton").objectReferenceValue = btnRetry;
+
+            soUim.FindProperty("bossBarRoot").objectReferenceValue = bossBarRoot;
+            soUim.FindProperty("bossBarFill").objectReferenceValue = imgBossFill;
+            soUim.FindProperty("bossNameText").objectReferenceValue = bossName;
+
+            soUim.FindProperty("victoryModal").objectReferenceValue = vicModal;
+            soUim.FindProperty("victoryTitleText").objectReferenceValue = vicTitle;
+            soUim.FindProperty("continueEndlessButton").objectReferenceValue = btnVic;
 
             soUim.ApplyModifiedProperties();
         }

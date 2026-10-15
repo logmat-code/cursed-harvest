@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2016159468691097735}
   - component: {fileID: 7252869413366403200}
   - component: {fileID: 1658808576869629003}
-  - component: {fileID: 8657057464614293617}
+  - component: {fileID: 3655513117839144669}
   m_Layer: 9
   m_Name: CursedSeed
   m_TagString: Pickup
@@ -75,7 +75,7 @@ MonoBehaviour:
   rotationSpeed: 120
   bobHeight: 0.15
   bobSpeed: 4
---- !u!114 &8657057464614293617
+--- !u!114 &3655513117839144669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

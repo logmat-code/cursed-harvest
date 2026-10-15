@@ -14,6 +14,16 @@ namespace CursedHarvest
 
         private void Awake()
         {
+            InitializeStats();
+
+            if (visualBowModel != null)
+            {
+                bowOriginalLocalPos = visualBowModel.localPosition;
+            }
+        }
+
+        private void InitializeStats()
+        {
             weaponId = "crossbow";
             weaponName = "Crossbow";
             baseDamage = 30f;
@@ -22,11 +32,12 @@ namespace CursedHarvest
             baseProjectileSpeed = 26f;
             baseMultishot = 1;
             basePierce = 1;
+        }
 
-            if (visualBowModel != null)
-            {
-                bowOriginalLocalPos = visualBowModel.localPosition;
-            }
+        public override void Initialize(WeaponManager manager)
+        {
+            InitializeStats();
+            base.Initialize(manager);
         }
 
         public void SetBoltPool(ObjectPool pool)
