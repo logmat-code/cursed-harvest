@@ -8,6 +8,7 @@ namespace CursedHarvest
     {
         [Header("Health Configuration")]
         [SerializeField] private float maxHealth = 35f;
+        [SerializeField] private float xpDropValue = 10f;
 
         [Header("Visual Feedback")]
         [SerializeField] private Renderer[] renderersToFlash;
@@ -108,6 +109,17 @@ namespace CursedHarvest
 
             OnDied?.Invoke();
             OnAnyEnemyDied?.Invoke(this, damage);
+
+            // Drop XP pickup
+            if (GameManager.Instance != null && GameManager.Instance.XpPool != null)
+            {
+                GameObject xpObj = GameManager.Instance.XpPool.Get(transform.position + Vector3.up * 0.3f, Quaternion.identity);
+                ExperiencePickup pickup = xpObj.GetComponent<ExperiencePickup>();
+                if (pickup != null)
+                {
+                    pickup.Initialize(xpDropValue);
+                }
+            }
 
             if (poolTracker != null)
             {

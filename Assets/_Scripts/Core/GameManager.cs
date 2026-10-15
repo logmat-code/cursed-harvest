@@ -7,12 +7,21 @@ namespace CursedHarvest
 {
     public class GameManager : MonoBehaviour
     {
-        public static GameManager Instance { get; private set; }
+        private static GameManager instance;
+        public static GameManager Instance
+        {
+            get
+            {
+                if (instance == null) instance = FindFirstObjectByType<GameManager>();
+                return instance;
+            }
+        }
 
         [Header("Scene References")]
         [SerializeField] private PlayerController player;
         [SerializeField] private ObjectPool boltPool;
         [SerializeField] private ObjectPool enemyPool;
+        [SerializeField] private ObjectPool xpPool;
         [SerializeField] private TopDownCameraFollow cameraFollow;
 
         [Header("Phase 1 Test Spawner")]
@@ -29,6 +38,7 @@ namespace CursedHarvest
         public int EnemiesKilled => enemiesKilled;
         public ObjectPool BoltPool => boltPool;
         public ObjectPool EnemyPool => enemyPool;
+        public ObjectPool XpPool => xpPool;
 
         public static event Action<int> OnEnemiesKilledChanged;
 
@@ -39,7 +49,7 @@ namespace CursedHarvest
                 Destroy(gameObject);
                 return;
             }
-            Instance = this;
+            instance = this;
 
             if (player == null)
             {

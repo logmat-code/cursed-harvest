@@ -45,6 +45,9 @@ GameObject:
   - component: {fileID: 7853580828415496531}
   - component: {fileID: 1984838863456025260}
   - component: {fileID: 2369962270304984550}
+  - component: {fileID: 6694616506941410161}
+  - component: {fileID: 1614779132775236512}
+  - component: {fileID: 5462161121699732114}
   - component: {fileID: 1392931678652141031}
   m_Layer: 6
   m_Name: Player
@@ -163,6 +166,53 @@ MonoBehaviour:
   globalProjectileSpeedMultiplier: 1
   globalBonusProjectiles: 0
   globalBonusPierce: 0
+--- !u!114 &6694616506941410161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024722486202123073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c23d5d92131524ac88ff08d9361337be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.ExperienceManager
+  startingLevel: 1
+  baseXP: 20
+  xpGrowthRate: 1.35
+  magnetRadiusMultiplier: 1
+--- !u!114 &1614779132775236512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024722486202123073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4936796f46c8e44f7ba9f7568b24afc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.UpgradeManager
+--- !u!114 &5462161121699732114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024722486202123073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22574220d06f1412c8d8559933ef7420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.LuckyLastSystem
+  startingCharges: 1
+  maxCharges: 2
+  duration: 8
+  damageBonus: 0.5
+  speedBonus: 0.25
+  cooldownReduction: 0.5
+  luckyLastAuraPrefab: {fileID: 0}
 --- !u!114 &1392931678652141031
 MonoBehaviour:
   m_ObjectHideFlags: 0

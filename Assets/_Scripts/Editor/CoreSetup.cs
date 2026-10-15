@@ -1,8 +1,10 @@
+using System;
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace CursedHarvest.Editor
 {
@@ -14,12 +16,19 @@ namespace CursedHarvest.Editor
         [MenuItem("Cursed Harvest/1. Build Phase 1 Core")]
         public static void BuildPhase1()
         {
+            BuildPhase2();
+        }
+
+        [MenuItem("Cursed Harvest/2. Build Phase 2 Survivor Loop")]
+        public static void BuildPhase2()
+        {
             EnsureDirectories();
             GameObject boltPrefab = CreateBoltPrefab();
+            GameObject xpPrefab = CreateXpPickupPrefab();
             GameObject playerPrefab = CreatePlayerPrefab(boltPrefab);
             GameObject gruntPrefab = CreatePumpkinGruntPrefab();
-            CreateMainScene(playerPrefab, boltPrefab, gruntPrefab);
-            Debug.Log("[CursedHarvest] Phase 1 Core Build Complete!");
+            CreateMainScene(playerPrefab, boltPrefab, gruntPrefab, xpPrefab);
+            Debug.Log("[CursedHarvest] Phase 2 Survivor Loop Build Complete!");
         }
 
         private static void EnsureDirectories()
@@ -35,20 +44,18 @@ namespace CursedHarvest.Editor
         {
             string targetPath = $"{PrefabsPath}/CrossbowBolt.prefab";
             GameObject boltSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonBowCrossbow/Prefabs/SM_Wep_Crossbow_Bolt_01.prefab");
-            if (boltSource == null)
-            {
-                Debug.LogError("Could not find SM_Wep_Crossbow_Bolt_01.prefab");
-                return null;
-            }
 
             GameObject instance = new GameObject("CrossbowBolt");
             instance.tag = "Projectile";
             int projLayer = LayerMask.NameToLayer("Projectile");
             if (projLayer >= 0) instance.layer = projLayer;
 
-            GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(boltSource, instance.transform);
-            model.transform.localPosition = Vector3.zero;
-            model.transform.localRotation = Quaternion.identity;
+            if (boltSource != null)
+            {
+                GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(boltSource, instance.transform);
+                model.transform.localPosition = Vector3.zero;
+                model.transform.localRotation = Quaternion.identity;
+            }
 
             BoxCollider collider = instance.AddComponent<BoxCollider>();
             collider.isTrigger = true;
@@ -63,8 +70,56 @@ namespace CursedHarvest.Editor
             instance.AddComponent<PooledObjectTracker>();
 
             GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, targetPath);
-            Object.DestroyImmediate(instance);
-            Debug.Log($"Created bolt prefab: {targetPath}");
+            UnityEngine.Object.DestroyImmediate(instance);
+            return saved;
+        }
+
+        private static GameObject CreateXpPickupPrefab()
+        {
+            string targetPath = $"{PrefabsPath}/XpPickup.prefab";
+            GameObject coinSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonStarter/Prefabs/SM_PolygonPrototype_Icon_Coin_01.prefab");
+            if (coinSource == null)
+            {
+                coinSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Props/SM_Gen_Prop_Coin_01.prefab");
+            }
+
+            GameObject instance = new GameObject("XpPickup");
+            instance.tag = "Pickup";
+            int pickupLayer = LayerMask.NameToLayer("Pickup");
+            if (pickupLayer >= 0) instance.layer = pickupLayer;
+
+            if (coinSource != null)
+            {
+                GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(coinSource, instance.transform);
+                model.transform.localPosition = Vector3.zero;
+                model.transform.localScale = Vector3.one * 0.7f;
+            }
+            else
+            {
+                GameObject placeholder = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                placeholder.transform.SetParent(instance.transform, false);
+                placeholder.transform.localScale = Vector3.one * 0.4f;
+                UnityEngine.Object.DestroyImmediate(placeholder.GetComponent<Collider>());
+            }
+
+            SphereCollider col = instance.AddComponent<SphereCollider>();
+            col.isTrigger = true;
+            col.radius = 0.5f;
+
+            // Small glowing point light
+            GameObject lightObj = new GameObject("GlowLight");
+            lightObj.transform.SetParent(instance.transform, false);
+            Light l = lightObj.AddComponent<Light>();
+            l.type = LightType.Point;
+            l.color = new Color(0.2f, 0.8f, 1f);
+            l.range = 2.5f;
+            l.intensity = 1.5f;
+
+            instance.AddComponent<ExperiencePickup>();
+            instance.AddComponent<PooledObjectTracker>();
+
+            GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, targetPath);
+            UnityEngine.Object.DestroyImmediate(instance);
             return saved;
         }
 
@@ -94,7 +149,6 @@ namespace CursedHarvest.Editor
                 peasant.transform.localPosition = Vector3.zero;
                 peasant.transform.localRotation = Quaternion.identity;
 
-                // Search for Hand_R
                 Transform[] allChildren = peasant.GetComponentsInChildren<Transform>(true);
                 foreach (Transform t in allChildren)
                 {
@@ -134,14 +188,16 @@ namespace CursedHarvest.Editor
             PlayerHealth ph = root.AddComponent<PlayerHealth>();
             PlayerDash pd = root.AddComponent<PlayerDash>();
             WeaponManager wm = root.AddComponent<WeaponManager>();
+            ExperienceManager xp = root.AddComponent<ExperienceManager>();
+            UpgradeManager um = root.AddComponent<UpgradeManager>();
+            LuckyLastSystem lucky = root.AddComponent<LuckyLastSystem>();
 
             CrossbowWeapon crossbow = root.AddComponent<CrossbowWeapon>();
             if (firePoint != null) crossbow.SetFirePoint(firePoint);
             wm.AddWeapon(crossbow);
 
             GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, targetPath);
-            Object.DestroyImmediate(root);
-            Debug.Log($"Created player prefab: {targetPath}");
+            UnityEngine.Object.DestroyImmediate(root);
             return saved;
         }
 
@@ -214,12 +270,11 @@ namespace CursedHarvest.Editor
             }
 
             GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, targetPath);
-            Object.DestroyImmediate(root);
-            Debug.Log($"Created Pumpkin Grunt prefab: {targetPath}");
+            UnityEngine.Object.DestroyImmediate(root);
             return saved;
         }
 
-        private static void CreateMainScene(GameObject playerPrefab, GameObject boltPrefab, GameObject gruntPrefab)
+        private static void CreateMainScene(GameObject playerPrefab, GameObject boltPrefab, GameObject gruntPrefab, GameObject xpPrefab)
         {
             string scenePath = $"{ScenesPath}/MainGame.unity";
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -237,7 +292,7 @@ namespace CursedHarvest.Editor
                 sky.transform.localScale = Vector3.one * 5f;
             }
 
-            // 2. Directional Light (Spooky moonlight)
+            // 2. Directional Light (Moonlight)
             GameObject lightObj = new GameObject("Moonlight");
             Light light = lightObj.AddComponent<Light>();
             light.type = LightType.Directional;
@@ -254,7 +309,6 @@ namespace CursedHarvest.Editor
                 groundTilePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Ground_Grass_Large_01.prefab");
             }
 
-            // Build 4x4 ground grid
             if (groundTilePrefab != null)
             {
                 for (int x = -2; x < 2; x++)
@@ -275,18 +329,15 @@ namespace CursedHarvest.Editor
                 ground.transform.localScale = new Vector3(8f, 1f, 8f);
             }
 
-            // Ground BoxCollider for safe physics
             BoxCollider groundCollider = arenaRoot.AddComponent<BoxCollider>();
             groundCollider.size = new Vector3(90f, 1f, 90f);
             groundCollider.center = new Vector3(0f, -0.5f, 0f);
 
-            // Boundary invisible colliders so player/enemies can't fall off
             CreateBoundaryWall(arenaRoot.transform, new Vector3(0, 5, 42), new Vector3(90, 10, 2));
             CreateBoundaryWall(arenaRoot.transform, new Vector3(0, 5, -42), new Vector3(90, 10, 2));
             CreateBoundaryWall(arenaRoot.transform, new Vector3(42, 5, 0), new Vector3(2, 10, 90));
             CreateBoundaryWall(arenaRoot.transform, new Vector3(-42, 5, 0), new Vector3(2, 10, 90));
 
-            // Dead trees and spooky pumpkins scattered
             GameObject deadTreePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonStarter/Prefabs/SM_Generic_TreeDead_01.prefab");
             GameObject pumpkinPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_01.prefab");
 
@@ -304,17 +355,16 @@ namespace CursedHarvest.Editor
                 {
                     GameObject tree = (GameObject)PrefabUtility.InstantiatePrefab(deadTreePrefab, arenaRoot.transform);
                     tree.transform.position = pos;
-                    tree.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
-                    tree.transform.localScale = Vector3.one * Random.Range(0.8f, 1.2f);
+                    tree.transform.rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
+                    tree.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.8f, 1.2f);
                 }
 
                 if (pumpkinPrefab != null)
                 {
                     GameObject p = (GameObject)PrefabUtility.InstantiatePrefab(pumpkinPrefab, arenaRoot.transform);
-                    p.transform.position = pos + new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f));
-                    p.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+                    p.transform.position = pos + new Vector3(UnityEngine.Random.Range(-2f, 2f), 0, UnityEngine.Random.Range(-2f, 2f));
+                    p.transform.rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
 
-                    // Add warm light to lantern
                     GameObject lanternLight = new GameObject("PumpkinLight");
                     lanternLight.transform.SetParent(p.transform, false);
                     lanternLight.transform.localPosition = new Vector3(0, 0.4f, 0);
@@ -336,14 +386,14 @@ namespace CursedHarvest.Editor
             // 5. Pools
             GameObject poolsRoot = new GameObject("Pools");
             ObjectPool boltPool = CreatePool(poolsRoot.transform, "BoltPool", boltPrefab, 30);
-            ObjectPool enemyPool = CreatePool(poolsRoot.transform, "EnemyPool", gruntPrefab, 20);
+            ObjectPool enemyPool = CreatePool(poolsRoot.transform, "EnemyPool", gruntPrefab, 30);
+            ObjectPool xpPool = CreatePool(poolsRoot.transform, "XpPool", xpPrefab, 50);
 
             // 6. Player Instance
             GameObject playerInstance = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab);
             playerInstance.name = "Player";
             playerInstance.transform.position = new Vector3(0f, 0.1f, 0f);
 
-            // Connect bolt pool to player's crossbow
             CrossbowWeapon crossbow = playerInstance.GetComponent<CrossbowWeapon>();
             if (crossbow != null && boltPool != null)
             {
@@ -352,7 +402,16 @@ namespace CursedHarvest.Editor
 
             camFollow.SetTarget(playerInstance.transform);
 
-            // 7. GameManager
+            // 7. SpawnDirector
+            GameObject sdObj = new GameObject("SpawnDirector");
+            SpawnDirector spawnDirector = sdObj.AddComponent<SpawnDirector>();
+            spawnDirector.SetPlayer(playerInstance.transform);
+            spawnDirector.SetPools(enemyPool);
+
+            // 8. UI Canvas & HUD
+            CreateUICanvas();
+
+            // 9. GameManager
             GameObject gmObj = new GameObject("GameManager");
             GameManager gm = gmObj.AddComponent<GameManager>();
 
@@ -360,19 +419,256 @@ namespace CursedHarvest.Editor
             soGm.FindProperty("player").objectReferenceValue = playerInstance.GetComponent<PlayerController>();
             soGm.FindProperty("boltPool").objectReferenceValue = boltPool;
             soGm.FindProperty("enemyPool").objectReferenceValue = enemyPool;
+            soGm.FindProperty("xpPool").objectReferenceValue = xpPool;
             soGm.FindProperty("cameraFollow").objectReferenceValue = camFollow;
             soGm.ApplyModifiedProperties();
 
             EditorSceneManager.SaveScene(scene, scenePath);
 
-            // Add to Build Settings
             EditorBuildSettingsScene[] buildScenes = new EditorBuildSettingsScene[]
             {
                 new EditorBuildSettingsScene(scenePath, true)
             };
             EditorBuildSettings.scenes = buildScenes;
+        }
 
-            Debug.Log($"MainGame scene saved to: {scenePath}");
+        private static void CreateUICanvas()
+        {
+            GameObject canvasObj = new GameObject("UICanvas");
+            Canvas canvas = canvasObj.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.matchWidthOrHeight = 0.5f;
+            canvasObj.AddComponent<GraphicRaycaster>();
+
+            // Ensure EventSystem
+            if (UnityEngine.Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
+            {
+                GameObject esObj = new GameObject("EventSystem");
+                esObj.AddComponent<UnityEngine.EventSystems.EventSystem>();
+                esObj.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            }
+
+            Font defaultFont = Font.CreateDynamicFontFromOSFont("Arial", 20);
+
+            // Top-Left: Health & Lucky Last
+            GameObject topLeft = CreateUIObject("TopLeftHUD", canvasObj.transform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(0.5f, 0.5f), new Vector2(250, 100), new Vector2(180, -70));
+            GameObject hpBg = CreateImage(topLeft, "HealthBg", new Color(0.15f, 0.15f, 0.2f, 0.85f));
+            hpBg.GetComponent<RectTransform>().sizeDelta = new Vector2(300, 28);
+            hpBg.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 20);
+
+            GameObject hpFill = CreateImage(hpBg, "HealthFill", new Color(0.2f, 0.85f, 0.3f, 1f));
+            Image imgHpFill = hpFill.GetComponent<Image>();
+            imgHpFill.type = Image.Type.Filled;
+            imgHpFill.fillMethod = Image.FillMethod.Horizontal;
+            imgHpFill.fillAmount = 1f;
+            RectTransform rtHpFill = hpFill.GetComponent<RectTransform>();
+            rtHpFill.anchorMin = Vector2.zero;
+            rtHpFill.anchorMax = Vector2.one;
+            rtHpFill.sizeDelta = Vector2.zero;
+
+            Text hpText = CreateText(hpBg, "HealthText", "100 / 100", 18, TextAnchor.MiddleCenter, Color.white, defaultFont);
+
+            Text luckyText = CreateText(topLeft, "LuckyChargesText", "LUCKY LAST: 1/2", 18, TextAnchor.MiddleLeft, new Color(1f, 0.85f, 0.2f), defaultFont);
+            luckyText.rectTransform.anchoredPosition = new Vector2(-60, -15);
+
+            // Lucky Last Banner
+            GameObject luckyBanner = CreateUIObject("LuckyLastBanner", canvasObj.transform, new Vector2(0.5f, 0.85f), new Vector2(0.5f, 0.85f), new Vector2(0.5f, 0.5f), new Vector2(400, 60), Vector2.zero);
+            CreateImage(luckyBanner, "BannerBg", new Color(0.9f, 0.1f, 0.1f, 0.85f));
+            Text bannerText = CreateText(luckyBanner, "BannerText", "★ LUCKY LAST ACTIVE! ★", 26, TextAnchor.MiddleCenter, Color.yellow, defaultFont);
+            luckyBanner.SetActive(false);
+
+            // Top-Center: Timer
+            GameObject topCenter = CreateUIObject("TopCenterHUD", canvasObj.transform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0.5f, 0.5f), new Vector2(200, 60), new Vector2(0, -40));
+            Text timerText = CreateText(topCenter, "TimerText", "00:00", 32, TextAnchor.MiddleCenter, Color.white, defaultFont);
+
+            // Top-Right: Kills & Seeds
+            GameObject topRight = CreateUIObject("TopRightHUD", canvasObj.transform, new Vector2(1, 1), new Vector2(1, 1), new Vector2(0.5f, 0.5f), new Vector2(250, 80), new Vector2(-150, -50));
+            Text killText = CreateText(topRight, "KillText", "KILLS: 0", 20, TextAnchor.MiddleRight, Color.white, defaultFont);
+            killText.rectTransform.anchoredPosition = new Vector2(0, 15);
+            Text seedText = CreateText(topRight, "SeedText", "SEEDS: 0", 20, TextAnchor.MiddleRight, new Color(0.4f, 1f, 0.4f), defaultFont);
+            seedText.rectTransform.anchoredPosition = new Vector2(0, -15);
+
+            // Bottom: XP Bar & Level
+            GameObject bottomBar = CreateUIObject("BottomHUD", canvasObj.transform, new Vector2(0, 0), new Vector2(1, 0), new Vector2(0.5f, 0), new Vector2(0, 40), new Vector2(0, 20));
+            RectTransform rtBottom = bottomBar.GetComponent<RectTransform>();
+            rtBottom.offsetMin = new Vector2(40, 10);
+            rtBottom.offsetMax = new Vector2(-40, 40);
+
+            GameObject xpBg = CreateImage(bottomBar, "XpBg", new Color(0.1f, 0.15f, 0.25f, 0.85f));
+            RectTransform rtXpBg = xpBg.GetComponent<RectTransform>();
+            rtXpBg.anchorMin = Vector2.zero;
+            rtXpBg.anchorMax = Vector2.one;
+            rtXpBg.sizeDelta = Vector2.zero;
+
+            GameObject xpFill = CreateImage(xpBg, "XpFill", new Color(0.2f, 0.65f, 1f, 1f));
+            Image imgXpFill = xpFill.GetComponent<Image>();
+            imgXpFill.type = Image.Type.Filled;
+            imgXpFill.fillMethod = Image.FillMethod.Horizontal;
+            imgXpFill.fillAmount = 0f;
+            RectTransform rtXpFill = xpFill.GetComponent<RectTransform>();
+            rtXpFill.anchorMin = Vector2.zero;
+            rtXpFill.anchorMax = Vector2.one;
+            rtXpFill.sizeDelta = Vector2.zero;
+
+            Text lvlText = CreateText(bottomBar, "LevelText", "LVL 1", 20, TextAnchor.MiddleCenter, Color.white, defaultFont);
+
+            // Level Up Modal
+            GameObject lvlModal = CreateUIObject("LevelUpModal", canvasObj.transform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+            CreateImage(lvlModal, "DarkOverlay", new Color(0f, 0f, 0f, 0.75f));
+
+            Text lvlTitle = CreateText(lvlModal, "Title", "CHOOSE AN UPGRADE", 36, TextAnchor.MiddleCenter, Color.yellow, defaultFont);
+            lvlTitle.rectTransform.anchoredPosition = new Vector2(0, 260);
+
+            GameObject cardsContainer = CreateUIObject("CardsContainer", lvlModal.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1000, 400), new Vector2(0, 20));
+            HorizontalLayoutGroup hlg = cardsContainer.AddComponent<HorizontalLayoutGroup>();
+            hlg.spacing = 30;
+            hlg.childAlignment = TextAnchor.MiddleCenter;
+            hlg.childControlWidth = false;
+            hlg.childControlHeight = false;
+
+            UpgradeCardUI[] cardUIs = new UpgradeCardUI[3];
+            for (int i = 0; i < 3; i++)
+            {
+                cardUIs[i] = CreateUpgradeCard(cardsContainer.transform, i + 1, defaultFont);
+            }
+
+            GameObject rerollBtnObj = CreateButton(lvlModal.transform, "RerollButton", "REROLL (1) [R]", new Color(0.3f, 0.2f, 0.5f), defaultFont);
+            rerollBtnObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -240);
+            Button btnReroll = rerollBtnObj.GetComponent<Button>();
+            Text txtReroll = rerollBtnObj.GetComponentInChildren<Text>();
+
+            lvlModal.SetActive(false);
+
+            // Game Over Modal
+            GameObject goModal = CreateUIObject("GameOverModal", canvasObj.transform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+            CreateImage(goModal, "DarkOverlay", new Color(0.2f, 0f, 0f, 0.85f));
+            Text goTitle = CreateText(goModal, "Title", "RUN OVER", 48, TextAnchor.MiddleCenter, Color.red, defaultFont);
+            goTitle.rectTransform.anchoredPosition = new Vector2(0, 160);
+
+            Text goStats = CreateText(goModal, "StatsText", "TIME: 00:00\nKILLS: 0\nLEVEL: 1\n\nFINAL SCORE: 0", 26, TextAnchor.MiddleCenter, Color.white, defaultFont);
+            goStats.rectTransform.anchoredPosition = new Vector2(0, 20);
+
+            GameObject retryBtnObj = CreateButton(goModal.transform, "RetryButton", "RETRY RUN", new Color(0.2f, 0.6f, 0.3f), defaultFont);
+            retryBtnObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -140);
+            Button btnRetry = retryBtnObj.GetComponent<Button>();
+
+            goModal.SetActive(false);
+
+            // Hook into UIManager
+            UIManager uim = canvasObj.AddComponent<UIManager>();
+            SerializedObject soUim = new SerializedObject(uim);
+            soUim.FindProperty("healthBarFill").objectReferenceValue = imgHpFill;
+            soUim.FindProperty("healthText").objectReferenceValue = hpText;
+            soUim.FindProperty("luckyChargesText").objectReferenceValue = luckyText;
+            soUim.FindProperty("luckyLastBanner").objectReferenceValue = luckyBanner;
+            soUim.FindProperty("timerText").objectReferenceValue = timerText;
+            soUim.FindProperty("xpBarFill").objectReferenceValue = imgXpFill;
+            soUim.FindProperty("levelText").objectReferenceValue = lvlText;
+            soUim.FindProperty("killCountText").objectReferenceValue = killText;
+            soUim.FindProperty("seedCountText").objectReferenceValue = seedText;
+
+            soUim.FindProperty("levelUpModal").objectReferenceValue = lvlModal;
+            SerializedProperty propCards = soUim.FindProperty("upgradeCards");
+            propCards.arraySize = 3;
+            for (int i = 0; i < 3; i++) propCards.GetArrayElementAtIndex(i).objectReferenceValue = cardUIs[i];
+            soUim.FindProperty("rerollButton").objectReferenceValue = btnReroll;
+            soUim.FindProperty("rerollButtonText").objectReferenceValue = txtReroll;
+
+            soUim.FindProperty("gameOverModal").objectReferenceValue = goModal;
+            soUim.FindProperty("gameOverStatsText").objectReferenceValue = goStats;
+            soUim.FindProperty("retryButton").objectReferenceValue = btnRetry;
+
+            soUim.ApplyModifiedProperties();
+        }
+
+        private static UpgradeCardUI CreateUpgradeCard(Transform parent, int slotIndex, Font font)
+        {
+            GameObject cardObj = CreateUIObject($"Card_{slotIndex}", parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(280, 360), Vector2.zero);
+            CreateImage(cardObj, "CardBg", new Color(0.18f, 0.20f, 0.28f, 0.95f));
+
+            Text cat = CreateText(cardObj, "Category", "WEAPON", 16, TextAnchor.MiddleCenter, new Color(1f, 0.6f, 0.2f), font);
+            cat.rectTransform.anchoredPosition = new Vector2(0, 140);
+
+            Text title = CreateText(cardObj, "Title", "Upgrade Title", 22, TextAnchor.MiddleCenter, Color.white, font);
+            title.rectTransform.anchoredPosition = new Vector2(0, 95);
+
+            Text desc = CreateText(cardObj, "Description", "+25% Damage", 17, TextAnchor.MiddleCenter, new Color(0.85f, 0.85f, 0.9f), font);
+            desc.rectTransform.sizeDelta = new Vector2(240, 100);
+            desc.rectTransform.anchoredPosition = new Vector2(0, 15);
+
+            Text lvl = CreateText(cardObj, "Level", "Lv. 1 / 5", 16, TextAnchor.MiddleCenter, Color.yellow, font);
+            lvl.rectTransform.anchoredPosition = new Vector2(0, -70);
+
+            GameObject btnObj = CreateButton(cardObj.transform, "SelectButton", $"SELECT [{slotIndex}]", new Color(0.2f, 0.5f, 0.8f), font);
+            btnObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -125);
+            btnObj.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 44);
+
+            UpgradeCardUI card = cardObj.AddComponent<UpgradeCardUI>();
+            SerializedObject so = new SerializedObject(card);
+            so.FindProperty("titleText").objectReferenceValue = title;
+            so.FindProperty("categoryText").objectReferenceValue = cat;
+            so.FindProperty("descriptionText").objectReferenceValue = desc;
+            so.FindProperty("levelText").objectReferenceValue = lvl;
+            so.FindProperty("selectButton").objectReferenceValue = btnObj.GetComponent<Button>();
+            so.ApplyModifiedProperties();
+
+            return card;
+        }
+
+        private static GameObject CreateUIObject(string name, Transform parent, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Vector2 pos)
+        {
+            GameObject obj = new GameObject(name, typeof(RectTransform));
+            obj.transform.SetParent(parent, false);
+            RectTransform rt = obj.GetComponent<RectTransform>();
+            rt.anchorMin = anchorMin;
+            rt.anchorMax = anchorMax;
+            rt.pivot = pivot;
+            rt.sizeDelta = size;
+            rt.anchoredPosition = pos;
+            return obj;
+        }
+
+        private static GameObject CreateImage(GameObject parent, string name, Color color)
+        {
+            GameObject imgObj = new GameObject(name, typeof(RectTransform), typeof(Image));
+            imgObj.transform.SetParent(parent.transform, false);
+            Image img = imgObj.GetComponent<Image>();
+            img.color = color;
+            RectTransform rt = imgObj.GetComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.sizeDelta = Vector2.zero;
+            return imgObj;
+        }
+
+        private static Text CreateText(GameObject parent, string name, string text, int fontSize, TextAnchor alignment, Color color, Font font)
+        {
+            GameObject txtObj = new GameObject(name, typeof(RectTransform), typeof(Text));
+            txtObj.transform.SetParent(parent.transform, false);
+            Text t = txtObj.GetComponent<Text>();
+            t.text = text;
+            t.fontSize = fontSize;
+            t.alignment = alignment;
+            t.color = color;
+            t.font = font;
+            RectTransform rt = txtObj.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(300, 50);
+            return t;
+        }
+
+        private static GameObject CreateButton(Transform parent, string name, string label, Color color, Font font)
+        {
+            GameObject btnObj = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+            btnObj.transform.SetParent(parent, false);
+            btnObj.GetComponent<Image>().color = color;
+            RectTransform rt = btnObj.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(240, 50);
+
+            CreateText(btnObj, "Text", label, 20, TextAnchor.MiddleCenter, Color.white, font);
+            return btnObj;
         }
 
         private static void CreateBoundaryWall(Transform parent, Vector3 pos, Vector3 size)
