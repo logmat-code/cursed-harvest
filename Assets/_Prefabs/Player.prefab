@@ -212,7 +212,7 @@ MonoBehaviour:
   damageBonus: 0.5
   speedBonus: 0.25
   cooldownReduction: 0.5
-  luckyLastAuraPrefab: {fileID: 0}
+  luckyLastAuraPrefab: {fileID: 100000, guid: 756d99540142b5e4a8d174e18a6310d9, type: 3}
 --- !u!114 &1392931678652141031
 MonoBehaviour:
   m_ObjectHideFlags: 0

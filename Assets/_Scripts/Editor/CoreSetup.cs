@@ -192,6 +192,14 @@ namespace CursedHarvest.Editor
             UpgradeManager um = root.AddComponent<UpgradeManager>();
             LuckyLastSystem lucky = root.AddComponent<LuckyLastSystem>();
 
+            GameObject firePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Fire.prefab");
+            if (firePrefab != null)
+            {
+                SerializedObject soLucky = new SerializedObject(lucky);
+                soLucky.FindProperty("luckyLastAuraPrefab").objectReferenceValue = firePrefab;
+                soLucky.ApplyModifiedProperties();
+            }
+
             CrossbowWeapon crossbow = root.AddComponent<CrossbowWeapon>();
             if (firePoint != null) crossbow.SetFirePoint(firePoint);
             wm.AddWeapon(crossbow);

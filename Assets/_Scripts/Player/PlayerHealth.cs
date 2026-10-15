@@ -26,6 +26,11 @@ namespace CursedHarvest
         public bool IsAlive => !isDead && currentHealth > 0;
         public bool IsInvulnerable => Time.time < lastDamageTime + invulnerabilityDuration;
 
+        public void ResetInvulnerability()
+        {
+            lastDamageTime = -10f;
+        }
+
         /// <summary>
         /// Hook for Lucky Last or shields. Return true to intercept lethal damage.
         /// </summary>
@@ -50,6 +55,13 @@ namespace CursedHarvest
             isDead = false;
             currentHealth = maxHealth;
             lastDamageTime = -10f;
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        }
+
+        public void SetCurrentHealth(float hp)
+        {
+            currentHealth = Mathf.Clamp(hp, 0f, maxHealth);
+            isDead = currentHealth <= 0f;
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 

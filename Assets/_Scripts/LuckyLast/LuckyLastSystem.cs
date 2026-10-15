@@ -38,28 +38,29 @@ namespace CursedHarvest
         public static event Action<float> OnLuckyLastActivated;
         public static event Action OnLuckyLastEnded;
 
+        private PlayerHealth Health => playerHealth != null ? playerHealth : (playerHealth = GetComponent<PlayerHealth>());
+        private PlayerController Controller => playerController != null ? playerController : (playerController = GetComponent<PlayerController>());
+        private WeaponManager Weapons => weaponManager != null ? weaponManager : (weaponManager = GetComponent<WeaponManager>());
+
         private void Awake()
         {
-            playerHealth = GetComponent<PlayerHealth>();
-            playerController = GetComponent<PlayerController>();
-            weaponManager = GetComponent<WeaponManager>();
-
             currentCharges = startingCharges;
+            if (Health != null) Health.LethalHitInterceptor = CheckLethalDamage;
         }
 
         private void OnEnable()
         {
-            if (playerHealth != null)
+            if (Health != null)
             {
-                playerHealth.LethalHitInterceptor = CheckLethalDamage;
+                Health.LethalHitInterceptor = CheckLethalDamage;
             }
         }
 
         private void OnDisable()
         {
-            if (playerHealth != null)
+            if (Health != null)
             {
-                playerHealth.LethalHitInterceptor = null;
+                Health.LethalHitInterceptor = null;
             }
         }
 
@@ -86,7 +87,7 @@ namespace CursedHarvest
             return false;
         }
 
-        private bool CheckLethalDamage(DamageData damage)
+        public bool CheckLethalDamage(DamageData damage)
         {
             if (currentCharges > 0 && !isLuckyLastActive)
             {
@@ -107,23 +108,21 @@ namespace CursedHarvest
             activeTimer = duration;
 
             // Set HP to exactly 1 HP
-            if (playerHealth != null)
+            if (Health != null)
             {
-                playerHealth.ResetHealth();
-                // Take 99 damage to leave at 1 HP
-                playerHealth.TakeDamage(new DamageData(playerHealth.MaxHealth - 1f));
+                Health.SetCurrentHealth(1f);
             }
 
             // Apply buffs
-            if (weaponManager != null)
+            if (Weapons != null)
             {
-                weaponManager.SetDamageMultiplier(weaponManager.GlobalDamageMultiplier + damageBonus);
-                weaponManager.SetCooldownMultiplier(weaponManager.GlobalCooldownMultiplier * cooldownReduction);
+                Weapons.SetDamageMultiplier(Weapons.GlobalDamageMultiplier + damageBonus);
+                Weapons.SetCooldownMultiplier(Weapons.GlobalCooldownMultiplier * cooldownReduction);
             }
 
-            if (playerController != null)
+            if (Controller != null)
             {
-                playerController.SetSpeedMultiplier(playerController.MoveSpeed / 6.8f + speedBonus);
+                Controller.SetSpeedMultiplier(Controller.MoveSpeed / 6.8f + speedBonus);
             }
 
             // Screen shake & UI
