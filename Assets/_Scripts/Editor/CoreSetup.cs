@@ -50,7 +50,7 @@ namespace CursedHarvest.Editor
             GameObject chaserPrefab = CreateGenericEnemyPrefab(
                 "Enemy_MaskedChaser",
                 EnemyType.MaskedChaser,
-                "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Skeleton_01.prefab",
+                "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Prisoner_Male_01.prefab",
                 "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_LED_Mask_01.prefab",
                 null,
                 1.0f, 25f, 4.8f, 12f, false, 0f, false, 0f, false, null);
@@ -61,7 +61,7 @@ namespace CursedHarvest.Editor
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Female_01.prefab",
                 "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Plague_Mask_01.prefab",
                 null,
-                1.0f, 55f, 2.7f, 10f, false, 0f, false, 0.1f, false, puddlePrefab);
+                1.05f, 55f, 2.7f, 10f, false, 0f, false, 0.1f, false, puddlePrefab);
 
             GameObject chargerPrefab = CreateGenericEnemyPrefab(
                 "Enemy_DemonCharger",
@@ -69,15 +69,15 @@ namespace CursedHarvest.Editor
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Charred_01.prefab",
                 "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Demonic_Mask_01.prefab",
                 null,
-                1.05f, 70f, 3.2f, 15f, true, 25f, false, 0.2f, false, null);
+                1.22f, 70f, 3.2f, 15f, true, 25f, false, 0.2f, false, null);
 
             GameObject farmerPrefab = CreateGenericEnemyPrefab(
                 "Enemy_CursedFarmer",
                 EnemyType.CursedFarmer,
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Male_01.prefab",
-                null,
-                "Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Axe_01.prefab",
-                1.1f, 130f, 2.2f, 26f, false, 0f, false, 0.5f, false, null);
+                "Assets/Synty/PolygonGeneric/Prefabs/Characters/Attachments/SM_Gen_Chr_Attach_Hat_01.prefab",
+                "Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Pickaxe_01.prefab",
+                1.25f, 130f, 2.2f, 26f, false, 0f, false, 0.5f, false, null);
 
             GameObject scarecrowPrefab = CreateGenericEnemyPrefab(
                 "Enemy_EliteScarecrow",
@@ -85,7 +85,7 @@ namespace CursedHarvest.Editor
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Male_01.prefab",
                 "Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_01.prefab",
                 null,
-                1.45f, 380f, 2.0f, 20f, false, 0f, true, 0.75f, true, null);
+                1.55f, 380f, 2.0f, 20f, false, 0f, true, 0.75f, true, null);
 
             GameObject brutePrefab = CreateGenericEnemyPrefab(
                 "Enemy_HarvestBrute",
@@ -93,7 +93,7 @@ namespace CursedHarvest.Editor
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Charred_01.prefab",
                 "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Demonic_Mask_01.prefab",
                 "Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Pickaxe_01.prefab",
-                1.55f, 480f, 2.1f, 32f, false, 0f, false, 1.0f, true, null);
+                1.70f, 480f, 2.1f, 32f, false, 0f, false, 1.0f, true, null);
 
             GameObject bossPrefab = CreateBossPrefab(bombPrefab);
 
@@ -262,6 +262,16 @@ namespace CursedHarvest.Editor
                 dirt.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
 
+            // Stone shrine statue landmark behind the plot
+            GameObject statueSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Props/SM_Gen_Prop_Statue_04.prefab");
+            if (statueSource != null)
+            {
+                GameObject statue = (GameObject)PrefabUtility.InstantiatePrefab(statueSource, instance.transform);
+                statue.transform.localPosition = new Vector3(0f, 0f, 0.75f);
+                statue.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                statue.transform.localScale = new Vector3(0.42f, 0.42f, 0.42f);
+            }
+
             // Growing pumpkin child
             GameObject growingPumpkin = new GameObject("GrowingPumpkin");
             growingPumpkin.transform.SetParent(instance.transform, false);
@@ -316,8 +326,10 @@ namespace CursedHarvest.Editor
 
             GameObject visual = new GameObject("Visual");
             visual.transform.SetParent(root.transform, false);
+            visual.transform.localScale = Vector3.one * 1.15f; // +15% heroic silhouette (Paso 2)
 
             Transform handSocket = null;
+            Transform headSocket = null;
             if (peasantSource != null)
             {
                 GameObject peasant = (GameObject)PrefabUtility.InstantiatePrefab(peasantSource, visual.transform);
@@ -327,12 +339,25 @@ namespace CursedHarvest.Editor
                 Transform[] allChildren = peasant.GetComponentsInChildren<Transform>(true);
                 foreach (Transform t in allChildren)
                 {
-                    if (t.name.Contains("Hand_R") || t.name.Contains("RightHand"))
+                    if (headSocket == null && (t.name.Contains("Head") || t.name.Contains("Neck")))
+                    {
+                        headSocket = t;
+                    }
+                    if (handSocket == null && (t.name.Contains("Hand_R") || t.name.Contains("RightHand")))
                     {
                         handSocket = t;
-                        break;
                     }
                 }
+            }
+
+            // Attach hairstyle for recognizable silhouette
+            GameObject hairSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Characters/Attachments/SM_Gen_Chr_Attach_Hair_04.prefab");
+            if (hairSource != null && headSocket != null)
+            {
+                GameObject hair = (GameObject)PrefabUtility.InstantiatePrefab(hairSource, headSocket);
+                hair.transform.localPosition = new Vector3(0f, 0.12f, 0.02f);
+                hair.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                hair.transform.localScale = Vector3.one * 0.5f;
             }
 
             GameObject bowInstance = null;
@@ -366,6 +391,7 @@ namespace CursedHarvest.Editor
             ExperienceManager xp = root.AddComponent<ExperienceManager>();
             UpgradeManager um = root.AddComponent<UpgradeManager>();
             LuckyLastSystem lucky = root.AddComponent<LuckyLastSystem>();
+            root.AddComponent<PlayerGroundIndicator>(); // Real-time glowing ground circle & forward arrow (Paso 2)
 
             GameObject firePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Fire.prefab");
             if (firePrefab != null)
@@ -422,6 +448,7 @@ namespace CursedHarvest.Editor
 
             GameObject visual = new GameObject("Visual");
             visual.transform.SetParent(root.transform, false);
+            visual.transform.localScale = Vector3.one * 0.90f; // Slightly smaller, hunched skeleton silhouette
 
             Transform headBone = null;
             if (skeletonSource != null)
@@ -1134,7 +1161,7 @@ namespace CursedHarvest.Editor
             startBtnObj.GetComponent<RectTransform>().sizeDelta = new Vector2(360, 56);
             Button btnStart = startBtnObj.GetComponent<Button>();
 
-            titleModal.SetActive(true);
+            titleModal.SetActive(false);
 
             // Hook into UIManager
             UIManager uim = canvasObj.AddComponent<UIManager>();

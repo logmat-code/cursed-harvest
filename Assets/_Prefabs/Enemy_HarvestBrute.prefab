@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 679729311516508308}
   - component: {fileID: 863602759839577817}
   - component: {fileID: 1281782409463587970}
-  - component: {fileID: 5028753506569689276}
+  - component: {fileID: 6500318357210154108}
   m_Layer: 7
   m_Name: Enemy_HarvestBrute
   m_TagString: Enemy
@@ -54,13 +54,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2.48
-  m_Radius: 0.62
+  m_Height: 2.72
+  m_Radius: 0.68
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.24, z: 0}
+  m_Center: {x: 0, y: 1.36, z: 0}
 --- !u!114 &863602759839577817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +114,7 @@ MonoBehaviour:
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &5028753506569689276
+--- !u!114 &6500318357210154108
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,7 +152,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.55, y: 1.55, z: 1.55}
+  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1321427715288707399}

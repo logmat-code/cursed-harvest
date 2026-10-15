@@ -241,7 +241,7 @@ namespace CursedHarvest.Editor
                 Debug.LogError($"[Phase 5 & 6 Test] FAILED: LuckyLastSystem not properly reset! Charges={lucky.CurrentCharges}, Active={lucky.IsActive}");
                 return;
             }
-            if (CursedSeedPickup.PlayerSeedCount != 1)
+            if (CursedSeedPickup.PlayerSeedCount != 0)
             {
                 Debug.LogError($"[Phase 5 & 6 Test] FAILED: Seed inventory not properly reset! Seeds={CursedSeedPickup.PlayerSeedCount}");
                 return;

@@ -26,7 +26,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.45, y: 1.45, z: 1.45}
+  m_LocalScale: {x: 1.55, y: 1.55, z: 1.55}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8152041707929314460}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 1445070963498528294}
   - component: {fileID: 3566233197230380533}
   - component: {fileID: 4650758301003790497}
-  - component: {fileID: 2763185487107017956}
+  - component: {fileID: 8576646975400077574}
   m_Layer: 7
   m_Name: Enemy_EliteScarecrow
   m_TagString: Enemy
@@ -86,13 +86,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2.3200002
-  m_Radius: 0.58000004
+  m_Height: 2.48
+  m_Radius: 0.62
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.1600001, z: 0}
+  m_Center: {x: 0, y: 1.24, z: 0}
 --- !u!114 &3566233197230380533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,7 +146,7 @@ MonoBehaviour:
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &2763185487107017956
+--- !u!114 &8576646975400077574
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

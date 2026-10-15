@@ -147,11 +147,36 @@ namespace CursedHarvest
             // Timeline based progression (00:00 to 12:00 = 720 seconds)
             float t = runTime;
 
-            if (t < 180f) // 0-3 mins: Tutorial & early horde
+            // Explicit first-minute onboarding curve (Pasos 12 & 13)
+            if (t < 10f)
             {
-                float p = t / 180f;
-                maxConcurrentEnemies = (int)Mathf.Lerp(12, 28, p);
-                nextSpawnInterval = Mathf.Lerp(1.8f, 1.0f, p);
+                // 00:00 - 00:10: Slow grunts, space to learn movement & auto-aim
+                maxConcurrentEnemies = 3;
+                nextSpawnInterval = 2.8f;
+            }
+            else if (t < 25f)
+            {
+                // 00:10 - 00:25: Grunts drop guaranteed XP crystals
+                maxConcurrentEnemies = 6;
+                nextSpawnInterval = 2.0f;
+            }
+            else if (t < 45f)
+            {
+                // 00:25 - 00:45: First expected level-up reached comfortably
+                maxConcurrentEnemies = 10;
+                nextSpawnInterval = 1.6f;
+            }
+            else if (t < 60f)
+            {
+                // 00:45 - 01:00: Introduce second enemy type (Masked Chaser)
+                maxConcurrentEnemies = 15;
+                nextSpawnInterval = 1.3f;
+            }
+            else if (t < 180f) // 1-3 mins: Increasing pressure
+            {
+                float p = (t - 60f) / 120f;
+                maxConcurrentEnemies = (int)Mathf.Lerp(15, 28, p);
+                nextSpawnInterval = Mathf.Lerp(1.3f, 1.0f, p);
             }
             else if (t < 360f) // 3-6 mins: Increasing pressure
             {
@@ -215,9 +240,20 @@ namespace CursedHarvest
                 return valid.Count > 0 ? valid[UnityEngine.Random.Range(0, valid.Count)] : gruntPool;
             }
 
-            if (t < 180f)
+            if (t < 45f)
             {
+                // First 45 seconds: purely grunts to allow learning movement and auto-firing safely
+                return gruntPool;
+            }
+            else if (t < 60f)
+            {
+                // 45s-60s: introduce 25% chasers
                 if (chaserPool != null && UnityEngine.Random.value < 0.25f) return chaserPool;
+                return gruntPool;
+            }
+            else if (t < 180f)
+            {
+                if (chaserPool != null && UnityEngine.Random.value < 0.35f) return chaserPool;
                 return gruntPool;
             }
             else if (t < 360f)

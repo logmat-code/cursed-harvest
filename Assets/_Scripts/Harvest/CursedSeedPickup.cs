@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CursedHarvest
@@ -20,7 +21,10 @@ namespace CursedHarvest
         private float spawnTime;
         private bool isAttracted;
 
-        public static int PlayerSeedCount { get; private set; } = 1; // Starts with 1 seed
+        public static int PlayerSeedCount { get; private set; } = 0;
+        private static bool hasCollectedFirstSeed = false;
+
+        public static event Action OnFirstSeedCollected;
 
         public static void AddSeeds(int amount)
         {
@@ -47,7 +51,8 @@ namespace CursedHarvest
 
         public static void ResetSeeds()
         {
-            PlayerSeedCount = 1;
+            PlayerSeedCount = 0;
+            hasCollectedFirstSeed = false;
             if (UIManager.Instance != null)
             {
                 UIManager.Instance.UpdateSeedCountHUD(PlayerSeedCount);
@@ -116,6 +121,12 @@ namespace CursedHarvest
         {
             AddSeeds(1);
             AudioManager.Instance?.PlaySound(SoundType.PickupSeed, 0.85f, 0.05f);
+
+            if (!hasCollectedFirstSeed)
+            {
+                hasCollectedFirstSeed = true;
+                OnFirstSeedCollected?.Invoke();
+            }
 
             if (poolTracker != null)
             {

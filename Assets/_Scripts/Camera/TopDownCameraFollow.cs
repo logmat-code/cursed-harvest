@@ -6,9 +6,9 @@ namespace CursedHarvest
     {
         [Header("Target & Follow")]
         [SerializeField] private Transform target;
-        [SerializeField] private Vector3 offset = new Vector3(0f, 15f, -9.5f);
+        [SerializeField] private Vector3 offset = new Vector3(0f, 11.0f, -7.5f);
         [SerializeField] private float smoothTime = 0.15f;
-        [SerializeField] private float cameraPitch = 56f;
+        [SerializeField] private float cameraPitch = 52f;
 
         [Header("Screen Shake")]
         private float shakeDuration;
@@ -32,10 +32,10 @@ namespace CursedHarvest
             }
         }
 
-        public void TriggerShake(float duration = 0.2f, float magnitude = 0.25f)
+        public void TriggerShake(float duration = 0.18f, float magnitude = 0.18f)
         {
             shakeDuration = Mathf.Max(shakeDuration, duration);
-            shakeMagnitude = Mathf.Max(shakeMagnitude, magnitude);
+            shakeMagnitude = Mathf.Clamp(Mathf.Max(shakeMagnitude, magnitude), 0f, 0.20f);
         }
 
         private void LateUpdate()

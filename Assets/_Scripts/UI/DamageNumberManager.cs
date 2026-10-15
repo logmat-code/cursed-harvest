@@ -70,11 +70,15 @@ namespace CursedHarvest
         public void SpawnDamage(Vector3 worldPos, float amount, bool isCrit = false)
         {
             if (amount <= 0f) return;
+            // Suppress small continuous tick spam if crowded
+            if (amount < 12f && !isCrit && activeNumbers.Count > 6) return;
+            // Cap maximum visible damage numbers to prevent screen clutter
+            if (activeNumbers.Count >= 12) return;
 
             GameObject obj = pool.Count > 0 ? pool.Dequeue() : CreateNumberObject(activeNumbers.Count);
             obj.SetActive(true);
 
-            Vector3 jitter = new Vector3(Random.Range(-0.4f, 0.4f), Random.Range(0f, 0.3f), Random.Range(-0.4f, 0.4f));
+            Vector3 jitter = new Vector3(Random.Range(-0.25f, 0.25f), Random.Range(0f, 0.2f), Random.Range(-0.25f, 0.25f));
             Vector3 pos = worldPos + jitter;
             obj.transform.position = pos;
 
@@ -91,8 +95,8 @@ namespace CursedHarvest
             int rounded = Mathf.RoundToInt(amount);
             tm.text = rounded.ToString();
 
-            Color color = isCrit ? new Color(1f, 0.3f, 0.1f, 1f) :
-                          (amount >= 40f ? new Color(1f, 0.85f, 0.2f, 1f) : new Color(1f, 1f, 1f, 1f));
+            Color color = isCrit ? new Color(1f, 0.35f, 0.1f, 1f) :
+                          (amount >= 40f ? new Color(1f, 0.9f, 0.25f, 1f) : new Color(1f, 1f, 1f, 0.95f));
             tm.color = color;
 
             ActiveNumber entry = new ActiveNumber
@@ -100,9 +104,9 @@ namespace CursedHarvest
                 gameObject = obj,
                 textMesh = tm,
                 startPos = pos,
-                velocity = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(1.8f, 2.6f), Random.Range(-0.5f, 0.5f)),
+                velocity = new Vector3(Random.Range(-0.25f, 0.25f), Random.Range(1.4f, 1.9f), Random.Range(-0.25f, 0.25f)),
                 timer = 0f,
-                duration = 0.55f,
+                duration = 0.40f,
                 baseColor = color
             };
 

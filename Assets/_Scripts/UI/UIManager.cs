@@ -55,6 +55,12 @@ namespace CursedHarvest
         private List<UpgradeData> currentChoices = new List<UpgradeData>();
         private bool isPaused;
 
+        private GameObject toastRoot;
+        private Text toastTitleText;
+        private Text toastSubtitleText;
+        private Image toastBg;
+        private Coroutine toastCoroutine;
+
         public bool IsModalOpen => (levelUpModal != null && levelUpModal.activeSelf) ||
                                   (pauseModal != null && pauseModal.activeSelf) ||
                                   (gameOverModal != null && gameOverModal.activeSelf) ||
@@ -110,12 +116,17 @@ namespace CursedHarvest
 
             GameManager.OnEnemiesKilledChanged += UpdateKillCountHUD;
             SpawnDirector.OnRunTimerUpdated += UpdateTimerHUD;
+            CursedSeedPickup.OnFirstSeedCollected += HandleFirstSeedCollected;
 
+            // Start game immediately without blocking text modal
             if (titleModal != null)
             {
-                titleModal.SetActive(true);
-                Time.timeScale = 0f;
+                titleModal.SetActive(false);
             }
+            Time.timeScale = 1f;
+
+            // Onboarding movement toast (Paso 10)
+            ShowToast("WASD — MOVE  •  SPACE — DASH", "Weapons fire automatically.", 4.5f, new Color(1f, 0.85f, 0.2f));
         }
 
         private void OnDestroy()
@@ -125,6 +136,93 @@ namespace CursedHarvest
             LuckyLastSystem.OnLuckyLastEnded -= HideLuckyLastBanner;
             GameManager.OnEnemiesKilledChanged -= UpdateKillCountHUD;
             SpawnDirector.OnRunTimerUpdated -= UpdateTimerHUD;
+            CursedSeedPickup.OnFirstSeedCollected -= HandleFirstSeedCollected;
+        }
+
+        private void HandleFirstSeedCollected()
+        {
+            ShowToast("CURSED SEED ACQUIRED", "Take it to a Harvest Plot gravestone to gamble.", 4.5f, new Color(0.3f, 1f, 0.45f));
+        }
+
+        public void ShowHarvestResolutionToast(string title, string detail, bool isLucky)
+        {
+            Color c = isLucky ? new Color(0.2f, 1f, 0.45f) : new Color(1f, 0.25f, 0.25f);
+            ShowToast(title, detail, 3.2f, c);
+        }
+
+        public void ShowToast(string title, string subtitle, float duration = 3.5f, Color? accentColor = null)
+        {
+            EnsureToastUI();
+            if (toastCoroutine != null) StopCoroutine(toastCoroutine);
+            toastCoroutine = StartCoroutine(ToastRoutine(title, subtitle, duration, accentColor ?? new Color(1f, 0.85f, 0.2f)));
+        }
+
+        private void EnsureToastUI()
+        {
+            if (toastRoot != null) return;
+
+            Canvas canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            toastRoot = new GameObject("NotificationToast");
+            toastRoot.transform.SetParent(canvas.transform, false);
+
+            RectTransform rt = toastRoot.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.5f, 0.82f);
+            rt.anchorMax = new Vector2(0.5f, 0.82f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(620, 72);
+            rt.anchoredPosition = Vector2.zero;
+
+            toastBg = toastRoot.AddComponent<Image>();
+            toastBg.color = new Color(0.06f, 0.08f, 0.12f, 0.92f);
+
+            GameObject titleObj = new GameObject("ToastTitle");
+            titleObj.transform.SetParent(toastRoot.transform, false);
+            RectTransform rtTitle = titleObj.AddComponent<RectTransform>();
+            rtTitle.anchorMin = new Vector2(0f, 0.5f);
+            rtTitle.anchorMax = new Vector2(1f, 1f);
+            rtTitle.offsetMin = new Vector2(15, 0);
+            rtTitle.offsetMax = new Vector2(-15, -4);
+            toastTitleText = titleObj.AddComponent<Text>();
+            toastTitleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 22);
+            toastTitleText.fontSize = 22;
+            toastTitleText.fontStyle = FontStyle.Bold;
+            toastTitleText.alignment = TextAnchor.MiddleCenter;
+            toastTitleText.color = new Color(1f, 0.85f, 0.2f);
+
+            GameObject subObj = new GameObject("ToastSub");
+            subObj.transform.SetParent(toastRoot.transform, false);
+            RectTransform rtSub = subObj.AddComponent<RectTransform>();
+            rtSub.anchorMin = new Vector2(0f, 0f);
+            rtSub.anchorMax = new Vector2(1f, 0.5f);
+            rtSub.offsetMin = new Vector2(15, 4);
+            rtSub.offsetMax = new Vector2(-15, 0);
+            toastSubtitleText = subObj.AddComponent<Text>();
+            toastSubtitleText.font = toastTitleText.font;
+            toastSubtitleText.fontSize = 16;
+            toastSubtitleText.alignment = TextAnchor.MiddleCenter;
+            toastSubtitleText.color = Color.white;
+
+            toastRoot.SetActive(false);
+        }
+
+        private System.Collections.IEnumerator ToastRoutine(string title, string subtitle, float duration, Color color)
+        {
+            if (toastRoot == null) yield break;
+            toastRoot.SetActive(true);
+            if (toastTitleText != null)
+            {
+                toastTitleText.text = title;
+                toastTitleText.color = color;
+            }
+            if (toastSubtitleText != null) toastSubtitleText.text = subtitle;
+
+            yield return new WaitForSecondsRealtime(duration);
+
+            if (toastRoot != null) toastRoot.SetActive(false);
+            toastCoroutine = null;
         }
 
         private void Update()
@@ -174,18 +272,36 @@ namespace CursedHarvest
         // ==================== HUD UPDATES ====================
         public void UpdateHealthHUD(float current, float max)
         {
-            if (healthBarFill != null) healthBarFill.fillAmount = Mathf.Clamp01(current / max);
-            if (healthText != null) healthText.text = $"{Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
+            if (healthBarFill != null)
+            {
+                float pct = Mathf.Clamp01(current / Mathf.Max(1f, max));
+                healthBarFill.fillAmount = pct;
+                healthBarFill.color = (pct <= 0.25f) ? new Color(0.95f, 0.2f, 0.2f) : new Color(0.2f, 0.85f, 0.3f);
+            }
+            if (healthText != null) healthText.text = $"HP {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
         }
 
         public void UpdateLuckyChargesHUD(int current, int max)
         {
-            if (luckyChargesText != null) luckyChargesText.text = $"LUCKY LAST: {current}/{max}";
+            if (luckyChargesText != null)
+            {
+                if (current > 0)
+                {
+                    luckyChargesText.text = $"★ LUCKY LAST: {current}";
+                    luckyChargesText.color = new Color(1f, 0.85f, 0.2f);
+                }
+                else
+                {
+                    luckyChargesText.text = "☠ NO LUCKY LAST! (NEXT HIT KILLS)";
+                    luckyChargesText.color = new Color(1f, 0.25f, 0.25f);
+                }
+            }
         }
 
         public void ShowLuckyLastBanner(float duration)
         {
             if (luckyLastBanner != null) luckyLastBanner.SetActive(true);
+            ShowToast("LUCKY LAST!", "Death cheated. 8 seconds of boosted power.", 2.5f, new Color(1f, 0.35f, 0.2f));
         }
 
         public void HideLuckyLastBanner()
@@ -210,7 +326,7 @@ namespace CursedHarvest
 
         public void SetLevelText(int level)
         {
-            if (levelText != null) levelText.text = $"LVL {level}";
+            if (levelText != null) levelText.text = $"LEVEL {level}";
         }
 
         public void UpdateKillCountHUD(int count)
@@ -220,7 +336,11 @@ namespace CursedHarvest
 
         public void UpdateSeedCountHUD(int count)
         {
-            if (seedCountText != null) seedCountText.text = $"SEEDS: {count}";
+            if (seedCountText != null)
+            {
+                seedCountText.text = $"SEEDS: {count}";
+                seedCountText.color = count > 0 ? new Color(0.4f, 1f, 0.4f) : new Color(0.65f, 0.65f, 0.65f);
+            }
         }
 
         // ==================== LEVEL UP MODAL ====================

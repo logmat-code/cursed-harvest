@@ -45,6 +45,8 @@ namespace CursedHarvest
 
         private float growTimer;
         private float cooldownTimer;
+        private TextMesh promptTextMesh;
+        private Transform cameraTransform;
 
         public PlotState State => currentState;
         public float BaseLuckyChance => baseLuckyChance;
@@ -56,11 +58,29 @@ namespace CursedHarvest
             if (plantSocket == null) plantSocket = transform;
             if (growingPumpkin != null) growingPumpkin.SetActive(false);
             if (plotLight != null) plotLight.color = new Color(0.4f, 1f, 0.4f);
+
+            CreatePromptTextMesh();
+        }
+
+        private void CreatePromptTextMesh()
+        {
+            GameObject promptObj = new GameObject("HarvestPromptText");
+            promptObj.transform.SetParent(transform, false);
+            promptObj.transform.localPosition = new Vector3(0f, 2.3f, 0f);
+
+            promptTextMesh = promptObj.AddComponent<TextMesh>();
+            promptTextMesh.fontSize = 28;
+            promptTextMesh.characterSize = 0.08f;
+            promptTextMesh.alignment = TextAlignment.Center;
+            promptTextMesh.anchor = TextAnchor.MiddleCenter;
+            promptTextMesh.fontStyle = FontStyle.Bold;
+            promptTextMesh.text = "";
         }
 
         private void Start()
         {
             FindPlayer();
+            if (Camera.main != null) cameraTransform = Camera.main.transform;
         }
 
         public void Initialize(Transform targetPlayer)
@@ -91,6 +111,8 @@ namespace CursedHarvest
         private void Update()
         {
             FindPlayer();
+            UpdateBillboardRotation();
+            UpdatePromptText();
 
             if (currentState == PlotState.Ready)
             {
@@ -110,12 +132,71 @@ namespace CursedHarvest
             }
         }
 
+        private void UpdateBillboardRotation()
+        {
+            if (cameraTransform == null && Camera.main != null)
+            {
+                cameraTransform = Camera.main.transform;
+            }
+            if (cameraTransform != null && promptTextMesh != null)
+            {
+                promptTextMesh.transform.rotation = cameraTransform.rotation;
+            }
+        }
+
+        private void UpdatePromptText()
+        {
+            if (promptTextMesh == null) return;
+            if (playerTransform == null)
+            {
+                promptTextMesh.text = "";
+                return;
+            }
+
+            float dist = Vector3.Distance(transform.position, playerTransform.position);
+            if (dist > interactionRadius + 2.8f)
+            {
+                promptTextMesh.text = "";
+                return;
+            }
+
+            switch (currentState)
+            {
+                case PlotState.Ready:
+                    if (CursedSeedPickup.PlayerSeedCount > 0)
+                    {
+                        promptTextMesh.text = "[E] PLANT CURSED SEED";
+                        promptTextMesh.color = new Color(1f, 0.85f, 0.2f);
+                    }
+                    else
+                    {
+                        promptTextMesh.text = "YOU NEED A CURSED SEED";
+                        promptTextMesh.color = new Color(0.95f, 0.35f, 0.3f);
+                    }
+                    break;
+                case PlotState.Growing:
+                    promptTextMesh.text = "HARVESTING...";
+                    promptTextMesh.color = new Color(1f, 0.65f, 0.1f);
+                    break;
+                case PlotState.Cooldown:
+                    promptTextMesh.text = $"RECHARGING ({cooldownTimer:0.0}s)";
+                    promptTextMesh.color = new Color(0.7f, 0.7f, 0.7f);
+                    break;
+                default:
+                    promptTextMesh.text = "";
+                    break;
+            }
+        }
+
         private void CheckPlayerInteraction()
         {
             if (playerTransform == null) return;
 
             float dist = Vector3.Distance(transform.position, playerTransform.position);
-            if (dist <= interactionRadius && CursedSeedPickup.PlayerSeedCount > 0)
+            bool inProximity = dist <= interactionRadius;
+            bool pressedE = Input.GetKeyDown(KeyCode.E);
+
+            if ((inProximity || (dist <= interactionRadius + 1.2f && pressedE)) && CursedSeedPickup.PlayerSeedCount > 0)
             {
                 // Plant seed!
                 if (CursedSeedPickup.TryConsumeSeed())
@@ -207,13 +288,16 @@ namespace CursedHarvest
                 growingPumpkin.SetActive(false);
             }
 
+            string outcomeDetail = "";
             if (result == HarvestResult.Lucky)
             {
-                ExecuteLuckyReward();
+                outcomeDetail = ExecuteLuckyReward();
+                UIManager.Instance?.ShowHarvestResolutionToast("★ LUCKY HARVEST! ★", outcomeDetail, true);
             }
             else
             {
-                ExecuteCursedConsequence();
+                outcomeDetail = ExecuteCursedConsequence();
+                UIManager.Instance?.ShowHarvestResolutionToast("☠ CURSED HARVEST! ☠", outcomeDetail, false);
             }
 
             OnHarvestGambleResolved?.Invoke(result);
@@ -228,7 +312,7 @@ namespace CursedHarvest
             }
         }
 
-        private void ExecuteLuckyReward()
+        private string ExecuteLuckyReward()
         {
             if (plotLight != null) plotLight.color = new Color(0.2f, 1f, 0.3f);
             if (luckyVfxPrefab != null) Instantiate(luckyVfxPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
@@ -247,6 +331,7 @@ namespace CursedHarvest
                         GameManager.Instance.XpPool.Get(pos, Quaternion.identity);
                     }
                 }
+                return "+7 XP Crystals Dropped!";
             }
             else if (roll < 0.65f)
             {
@@ -255,6 +340,7 @@ namespace CursedHarvest
                 {
                     playerHealth.Heal(35f);
                 }
+                return "+35 Health Restored!";
             }
             else if (roll < 0.85f)
             {
@@ -263,6 +349,7 @@ namespace CursedHarvest
                 {
                     StartCoroutine(TemporaryDamageBuffRoutine(0.35f, 15f));
                 }
+                return "+35% Damage Boost for 15s!";
             }
             else
             {
@@ -271,10 +358,11 @@ namespace CursedHarvest
                 {
                     luckySystem.AddCharge();
                 }
+                return "+1 Lucky Last Life Restored!";
             }
         }
 
-        private void ExecuteCursedConsequence()
+        private string ExecuteCursedConsequence()
         {
             if (plotLight != null) plotLight.color = new Color(1f, 0.1f, 0.1f);
             if (cursedVfxPrefab != null) Instantiate(cursedVfxPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
@@ -295,11 +383,13 @@ namespace CursedHarvest
                         if (ec != null && playerTransform != null) ec.SetTarget(playerTransform);
                     }
                 }
+                return "Monster Ambush Spawned!";
             }
             else if (roll < 0.80f)
             {
                 // 2. Damaging / Toxic Zone around plot
                 StartCoroutine(ToxicZoneRoutine(6f, 15f));
+                return "Toxic Hazard Zone Spawned!";
             }
             else
             {
@@ -308,6 +398,7 @@ namespace CursedHarvest
                 {
                     StartCoroutine(TemporarySlowRoutine(0.25f, 5f));
                 }
+                return "-25% Slow for 5s!";
             }
         }
 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2433424063991287719}
   - component: {fileID: 5092099135229036198}
   - component: {fileID: 4592067963175016092}
-  - component: {fileID: 4498304598231886912}
+  - component: {fileID: 1746812854240982065}
   m_Layer: 7
   m_Name: Enemy_MaskedChaser
   m_TagString: Enemy
@@ -114,7 +114,7 @@ MonoBehaviour:
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &4498304598231886912
+--- !u!114 &1746812854240982065
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,7 +155,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1905551904713256155}
+  - {fileID: 1355811925836921715}
   m_Father: {fileID: 102370459321089449}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3445788990004275168
@@ -166,66 +166,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7348788380114669700}
     m_Modifications:
-    - target: {fileID: 3019351386366890193, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
-      propertyPath: m_Name
-      value: SM_Gen_Chr_Skeleton_01
-      objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - target: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7229581758514280130, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
+      propertyPath: m_Name
+      value: SM_Gen_Chr_Prisoner_Male_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 5652870239407337565, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 3149161939283763192, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3746349195066213677}
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
---- !u!4 &1905551904713256155 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
+--- !u!4 &316928511096420376 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3149161939283763192, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
   m_PrefabInstance: {fileID: 3445788990004275168}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &7035433353786972093 stripped
+--- !u!4 &1355811925836921715 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5652870239407337565, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4395839890816195731, guid: 2d07864ce16f5e042a9bb64e7d61d8ff, type: 3}
   m_PrefabInstance: {fileID: 3445788990004275168}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5146194155679301352
@@ -234,7 +234,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 7035433353786972093}
+    m_TransformParent: {fileID: 316928511096420376}
     m_Modifications:
     - target: {fileID: 5581240968248350232, guid: b6d5ba35b13c6d94aa2a4b6e0749756d, type: 3}
       propertyPath: m_Name

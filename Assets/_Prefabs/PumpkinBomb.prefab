@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3561088253681789863}
   - component: {fileID: 1205680168468650771}
   - component: {fileID: 5151946496449934993}
-  - component: {fileID: 8626228491453615384}
+  - component: {fileID: 4518857847866477227}
   m_Layer: 0
   m_Name: PumpkinBomb
   m_TagString: Projectile
@@ -74,7 +74,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   explosionVfxPrefab: {fileID: 0}
---- !u!114 &8626228491453615384
+--- !u!114 &4518857847866477227
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
