@@ -9,6 +9,7 @@ namespace CursedHarvest
         [Header("Health Configuration")]
         [SerializeField] private float maxHealth = 35f;
         [SerializeField] private float xpDropValue = 10f;
+        [SerializeField] private float seedDropChance = 0.25f;
 
         [Header("Visual Feedback")]
         [SerializeField] private Renderer[] renderersToFlash;
@@ -119,6 +120,12 @@ namespace CursedHarvest
                 {
                     pickup.Initialize(xpDropValue);
                 }
+            }
+
+            // Drop Cursed Seed
+            if (UnityEngine.Random.value <= seedDropChance && GameManager.Instance != null && GameManager.Instance.SeedPool != null)
+            {
+                GameManager.Instance.SeedPool.Get(transform.position + Vector3.up * 0.3f, Quaternion.identity);
             }
 
             if (poolTracker != null)

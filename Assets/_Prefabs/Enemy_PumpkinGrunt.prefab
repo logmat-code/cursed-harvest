@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2285448635607625546}
   - component: {fileID: 4821232791797275800}
   - component: {fileID: 4451131818228334915}
-  - component: {fileID: 2796844027734962780}
+  - component: {fileID: 6665455451042647199}
   m_Layer: 7
   m_Name: Enemy_PumpkinGrunt
   m_TagString: Enemy
@@ -98,10 +98,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.EnemyHealth
   maxHealth: 35
   xpDropValue: 10
+  seedDropChance: 0.25
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &2796844027734962780
+--- !u!114 &6665455451042647199
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

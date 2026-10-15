@@ -38,6 +38,7 @@ ehthumbs.db
 
 # Large raw archive files
 Assets/*.unitypackage
+Assets/*.unitypackage.meta
 Assets/SourceFiles*
 Assets/POLYGON*_SourceFiles*
 *.log

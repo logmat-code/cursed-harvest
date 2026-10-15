@@ -22,6 +22,7 @@ namespace CursedHarvest
         [SerializeField] private ObjectPool boltPool;
         [SerializeField] private ObjectPool enemyPool;
         [SerializeField] private ObjectPool xpPool;
+        [SerializeField] private ObjectPool seedPool;
         [SerializeField] private TopDownCameraFollow cameraFollow;
 
         [Header("Phase 1 Test Spawner")]
@@ -39,6 +40,7 @@ namespace CursedHarvest
         public ObjectPool BoltPool => boltPool;
         public ObjectPool EnemyPool => enemyPool;
         public ObjectPool XpPool => xpPool;
+        public ObjectPool SeedPool => seedPool;
 
         public static event Action<int> OnEnemiesKilledChanged;
 

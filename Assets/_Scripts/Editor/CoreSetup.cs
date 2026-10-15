@@ -16,19 +16,27 @@ namespace CursedHarvest.Editor
         [MenuItem("Cursed Harvest/1. Build Phase 1 Core")]
         public static void BuildPhase1()
         {
-            BuildPhase2();
+            BuildPhase4();
         }
 
         [MenuItem("Cursed Harvest/2. Build Phase 2 Survivor Loop")]
         public static void BuildPhase2()
         {
+            BuildPhase4();
+        }
+
+        [MenuItem("Cursed Harvest/3. Build Phase 4 Harvest")]
+        public static void BuildPhase4()
+        {
             EnsureDirectories();
             GameObject boltPrefab = CreateBoltPrefab();
             GameObject xpPrefab = CreateXpPickupPrefab();
+            GameObject seedPrefab = CreateCursedSeedPrefab();
+            GameObject plotPrefab = CreateHarvestPlotPrefab();
             GameObject playerPrefab = CreatePlayerPrefab(boltPrefab);
             GameObject gruntPrefab = CreatePumpkinGruntPrefab();
-            CreateMainScene(playerPrefab, boltPrefab, gruntPrefab, xpPrefab);
-            Debug.Log("[CursedHarvest] Phase 2 Survivor Loop Build Complete!");
+            CreateMainScene(playerPrefab, boltPrefab, gruntPrefab, xpPrefab, seedPrefab, plotPrefab);
+            Debug.Log("[CursedHarvest] Phase 4 Harvest Build Complete!");
         }
 
         private static void EnsureDirectories()
@@ -117,6 +125,98 @@ namespace CursedHarvest.Editor
 
             instance.AddComponent<ExperiencePickup>();
             instance.AddComponent<PooledObjectTracker>();
+
+            GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, targetPath);
+            UnityEngine.Object.DestroyImmediate(instance);
+            return saved;
+        }
+
+        private static GameObject CreateCursedSeedPrefab()
+        {
+            string targetPath = $"{PrefabsPath}/CursedSeed.prefab";
+            GameObject pumpkinSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_01.prefab");
+
+            GameObject instance = new GameObject("CursedSeed");
+            instance.tag = "Pickup";
+            int pickupLayer = LayerMask.NameToLayer("Pickup");
+            if (pickupLayer >= 0) instance.layer = pickupLayer;
+
+            if (pumpkinSource != null)
+            {
+                GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(pumpkinSource, instance.transform);
+                model.transform.localPosition = Vector3.zero;
+                model.transform.localScale = Vector3.one * 0.35f;
+            }
+
+            SphereCollider col = instance.AddComponent<SphereCollider>();
+            col.isTrigger = true;
+            col.radius = 0.5f;
+
+            // Spooky purple/magenta glowing light
+            GameObject lightObj = new GameObject("SeedLight");
+            lightObj.transform.SetParent(instance.transform, false);
+            Light l = lightObj.AddComponent<Light>();
+            l.type = LightType.Point;
+            l.color = new Color(0.85f, 0.2f, 1f);
+            l.range = 3.0f;
+            l.intensity = 2.0f;
+
+            instance.AddComponent<CursedSeedPickup>();
+            instance.AddComponent<PooledObjectTracker>();
+
+            GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, targetPath);
+            UnityEngine.Object.DestroyImmediate(instance);
+            return saved;
+        }
+
+        private static GameObject CreateHarvestPlotPrefab()
+        {
+            string targetPath = $"{PrefabsPath}/HarvestPlot.prefab";
+            GameObject dirtSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Ground_Dirt_01.prefab");
+            GameObject pumpkinSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_01.prefab");
+            GameObject luckyVfx = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Fireworks_Green_Large.prefab");
+            GameObject cursedVfx = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Explosion_Rubble.prefab");
+
+            GameObject instance = new GameObject("HarvestPlot");
+            instance.tag = "HarvestPlot";
+
+            if (dirtSource != null)
+            {
+                GameObject dirt = (GameObject)PrefabUtility.InstantiatePrefab(dirtSource, instance.transform);
+                dirt.transform.localPosition = new Vector3(0f, -0.05f, 0f);
+                dirt.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            }
+
+            // Growing pumpkin child
+            GameObject growingPumpkin = new GameObject("GrowingPumpkin");
+            growingPumpkin.transform.SetParent(instance.transform, false);
+            growingPumpkin.transform.localPosition = new Vector3(0f, 0.2f, 0f);
+
+            if (pumpkinSource != null)
+            {
+                GameObject pModel = (GameObject)PrefabUtility.InstantiatePrefab(pumpkinSource, growingPumpkin.transform);
+                pModel.transform.localPosition = Vector3.zero;
+            }
+
+            // Beacon / plot light
+            GameObject lightObj = new GameObject("PlotLight");
+            lightObj.transform.SetParent(instance.transform, false);
+            lightObj.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            Light l = lightObj.AddComponent<Light>();
+            l.type = LightType.Point;
+            l.color = new Color(0.4f, 1f, 0.4f);
+            l.range = 6.0f;
+            l.intensity = 1.8f;
+
+            HarvestPlot plot = instance.AddComponent<HarvestPlot>();
+            SerializedObject soPlot = new SerializedObject(plot);
+            soPlot.FindProperty("growingPumpkin").objectReferenceValue = growingPumpkin;
+            soPlot.FindProperty("plotLight").objectReferenceValue = l;
+            if (luckyVfx != null) soPlot.FindProperty("luckyVfxPrefab").objectReferenceValue = luckyVfx;
+            if (cursedVfx != null) soPlot.FindProperty("cursedVfxPrefab").objectReferenceValue = cursedVfx;
+            soPlot.ApplyModifiedProperties();
+
+            growingPumpkin.SetActive(false);
 
             GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, targetPath);
             UnityEngine.Object.DestroyImmediate(instance);
@@ -282,7 +382,7 @@ namespace CursedHarvest.Editor
             return saved;
         }
 
-        private static void CreateMainScene(GameObject playerPrefab, GameObject boltPrefab, GameObject gruntPrefab, GameObject xpPrefab)
+        private static void CreateMainScene(GameObject playerPrefab, GameObject boltPrefab, GameObject gruntPrefab, GameObject xpPrefab, GameObject seedPrefab, GameObject plotPrefab)
         {
             string scenePath = $"{ScenesPath}/MainGame.unity";
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -384,6 +484,24 @@ namespace CursedHarvest.Editor
                 }
             }
 
+            // 3b. Harvest Plots (4 arena quadrants)
+            if (plotPrefab != null)
+            {
+                Vector3[] plotPositions = new Vector3[]
+                {
+                    new Vector3(14f, 0f, 14f),
+                    new Vector3(-14f, 0f, 14f),
+                    new Vector3(-14f, 0f, -14f),
+                    new Vector3(14f, 0f, -14f)
+                };
+
+                foreach (var pPos in plotPositions)
+                {
+                    GameObject plotObj = (GameObject)PrefabUtility.InstantiatePrefab(plotPrefab, arenaRoot.transform);
+                    plotObj.transform.position = pPos;
+                }
+            }
+
             // 4. Camera
             GameObject camObj = new GameObject("Main Camera");
             camObj.tag = "MainCamera";
@@ -396,6 +514,7 @@ namespace CursedHarvest.Editor
             ObjectPool boltPool = CreatePool(poolsRoot.transform, "BoltPool", boltPrefab, 30);
             ObjectPool enemyPool = CreatePool(poolsRoot.transform, "EnemyPool", gruntPrefab, 30);
             ObjectPool xpPool = CreatePool(poolsRoot.transform, "XpPool", xpPrefab, 50);
+            ObjectPool seedPool = CreatePool(poolsRoot.transform, "SeedPool", seedPrefab, 20);
 
             // 6. Player Instance
             GameObject playerInstance = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab);
@@ -428,6 +547,7 @@ namespace CursedHarvest.Editor
             soGm.FindProperty("boltPool").objectReferenceValue = boltPool;
             soGm.FindProperty("enemyPool").objectReferenceValue = enemyPool;
             soGm.FindProperty("xpPool").objectReferenceValue = xpPool;
+            soGm.FindProperty("seedPool").objectReferenceValue = seedPool;
             soGm.FindProperty("cameraFollow").objectReferenceValue = camFollow;
             soGm.ApplyModifiedProperties();
 
