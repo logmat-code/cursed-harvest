@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4109197974553622569}
   - component: {fileID: 713392208428235377}
   - component: {fileID: 2270541132745728584}
-  - component: {fileID: 5436622867014544354}
+  - component: {fileID: 6160507914209704796}
   m_Layer: 7
   m_Name: Enemy_DemonCharger
   m_TagString: Enemy
@@ -114,7 +114,7 @@ MonoBehaviour:
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &5436622867014544354
+--- !u!114 &6160507914209704796
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

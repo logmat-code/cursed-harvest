@@ -109,6 +109,8 @@ namespace CursedHarvest
                 xpManager.AddXP(xpValue);
             }
 
+            AudioManager.Instance?.PlaySound(SoundType.PickupXP, 0.7f, 0.08f);
+
             if (poolTracker != null)
             {
                 poolTracker.ReturnToPool();

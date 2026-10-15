@@ -90,6 +90,7 @@ namespace CursedHarvest
 
             PlayHitFlash();
             OnDamaged?.Invoke(damage);
+            DamageNumberManager.Instance?.SpawnDamage(transform.position + Vector3.up * 1.0f, damage.amount);
 
             if (currentHealth <= 0f)
             {
@@ -118,6 +119,7 @@ namespace CursedHarvest
 
             OnDied?.Invoke();
             OnAnyEnemyDied?.Invoke(this, damage);
+            AudioManager.Instance?.PlaySound(SoundType.EnemyDeath, 0.75f, 0.12f);
 
             // Drop XP pickup
             if (GameManager.Instance != null && GameManager.Instance.XpPool != null)

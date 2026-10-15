@@ -85,6 +85,11 @@ namespace CursedHarvest
                 }
             }
 
+            if (hits.Length > 0)
+            {
+                AudioManager.Instance?.PlaySound(SoundType.FireTick, 0.35f, 0.15f);
+            }
+
             return true;
         }
 

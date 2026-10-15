@@ -93,6 +93,8 @@ namespace CursedHarvest
                 }
             }
 
+            AudioManager.Instance?.PlaySound(SoundType.CrossbowShoot, 0.7f, 0.05f);
+
             // Quick recoil visual kick
             if (visualBowModel != null)
             {

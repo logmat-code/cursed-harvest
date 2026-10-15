@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2285448635607625546}
   - component: {fileID: 4821232791797275800}
   - component: {fileID: 4451131818228334915}
-  - component: {fileID: 5829919363739658739}
+  - component: {fileID: 1149471299897748582}
   m_Layer: 7
   m_Name: Enemy_PumpkinGrunt
   m_TagString: Enemy
@@ -114,7 +114,7 @@ MonoBehaviour:
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &5829919363739658739
+--- !u!114 &1149471299897748582
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

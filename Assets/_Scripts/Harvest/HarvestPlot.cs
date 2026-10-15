@@ -232,6 +232,7 @@ namespace CursedHarvest
         {
             if (plotLight != null) plotLight.color = new Color(0.2f, 1f, 0.3f);
             if (luckyVfxPrefab != null) Instantiate(luckyVfxPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+            AudioManager.Instance?.PlaySound(SoundType.HarvestLucky, 0.95f, 0f);
 
             float roll = UnityEngine.Random.value;
             if (roll < 0.35f)
@@ -277,6 +278,7 @@ namespace CursedHarvest
         {
             if (plotLight != null) plotLight.color = new Color(1f, 0.1f, 0.1f);
             if (cursedVfxPrefab != null) Instantiate(cursedVfxPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+            AudioManager.Instance?.PlaySound(SoundType.HarvestCursed, 0.95f, 0f);
 
             float roll = UnityEngine.Random.value;
             if (roll < 0.50f)

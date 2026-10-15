@@ -115,6 +115,7 @@ namespace CursedHarvest
         public void Collect()
         {
             AddSeeds(1);
+            AudioManager.Instance?.PlaySound(SoundType.PickupSeed, 0.85f, 0.05f);
 
             if (poolTracker != null)
             {

@@ -128,8 +128,10 @@ namespace CursedHarvest
             // Screen shake & UI
             if (TopDownCameraFollow.Instance != null)
             {
-                TopDownCameraFollow.Instance.TriggerShake(0.4f, 0.4f);
+                TopDownCameraFollow.Instance.TriggerShake(0.5f, 0.55f);
             }
+
+            AudioManager.Instance?.PlaySound(SoundType.LuckyLast, 1.0f, 0f);
 
             if (luckyLastAuraPrefab != null && activeAuraInstance == null)
             {

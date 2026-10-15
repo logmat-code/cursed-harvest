@@ -923,6 +923,13 @@ namespace CursedHarvest.Editor
             soGm.FindProperty("cameraFollow").objectReferenceValue = camFollow;
             soGm.ApplyModifiedProperties();
 
+            // 10. Audio & Polish Managers
+            GameObject audioObj = new GameObject("AudioManager");
+            audioObj.AddComponent<AudioManager>();
+
+            GameObject dmgNumObj = new GameObject("DamageNumberManager");
+            dmgNumObj.AddComponent<DamageNumberManager>();
+
             EditorSceneManager.SaveScene(scene, scenePath);
 
             EditorBuildSettingsScene[] buildScenes = new EditorBuildSettingsScene[]
@@ -1096,6 +1103,39 @@ namespace CursedHarvest.Editor
 
             vicModal.SetActive(false);
 
+            // Title / Instructions Modal
+            GameObject titleModal = CreateUIObject("TitleModal", canvasObj.transform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+            CreateImage(titleModal, "DarkOverlay", new Color(0.04f, 0.04f, 0.08f, 0.94f));
+
+            Text titleHeader = CreateText(titleModal, "Title", "CURSED HARVEST: LUCKY LAST", 44, TextAnchor.MiddleCenter, new Color(1f, 0.55f, 0.1f), defaultFont);
+            titleHeader.rectTransform.anchoredPosition = new Vector2(0, 240);
+
+            Text titleSubtitle = CreateText(titleModal, "Subtitle", "Synty Spooky Jam Oct 2026", 20, TextAnchor.MiddleCenter, new Color(0.9f, 0.8f, 0.4f), defaultFont);
+            titleSubtitle.rectTransform.anchoredPosition = new Vector2(0, 195);
+
+            string guide = "HOW TO SURVIVE:\n\n" +
+                           "• [W][A][S][D]: 360° Movement\n" +
+                           "• [SPACE] / [SHIFT]: Dash with invulnerability\n" +
+                           "• WEAPONS AUTO-AIM & FIRE AT FOES CONTINUOUSLY\n" +
+                           "• Slay enemies to gather EXP (Level Up) & Cursed Seeds\n" +
+                           "• Approach GRAVESTONES to plant seeds & gamble:\n" +
+                           "   - 70% LUCKY: EXP bursts, HP heals, lethal damage buffs\n" +
+                           "   - 30% CURSED: Monster ambushes, toxic puddles, slow\n" +
+                           "• LUCKY LAST: Fatal hits are intercepted! Enter an 8s\n" +
+                           "   berserk frenzy with +50% damage & +50% attack speed!\n" +
+                           "• Survive 12 minutes to face 'THE LAST HARVEST' boss!";
+
+            Text titleGuide = CreateText(titleModal, "GuideText", guide, 20, TextAnchor.MiddleLeft, Color.white, defaultFont);
+            titleGuide.rectTransform.sizeDelta = new Vector2(850, 280);
+            titleGuide.rectTransform.anchoredPosition = new Vector2(0, -10);
+
+            GameObject startBtnObj = CreateButton(titleModal.transform, "StartRunButton", "START RUN [SPACE / CLICK]", new Color(0.85f, 0.35f, 0.1f), defaultFont);
+            startBtnObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -220);
+            startBtnObj.GetComponent<RectTransform>().sizeDelta = new Vector2(360, 56);
+            Button btnStart = startBtnObj.GetComponent<Button>();
+
+            titleModal.SetActive(true);
+
             // Hook into UIManager
             UIManager uim = canvasObj.AddComponent<UIManager>();
             SerializedObject soUim = new SerializedObject(uim);
@@ -1127,6 +1167,9 @@ namespace CursedHarvest.Editor
             soUim.FindProperty("victoryModal").objectReferenceValue = vicModal;
             soUim.FindProperty("victoryTitleText").objectReferenceValue = vicTitle;
             soUim.FindProperty("continueEndlessButton").objectReferenceValue = btnVic;
+
+            soUim.FindProperty("titleModal").objectReferenceValue = titleModal;
+            soUim.FindProperty("startRunButton").objectReferenceValue = btnStart;
 
             soUim.ApplyModifiedProperties();
         }

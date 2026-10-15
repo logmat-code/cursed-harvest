@@ -56,6 +56,7 @@ namespace CursedHarvest
                 currentXP -= requiredXP;
                 currentLevel++;
                 requiredXP = CalculateRequiredXP(currentLevel);
+                AudioManager.Instance?.PlaySound(SoundType.LevelUp, 1.0f, 0f);
                 OnLevelUp?.Invoke(currentLevel);
             }
 

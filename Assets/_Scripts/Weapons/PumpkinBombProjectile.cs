@@ -84,6 +84,9 @@ namespace CursedHarvest
                 Instantiate(explosionVfxPrefab, transform.position, Quaternion.identity);
             }
 
+            AudioManager.Instance?.PlaySound(SoundType.BombExplode, 1.0f, 0.05f);
+            TopDownCameraFollow.Instance?.TriggerShake(0.25f, 0.35f);
+
             // AoE damage check
             Collider[] colliders = Physics.OverlapSphere(transform.position, blastRadius, hitMask);
             for (int i = 0; i < colliders.Length; i++)

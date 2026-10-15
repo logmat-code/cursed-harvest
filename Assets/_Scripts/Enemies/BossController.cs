@@ -200,6 +200,8 @@ namespace CursedHarvest
             {
                 TopDownCameraFollow.Instance.TriggerShake(0.6f, 0.45f);
             }
+
+            AudioManager.Instance?.PlaySound(SoundType.BossSlam, 1.1f, 0.05f);
         }
 
         private void ExecuteMortarBarrage()

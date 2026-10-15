@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4786692269304098488}
   - component: {fileID: 809938774502539702}
   - component: {fileID: 2247928820904545642}
-  - component: {fileID: 5349323608299221811}
+  - component: {fileID: 8386292569212841308}
   m_Layer: 7
   m_Name: Enemy_CursedFarmer
   m_TagString: Enemy
@@ -114,7 +114,7 @@ MonoBehaviour:
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &5349323608299221811
+--- !u!114 &8386292569212841308
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

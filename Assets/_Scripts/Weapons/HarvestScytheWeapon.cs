@@ -154,6 +154,7 @@ namespace CursedHarvest
 
                         DamageData data = new DamageData(Damage, gameObject, pushDir, scytheKnockback);
                         damageable.TakeDamage(data);
+                        AudioManager.Instance?.PlaySound(SoundType.ScytheHit, 0.75f, 0.1f);
                     }
                 }
             }

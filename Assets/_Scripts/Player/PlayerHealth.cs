@@ -115,6 +115,9 @@ namespace CursedHarvest
             lastDamageTime = Time.time;
             PlayHitFlash();
 
+            AudioManager.Instance?.PlaySound(SoundType.PlayerHit, 0.9f, 0.05f);
+            TopDownCameraFollow.Instance?.TriggerShake(0.18f, 0.22f);
+
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
             OnDamaged?.Invoke(damage);
         }

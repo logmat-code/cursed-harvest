@@ -47,13 +47,18 @@ namespace CursedHarvest
         [SerializeField] private Text victoryTitleText;
         [SerializeField] private Button continueEndlessButton;
 
+        [Header("Title / Instructions Modal")]
+        [SerializeField] private GameObject titleModal;
+        [SerializeField] private Button startRunButton;
+
         private UpgradeManager upgradeManager;
         private List<UpgradeData> currentChoices = new List<UpgradeData>();
         private bool isPaused;
 
         public bool IsModalOpen => (levelUpModal != null && levelUpModal.activeSelf) ||
                                   (pauseModal != null && pauseModal.activeSelf) ||
-                                  (gameOverModal != null && gameOverModal.activeSelf);
+                                  (gameOverModal != null && gameOverModal.activeSelf) ||
+                                  (titleModal != null && titleModal.activeSelf);
 
         private void Awake()
         {
@@ -69,6 +74,7 @@ namespace CursedHarvest
             if (retryButton != null) retryButton.onClick.AddListener(RestartRun);
             if (rerollButton != null) rerollButton.onClick.AddListener(OnRerollClicked);
             if (continueEndlessButton != null) continueEndlessButton.onClick.AddListener(CloseVictoryModal);
+            if (startRunButton != null) startRunButton.onClick.AddListener(StartRunFromTitle);
 
             HideAllModals();
         }
@@ -104,6 +110,12 @@ namespace CursedHarvest
 
             GameManager.OnEnemiesKilledChanged += UpdateKillCountHUD;
             SpawnDirector.OnRunTimerUpdated += UpdateTimerHUD;
+
+            if (titleModal != null)
+            {
+                titleModal.SetActive(true);
+                Time.timeScale = 0f;
+            }
         }
 
         private void OnDestroy()
@@ -117,6 +129,15 @@ namespace CursedHarvest
 
         private void Update()
         {
+            if (titleModal != null && titleModal.activeSelf)
+            {
+                if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+                {
+                    StartRunFromTitle();
+                }
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (levelUpModal != null && levelUpModal.activeSelf) return; // Don't pause during level up
@@ -133,8 +154,16 @@ namespace CursedHarvest
             }
         }
 
+        public void StartRunFromTitle()
+        {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            if (titleModal != null) titleModal.SetActive(false);
+            Time.timeScale = 1f;
+        }
+
         public void HideAllModals()
         {
+            if (titleModal != null) titleModal.SetActive(false);
             if (levelUpModal != null) levelUpModal.SetActive(false);
             if (pauseModal != null) pauseModal.SetActive(false);
             if (gameOverModal != null) gameOverModal.SetActive(false);
@@ -247,6 +276,7 @@ namespace CursedHarvest
 
         private void OnRerollClicked()
         {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             if (upgradeManager != null && upgradeManager.TryReroll())
             {
                 currentChoices = upgradeManager.GetRandomUpgradeChoices(3);
@@ -269,6 +299,7 @@ namespace CursedHarvest
 
         public void SelectCard(int index)
         {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             if (index >= 0 && index < currentChoices.Count && upgradeManager != null)
             {
                 upgradeManager.ApplyUpgrade(currentChoices[index]);
@@ -281,6 +312,7 @@ namespace CursedHarvest
         // ==================== PAUSE MODAL ====================
         public void TogglePause()
         {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             isPaused = !isPaused;
             if (pauseModal != null) pauseModal.SetActive(isPaused);
             Time.timeScale = isPaused ? 0f : 1f;
@@ -288,6 +320,7 @@ namespace CursedHarvest
 
         public void ResumeGame()
         {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             isPaused = false;
             if (pauseModal != null) pauseModal.SetActive(false);
             Time.timeScale = 1f;
@@ -295,6 +328,7 @@ namespace CursedHarvest
 
         public void RestartRun()
         {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             Time.timeScale = 1f;
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
@@ -335,6 +369,7 @@ namespace CursedHarvest
 
         public void CloseVictoryModal()
         {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             if (victoryModal != null) victoryModal.SetActive(false);
             Time.timeScale = 1f;
             SpawnDirector sd = FindFirstObjectByType<SpawnDirector>();

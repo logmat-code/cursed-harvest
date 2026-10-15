@@ -71,6 +71,8 @@ namespace CursedHarvest
             dashDirection = moveDir.normalized;
 
             lastDashTime = Time.time;
+            AudioManager.Instance?.PlaySound(SoundType.PlayerDash, 0.85f, 0.08f);
+            TopDownCameraFollow.Instance?.TriggerShake(0.08f, 0.12f);
             StartCoroutine(DashRoutine());
         }
 
