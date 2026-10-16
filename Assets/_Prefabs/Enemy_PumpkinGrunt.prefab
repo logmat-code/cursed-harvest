@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 3807086640292654884}
   - component: {fileID: 2285448635607625546}
   - component: {fileID: 4821232791797275800}
+  - component: {fileID: 8136199037826474547}
   - component: {fileID: 4451131818228334915}
-  - component: {fileID: 3874200864900081955}
+  - component: {fileID: 395514878538800862}
   m_Layer: 7
   m_Name: Enemy_PumpkinGrunt
   m_TagString: Enemy
@@ -93,6 +94,32 @@ MonoBehaviour:
   bobFrequency: 10
   bobAmplitude: 0.08
   tiltAngle: 6
+--- !u!114 &8136199037826474547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796698155104096713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85712de3b0c694637a0f8bdefa732a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.EnemyLocomotion
+  cycleDistance: 0.85
+  maxStrideAngle: 11
+  maxKneeBend: 5.5
+  hipBobHeight: 0.005
+  torsoLeanAngle: 1
+  lateralRollAngle: 1.8
+  shoulderTiltAngle: 0
+  armSwingAngle: 4
+  armRestPitch: 0
+  hasWeaponInHand: 0
+  isAsymmetricLimp: 0
+  breathRate: 2.8
+  breathAmplitude: 0.0025
+  idleMicroShift: 1.2
 --- !u!114 &4451131818228334915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,8 +140,8 @@ MonoBehaviour:
   onDeathHazardPrefab: {fileID: 0}
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
-  deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &3874200864900081955
+  deathEffectPrefab: {fileID: 3771140208864044240, guid: 728a7e1019d3b474b900dabed730c0dc, type: 3}
+--- !u!114 &395514878538800862
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,7 +150,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 796698155104096713}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 8606cf74a28a0403e8f764c868658d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.PooledObjectTracker
 --- !u!1 &7170529336888621338
@@ -152,7 +179,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8763938147078641518}
@@ -168,15 +195,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1479028106056636139, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 1479028106056636139, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 1479028106056636139, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 1479028106056636139, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}
       propertyPath: m_LocalPosition.x

@@ -50,6 +50,11 @@ namespace CursedHarvest
         [Header("Title / Instructions Modal")]
         [SerializeField] private GameObject titleModal;
         [SerializeField] private Button startRunButton;
+        [SerializeField] private Button openCreditsButton;
+
+        [Header("Credits Modal")]
+        [SerializeField] private GameObject creditsModal;
+        [SerializeField] private Button closeCreditsButton;
 
         private UpgradeManager upgradeManager;
         private List<UpgradeData> currentChoices = new List<UpgradeData>();
@@ -61,10 +66,15 @@ namespace CursedHarvest
         private Image toastBg;
         private Coroutine toastCoroutine;
 
+        private float lastKnownCurrentHp = 100f;
+        private float lastKnownMaxHp = 100f;
+        private Coroutine hpFlashCoroutine;
+
         public bool IsModalOpen => (levelUpModal != null && levelUpModal.activeSelf) ||
                                   (pauseModal != null && pauseModal.activeSelf) ||
                                   (gameOverModal != null && gameOverModal.activeSelf) ||
-                                  (titleModal != null && titleModal.activeSelf);
+                                  (titleModal != null && titleModal.activeSelf) ||
+                                  (creditsModal != null && creditsModal.activeSelf);
 
         private void Awake()
         {
@@ -81,6 +91,8 @@ namespace CursedHarvest
             if (rerollButton != null) rerollButton.onClick.AddListener(OnRerollClicked);
             if (continueEndlessButton != null) continueEndlessButton.onClick.AddListener(CloseVictoryModal);
             if (startRunButton != null) startRunButton.onClick.AddListener(StartRunFromTitle);
+            if (openCreditsButton != null) openCreditsButton.onClick.AddListener(ShowCredits);
+            if (closeCreditsButton != null) closeCreditsButton.onClick.AddListener(CloseCredits);
 
             HideAllModals();
         }
@@ -186,7 +198,9 @@ namespace CursedHarvest
             rtTitle.offsetMin = new Vector2(15, 0);
             rtTitle.offsetMax = new Vector2(-15, -4);
             toastTitleText = titleObj.AddComponent<Text>();
-            toastTitleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 22);
+            Font safeFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (safeFont == null) safeFont = Font.CreateDynamicFontFromOSFont("Arial", 22);
+            toastTitleText.font = safeFont;
             toastTitleText.fontSize = 22;
             toastTitleText.fontStyle = FontStyle.Bold;
             toastTitleText.alignment = TextAnchor.MiddleCenter;
@@ -227,8 +241,22 @@ namespace CursedHarvest
 
         private void Update()
         {
+            if (creditsModal != null && creditsModal.activeSelf)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+                {
+                    CloseCredits();
+                }
+                return;
+            }
+
             if (titleModal != null && titleModal.activeSelf)
             {
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    ShowCredits();
+                    return;
+                }
                 if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
                 {
                     StartRunFromTitle();
@@ -250,18 +278,42 @@ namespace CursedHarvest
                 if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) SelectCard(2);
                 if (Input.GetKeyDown(KeyCode.R)) OnRerollClicked();
             }
+
+            // Real-time critical health pulsing
+            if (hpFlashCoroutine == null && healthBarFill != null)
+            {
+                float pct = Mathf.Clamp01(lastKnownCurrentHp / lastKnownMaxHp);
+                if (pct <= 0.25f)
+                {
+                    healthBarFill.color = GetBaseHealthColor(pct);
+                }
+            }
         }
 
         public void StartRunFromTitle()
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             if (titleModal != null) titleModal.SetActive(false);
+            if (creditsModal != null) creditsModal.SetActive(false);
             Time.timeScale = 1f;
+        }
+
+        public void ShowCredits()
+        {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            if (creditsModal != null) creditsModal.SetActive(true);
+        }
+
+        public void CloseCredits()
+        {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            if (creditsModal != null) creditsModal.SetActive(false);
         }
 
         public void HideAllModals()
         {
             if (titleModal != null) titleModal.SetActive(false);
+            if (creditsModal != null) creditsModal.SetActive(false);
             if (levelUpModal != null) levelUpModal.SetActive(false);
             if (pauseModal != null) pauseModal.SetActive(false);
             if (gameOverModal != null) gameOverModal.SetActive(false);
@@ -272,13 +324,78 @@ namespace CursedHarvest
         // ==================== HUD UPDATES ====================
         public void UpdateHealthHUD(float current, float max)
         {
+            float prev = lastKnownCurrentHp;
+            lastKnownCurrentHp = current;
+            lastKnownMaxHp = Mathf.Max(1f, max);
+            float pct = Mathf.Clamp01(current / lastKnownMaxHp);
+
             if (healthBarFill != null)
             {
-                float pct = Mathf.Clamp01(current / Mathf.Max(1f, max));
+                // Set both fillAmount and anchorMax so fill works under all sprite/non-sprite modes
                 healthBarFill.fillAmount = pct;
-                healthBarFill.color = (pct <= 0.25f) ? new Color(0.95f, 0.2f, 0.2f) : new Color(0.2f, 0.85f, 0.3f);
+                RectTransform rtFill = healthBarFill.rectTransform;
+                if (rtFill != null)
+                {
+                    rtFill.anchorMin = Vector2.zero;
+                    rtFill.anchorMax = new Vector2(pct, 1f);
+                    rtFill.sizeDelta = Vector2.zero;
+                }
+
+                // Flash on hit or heal
+                if (current < prev - 0.5f)
+                {
+                    if (hpFlashCoroutine != null) StopCoroutine(hpFlashCoroutine);
+                    hpFlashCoroutine = StartCoroutine(HealthBarFlashRoutine(Color.white));
+                }
+                else if (current > prev + 0.5f)
+                {
+                    if (hpFlashCoroutine != null) StopCoroutine(hpFlashCoroutine);
+                    hpFlashCoroutine = StartCoroutine(HealthBarFlashRoutine(new Color(0.2f, 0.95f, 0.4f, 1f)));
+                }
+                else if (hpFlashCoroutine == null)
+                {
+                    healthBarFill.color = GetBaseHealthColor(pct);
+                }
             }
-            if (healthText != null) healthText.text = $"HP {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
+
+            if (healthText != null)
+            {
+                healthText.text = $"{Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
+            }
+        }
+
+        private Color GetBaseHealthColor(float pct)
+        {
+            if (pct <= 0.25f)
+            {
+                float pulse = Mathf.PingPong(Time.time * 4f, 1f);
+                return Color.Lerp(new Color(0.95f, 0.15f, 0.15f), new Color(0.55f, 0.08f, 0.08f), pulse);
+            }
+            if (pct <= 0.50f)
+            {
+                return new Color(0.92f, 0.40f, 0.10f); // Cautionary amber-red
+            }
+            return new Color(0.72f, 0.12f, 0.12f); // Deep blood crimson
+        }
+
+        private System.Collections.IEnumerator HealthBarFlashRoutine(Color flashColor)
+        {
+            if (healthBarFill != null) healthBarFill.color = flashColor;
+            yield return new WaitForSecondsRealtime(0.12f);
+            float elapsed = 0f;
+            float dur = 0.20f;
+            while (elapsed < dur)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = elapsed / dur;
+                float pct = Mathf.Clamp01(lastKnownCurrentHp / lastKnownMaxHp);
+                if (healthBarFill != null)
+                {
+                    healthBarFill.color = Color.Lerp(flashColor, GetBaseHealthColor(pct), t);
+                }
+                yield return null;
+            }
+            hpFlashCoroutine = null;
         }
 
         public void UpdateLuckyChargesHUD(int current, int max)
@@ -287,13 +404,13 @@ namespace CursedHarvest
             {
                 if (current > 0)
                 {
-                    luckyChargesText.text = $"★ LUCKY LAST: {current}";
-                    luckyChargesText.color = new Color(1f, 0.85f, 0.2f);
+                    luckyChargesText.text = $"★ {current}";
+                    luckyChargesText.color = new Color(0.95f, 0.82f, 0.25f);
                 }
                 else
                 {
-                    luckyChargesText.text = "☠ NO LUCKY LAST! (NEXT HIT KILLS)";
-                    luckyChargesText.color = new Color(1f, 0.25f, 0.25f);
+                    luckyChargesText.text = "☠ 0";
+                    luckyChargesText.color = new Color(0.85f, 0.25f, 0.25f);
                 }
             }
         }
@@ -326,20 +443,20 @@ namespace CursedHarvest
 
         public void SetLevelText(int level)
         {
-            if (levelText != null) levelText.text = $"LEVEL {level}";
+            if (levelText != null) levelText.text = $"LVL {level}";
         }
 
         public void UpdateKillCountHUD(int count)
         {
-            if (killCountText != null) killCountText.text = $"KILLS: {count}";
+            if (killCountText != null) killCountText.text = $"☠ {count}";
         }
 
         public void UpdateSeedCountHUD(int count)
         {
             if (seedCountText != null)
             {
-                seedCountText.text = $"SEEDS: {count}";
-                seedCountText.color = count > 0 ? new Color(0.4f, 1f, 0.4f) : new Color(0.65f, 0.65f, 0.65f);
+                seedCountText.text = $"✦ {count}";
+                seedCountText.color = count > 0 ? new Color(0.35f, 0.95f, 0.55f) : new Color(0.55f, 0.65f, 0.55f);
             }
         }
 
@@ -389,7 +506,7 @@ namespace CursedHarvest
                 rerollButton.interactable = upgradeManager.RerollCharges > 0;
                 if (rerollButtonText != null)
                 {
-                    rerollButtonText.text = $"REROLL ({upgradeManager.RerollCharges}) [R]";
+                    rerollButtonText.text = $"REROLL — {upgradeManager.RerollCharges} LEFT [R]";
                 }
             }
         }

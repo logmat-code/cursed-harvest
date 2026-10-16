@@ -88,7 +88,7 @@ MonoBehaviour:
   growingPumpkin: {fileID: 2941700285115760980}
   plotLight: {fileID: 567677317076414044}
   luckyVfxPrefab: {fileID: 175238, guid: 26d069e6f78e6f8478e4dc0152bd6939, type: 3}
-  cursedVfxPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
+  cursedVfxPrefab: {fileID: 276821299728828542, guid: 83afd1fe2584d4b569ed02e2b877b199, type: 3}
 --- !u!1 &6106083418530008844
 GameObject:
   m_ObjectHideFlags: 0

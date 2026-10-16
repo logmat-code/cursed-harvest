@@ -15,9 +15,9 @@ namespace CursedHarvest
         [SerializeField] private ObjectPool farmerPool;
 
         [Header("Spawn Boundaries")]
-        [SerializeField] private float minSpawnRadius = 15f;
-        [SerializeField] private float maxSpawnRadius = 20f;
-        [SerializeField] private float arenaHalfBounds = 38f;
+        [SerializeField] private float minSpawnRadius = 20f;
+        [SerializeField] private float maxSpawnRadius = 28f;
+        [SerializeField] private float arenaHalfBounds = 31f;
 
         [Header("Difficulty Curves")]
         [SerializeField] private float runTime;

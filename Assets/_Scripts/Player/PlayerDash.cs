@@ -16,6 +16,7 @@ namespace CursedHarvest
 
         private PlayerController playerController;
         private PlayerHealth playerHealth;
+        private TrailRenderer dashTrail;
         private float cooldownMultiplier = 1f;
         private float lastDashTime = -10f;
         private bool isDashing;
@@ -38,6 +39,30 @@ namespace CursedHarvest
             {
                 visualRoot = transform.GetChild(0);
             }
+
+            SetupDashTrail();
+        }
+
+        private void SetupDashTrail()
+        {
+            GameObject trailObj = new GameObject("DashGhostTrail");
+            trailObj.transform.SetParent(transform, false);
+            trailObj.transform.localPosition = new Vector3(0f, 0.8f, 0f);
+
+            dashTrail = trailObj.AddComponent<TrailRenderer>();
+            dashTrail.time = 0.15f;
+            dashTrail.startWidth = 0.55f;
+            dashTrail.endWidth = 0.05f;
+            dashTrail.autodestruct = false;
+            dashTrail.emitting = false;
+
+            Shader defaultShader = Shader.Find("Sprites/Default");
+            if (defaultShader != null)
+            {
+                dashTrail.material = new Material(defaultShader);
+            }
+            dashTrail.startColor = new Color(0.3f, 0.9f, 1f, 0.75f);
+            dashTrail.endColor = new Color(0.1f, 0.4f, 1f, 0f);
         }
 
         public void SetCooldownMultiplier(float multiplier)
@@ -79,6 +104,11 @@ namespace CursedHarvest
         private IEnumerator DashRoutine()
         {
             isDashing = true;
+            if (dashTrail != null)
+            {
+                dashTrail.Clear();
+                dashTrail.emitting = true;
+            }
             OnDashStarted?.Invoke();
 
             float elapsed = 0f;
@@ -112,6 +142,11 @@ namespace CursedHarvest
             if (visualRoot != null)
             {
                 visualRoot.localScale = originalScale;
+            }
+
+            if (dashTrail != null)
+            {
+                dashTrail.emitting = false;
             }
 
             isDashing = false;

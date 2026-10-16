@@ -93,24 +93,24 @@ namespace CursedHarvest
         private void InitializeUpgradeDatabase()
         {
             upgrades.Clear();
-            AddDef(new UpgradeData(UpgradeType.SharpBolts, "sharp_bolts", "Sharp Bolts", "Crossbow bolts deal significantly more damage.", "Weapon", 5));
-            AddDef(new UpgradeData(UpgradeType.RapidFire, "rapid_fire", "Rapid Fire", "Crossbow shoots and reloads much faster.", "Weapon", 5));
-            AddDef(new UpgradeData(UpgradeType.DoubleShot, "double_shot", "Double Shot", "Crossbow fires an extra bolt in an arc.", "Weapon", 3));
-            AddDef(new UpgradeData(UpgradeType.ToughSkin, "tough_skin", "Tough Skin", "Increases maximum health and heals you.", "Stat", 5));
-            AddDef(new UpgradeData(UpgradeType.FleetFooted, "fleet_footed", "Fleet Footed", "Increases your movement speed.", "Stat", 5));
-            AddDef(new UpgradeData(UpgradeType.QuickStep, "quick_step", "Quick Step", "Dash recharges much faster to evade attacks.", "Utility", 4));
-            AddDef(new UpgradeData(UpgradeType.LastBreath, "last_breath", "Last Breath", "When near death (<25% HP), deal massive bonus damage.", "Special", 1));
-            AddDef(new UpgradeData(UpgradeType.BetterHarvest, "better_harvest", "Better Harvest", "Increases chance of getting Lucky rewards from Harvest Plots.", "Harvest", 3));
-            AddDef(new UpgradeData(UpgradeType.OneMore, "one_more", "One More", "Grants an extra reroll when choosing upgrades.", "Utility", 3));
-            AddDef(new UpgradeData(UpgradeType.SecondChance, "second_chance", "Second Chance", "Grants an additional Lucky Last charge to cheat death.", "Special", 2, isRare: true));
-            AddDef(new UpgradeData(UpgradeType.PumpkinBomb, "pumpkin_bomb", "Pumpkin Bomb", "Unlocks an explosive pumpkin mortar attack.", "Weapon", 5));
-            AddDef(new UpgradeData(UpgradeType.HarvestScythe, "harvest_scythe", "Harvest Scythe", "Unlocks orbiting scythe blades that slice nearby foes.", "Weapon", 5));
-            AddDef(new UpgradeData(UpgradeType.FireAura, "fire_aura", "Cursed Fire Aura", "Unlocks a ring of soul fire that burns close enemies.", "Weapon", 5));
-            AddDef(new UpgradeData(UpgradeType.HeavyImpact, "heavy_impact", "Heavy Impact", "Attacks push monsters back much farther.", "Stat", 3));
-            AddDef(new UpgradeData(UpgradeType.MagnetSuction, "magnet_suction", "Soul Magnet", "Attracts EXP gems and Cursed Seeds from much farther away.", "Utility", 3));
-            AddDef(new UpgradeData(UpgradeType.GiantScythe, "giant_scythe", "Giant Scythe", "Expands orbiting scythe ring and increases damage.", "Weapon", 3));
-            AddDef(new UpgradeData(UpgradeType.BombCluster, "bomb_cluster", "Cluster Mortar", "Pumpkin Bombs fire an extra explosive mortar.", "Weapon", 3));
-            AddDef(new UpgradeData(UpgradeType.InfernoAura, "inferno_aura", "Inferno", "Expands soul fire ring and intensifies burn damage.", "Weapon", 3));
+            AddDef(new UpgradeData(UpgradeType.SharpBolts, "sharp_bolts", "Sharp Bolts", "Crossbow damage +25%.", "Weapon", 5));
+            AddDef(new UpgradeData(UpgradeType.RapidFire, "rapid_fire", "Rapid Fire", "Crossbow fire rate +20%.", "Weapon", 5));
+            AddDef(new UpgradeData(UpgradeType.DoubleShot, "double_shot", "Double Shot", "+1 extra Crossbow bolt.", "Weapon", 3));
+            AddDef(new UpgradeData(UpgradeType.ToughSkin, "tough_skin", "Tough Skin", "Max Health +30 and heal.", "Stat", 5));
+            AddDef(new UpgradeData(UpgradeType.FleetFooted, "fleet_footed", "Fleet Footed", "Movement speed +18%.", "Stat", 5));
+            AddDef(new UpgradeData(UpgradeType.QuickStep, "quick_step", "Quick Step", "Dash cooldown -25%.", "Utility", 4));
+            AddDef(new UpgradeData(UpgradeType.LastBreath, "last_breath", "Last Breath", "Deal +50% damage when low HP.", "Special", 1));
+            AddDef(new UpgradeData(UpgradeType.BetterHarvest, "better_harvest", "Better Harvest", "+15% Lucky gamble chance.", "Harvest", 3));
+            AddDef(new UpgradeData(UpgradeType.OneMore, "one_more", "One More", "+1 Upgrade reroll charge.", "Utility", 3));
+            AddDef(new UpgradeData(UpgradeType.SecondChance, "second_chance", "Second Chance", "+1 Lucky Last cheat-death charge.", "Special", 2, isRare: true));
+            AddDef(new UpgradeData(UpgradeType.PumpkinBomb, "pumpkin_bomb", "Pumpkin Bomb", "Lobs explosive pumpkin mortars.", "Weapon", 5));
+            AddDef(new UpgradeData(UpgradeType.HarvestScythe, "harvest_scythe", "Harvest Scythe", "Orbiting blades slice nearby foes.", "Weapon", 5));
+            AddDef(new UpgradeData(UpgradeType.FireAura, "fire_aura", "Cursed Fire Aura", "Ring of soul fire burns close enemies.", "Weapon", 5));
+            AddDef(new UpgradeData(UpgradeType.HeavyImpact, "heavy_impact", "Heavy Impact", "Knockback +50% on all attacks.", "Stat", 3));
+            AddDef(new UpgradeData(UpgradeType.MagnetSuction, "magnet_suction", "Soul Magnet", "Attract gems and seeds from farther.", "Utility", 3));
+            AddDef(new UpgradeData(UpgradeType.GiantScythe, "giant_scythe", "Giant Scythe", "+Scythe size and damage.", "Weapon", 3));
+            AddDef(new UpgradeData(UpgradeType.BombCluster, "bomb_cluster", "Cluster Mortar", "Pumpkin Bomb fires an extra mortar.", "Weapon", 3));
+            AddDef(new UpgradeData(UpgradeType.InfernoAura, "inferno_aura", "Inferno", "Expands fire ring and damage.", "Weapon", 3));
         }
 
         private void AddDef(UpgradeData data)

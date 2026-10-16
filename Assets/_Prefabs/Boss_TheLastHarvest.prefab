@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 7497048984426723210}
   - component: {fileID: 1616761643498936610}
   - component: {fileID: 2989719379824944685}
+  - component: {fileID: 8556847067111475277}
   m_Layer: 7
   m_Name: Boss_TheLastHarvest
   m_TagString: Enemy
@@ -112,7 +113,7 @@ MonoBehaviour:
   onDeathHazardPrefab: {fileID: 0}
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
-  deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
+  deathEffectPrefab: {fileID: 2824854994463074288, guid: 07fda0f388e1f4fe3a43a2d689fabf3b, type: 3}
 --- !u!114 &2989719379824944685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,8 +132,34 @@ MonoBehaviour:
   slamRadius: 6.5
   slamDamage: 35
   visualRoot: {fileID: 0}
-  slamVfxPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
+  slamVfxPrefab: {fileID: 2824854994463074288, guid: 07fda0f388e1f4fe3a43a2d689fabf3b, type: 3}
   bombPrefab: {fileID: 1947723091916589460, guid: a3dcf6be08c824c2e89e361b1d22958d, type: 3}
+--- !u!114 &8556847067111475277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7676054429172395824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85712de3b0c694637a0f8bdefa732a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.EnemyLocomotion
+  cycleDistance: 0.85
+  maxStrideAngle: 11
+  maxKneeBend: 5.5
+  hipBobHeight: 0.005
+  torsoLeanAngle: 1
+  lateralRollAngle: 1.8
+  shoulderTiltAngle: 0
+  armSwingAngle: 4
+  armRestPitch: 0
+  hasWeaponInHand: 0
+  isAsymmetricLimp: 0
+  breathRate: 2.8
+  breathAmplitude: 0.0025
+  idleMicroShift: 1.2
 --- !u!1001 &565141706574285204
 PrefabInstance:
   m_ObjectHideFlags: 0

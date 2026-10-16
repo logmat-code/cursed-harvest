@@ -81,11 +81,16 @@ namespace CursedHarvest
             // Visual explosion
             if (explosionVfxPrefab != null)
             {
-                Instantiate(explosionVfxPrefab, transform.position, Quaternion.identity);
+                GameObject vfx = Instantiate(explosionVfxPrefab, transform.position, Quaternion.identity);
+                if (vfx.GetComponent<VfxAutoDestroy>() == null)
+                {
+                    if (Application.isPlaying) Destroy(vfx, 0.45f);
+                    else DestroyImmediate(vfx);
+                }
             }
 
             AudioManager.Instance?.PlaySound(SoundType.BombExplode, 1.0f, 0.05f);
-            TopDownCameraFollow.Instance?.TriggerShake(0.25f, 0.35f);
+            TopDownCameraFollow.Instance?.TriggerShake(0.12f, 0.08f);
 
             // AoE damage check
             Collider[] colliders = Physics.OverlapSphere(transform.position, blastRadius, hitMask);

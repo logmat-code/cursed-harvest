@@ -315,7 +315,15 @@ namespace CursedHarvest
         private string ExecuteLuckyReward()
         {
             if (plotLight != null) plotLight.color = new Color(0.2f, 1f, 0.3f);
-            if (luckyVfxPrefab != null) Instantiate(luckyVfxPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+            if (luckyVfxPrefab != null)
+            {
+                GameObject vfx = Instantiate(luckyVfxPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                if (vfx.GetComponent<VfxAutoDestroy>() == null)
+                {
+                    if (Application.isPlaying) Destroy(vfx, 1.2f);
+                    else DestroyImmediate(vfx);
+                }
+            }
             AudioManager.Instance?.PlaySound(SoundType.HarvestLucky, 0.95f, 0f);
 
             float roll = UnityEngine.Random.value;
@@ -365,8 +373,17 @@ namespace CursedHarvest
         private string ExecuteCursedConsequence()
         {
             if (plotLight != null) plotLight.color = new Color(1f, 0.1f, 0.1f);
-            if (cursedVfxPrefab != null) Instantiate(cursedVfxPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+            if (cursedVfxPrefab != null)
+            {
+                GameObject vfx = Instantiate(cursedVfxPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                if (vfx.GetComponent<VfxAutoDestroy>() == null)
+                {
+                    if (Application.isPlaying) Destroy(vfx, 0.55f);
+                    else DestroyImmediate(vfx);
+                }
+            }
             AudioManager.Instance?.PlaySound(SoundType.HarvestCursed, 0.95f, 0f);
+            TopDownCameraFollow.Instance?.TriggerShake(0.14f, 0.10f);
 
             float roll = UnityEngine.Random.value;
             if (roll < 0.50f)

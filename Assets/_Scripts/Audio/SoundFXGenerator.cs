@@ -36,6 +36,33 @@ namespace CursedHarvest
             return clip;
         }
 
+        public static AudioClip GenerateEnemyHit()
+        {
+            float duration = 0.09f;
+            int totalSamples = (int)(SampleRate * duration);
+            float[] samples = new float[totalSamples];
+
+            for (int i = 0; i < totalSamples; i++)
+            {
+                float t = (float)i / SampleRate;
+                float progress = t / duration;
+
+                // Thud tone: 320Hz -> 80Hz
+                float freq = Mathf.Lerp(320f, 80f, progress);
+                float tone = Mathf.Sin(2f * Mathf.PI * freq * t);
+
+                // Quick grit
+                float noise = (UnityEngine.Random.value * 2f - 1f) * Mathf.Max(0f, 1f - progress * 3f);
+
+                float envelope = Mathf.Exp(-20f * progress);
+                samples[i] = (tone * 0.65f + noise * 0.35f) * envelope * 0.8f;
+            }
+
+            AudioClip clip = AudioClip.Create("SFX_EnemyHit", totalSamples, 1, SampleRate, false);
+            clip.SetData(samples, 0);
+            return clip;
+        }
+
         public static AudioClip GenerateBombExplode()
         {
             float duration = 0.5f;

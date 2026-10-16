@@ -10,6 +10,8 @@ namespace CursedHarvest
         [SerializeField] private float maxLifetime = 3f;
         [SerializeField] private float radius = 0.25f;
         [SerializeField] private LayerMask hitMask;
+        [SerializeField] private GameObject impactVfxPrefab;
+        [SerializeField] private TrailRenderer trail;
 
         private float damage = 25f;
         private float knockback = 4f;
@@ -26,6 +28,11 @@ namespace CursedHarvest
             hitMask = mask;
         }
 
+        public void SetImpactVfx(GameObject vfx)
+        {
+            impactVfxPrefab = vfx;
+        }
+
         public void Initialize(float damageAmount, float projectileSpeed, float knockbackForce, int pierce, GameObject source)
         {
             damage = damageAmount;
@@ -39,6 +46,10 @@ namespace CursedHarvest
         private void Awake()
         {
             poolTracker = GetComponent<PooledObjectTracker>();
+            if (trail == null)
+            {
+                trail = GetComponentInChildren<TrailRenderer>();
+            }
         }
 
         public void OnSpawnFromPool()
@@ -46,11 +57,19 @@ namespace CursedHarvest
             spawnTime = Time.time;
             hitsRemaining = pierceCount;
             damagedTargets.Clear();
+            if (trail != null)
+            {
+                trail.Clear();
+            }
         }
 
         public void OnReturnToPool()
         {
             damagedTargets.Clear();
+            if (trail != null)
+            {
+                trail.Clear();
+            }
         }
 
         private void Update()
@@ -76,6 +95,7 @@ namespace CursedHarvest
                         hit.point
                     );
                     damageable.TakeDamage(dData);
+                    TriggerHitEffects(hit.point, hit.normal);
 
                     hitsRemaining--;
                     if (hitsRemaining <= 0)
@@ -108,6 +128,7 @@ namespace CursedHarvest
                     transform.position
                 );
                 damageable.TakeDamage(dData);
+                TriggerHitEffects(transform.position, -transform.forward);
 
                 hitsRemaining--;
                 if (hitsRemaining <= 0)
@@ -115,6 +136,18 @@ namespace CursedHarvest
                     Despawn();
                 }
             }
+        }
+
+        private void TriggerHitEffects(Vector3 hitPos, Vector3 hitNormal)
+        {
+            if (impactVfxPrefab != null)
+            {
+                Quaternion rot = hitNormal.sqrMagnitude > 0.01f ? Quaternion.LookRotation(hitNormal, Vector3.up) : Quaternion.identity;
+                GameObject vfx = Instantiate(impactVfxPrefab, hitPos, rot);
+                vfx.transform.localScale = Vector3.one * 0.45f;
+                Destroy(vfx, 0.3f);
+            }
+            AudioManager.Instance?.PlaySound(SoundType.EnemyHit, 0.75f, 0.08f);
         }
 
         private void Despawn()

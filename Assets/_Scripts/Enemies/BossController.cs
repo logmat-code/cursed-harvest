@@ -182,7 +182,12 @@ namespace CursedHarvest
 
             if (slamVfxPrefab != null)
             {
-                Instantiate(slamVfxPrefab, transform.position, Quaternion.identity);
+                GameObject vfx = Instantiate(slamVfxPrefab, transform.position, Quaternion.identity);
+                if (vfx.GetComponent<VfxAutoDestroy>() == null)
+                {
+                    if (Application.isPlaying) Destroy(vfx, 0.75f);
+                    else DestroyImmediate(vfx);
+                }
             }
 
             if (playerTransform != null && Vector3.Distance(transform.position, playerTransform.position) <= slamRadius)
@@ -198,7 +203,7 @@ namespace CursedHarvest
 
             if (TopDownCameraFollow.Instance != null)
             {
-                TopDownCameraFollow.Instance.TriggerShake(0.6f, 0.45f);
+                TopDownCameraFollow.Instance.TriggerShake(0.20f, 0.12f);
             }
 
             AudioManager.Instance?.PlaySound(SoundType.BossSlam, 1.1f, 0.05f);

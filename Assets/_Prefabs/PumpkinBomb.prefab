@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3561088253681789863}
   - component: {fileID: 1205680168468650771}
   - component: {fileID: 5151946496449934993}
-  - component: {fileID: 4518857847866477227}
+  - component: {fileID: 6077230301289415583}
   m_Layer: 0
   m_Name: PumpkinBomb
   m_TagString: Projectile
@@ -73,8 +73,8 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 0
-  explosionVfxPrefab: {fileID: 0}
---- !u!114 &4518857847866477227
+  explosionVfxPrefab: {fileID: 3771140208864044240, guid: 728a7e1019d3b474b900dabed730c0dc, type: 3}
+--- !u!114 &6077230301289415583
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -83,7 +83,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1947723091916589460}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 8606cf74a28a0403e8f764c868658d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.PooledObjectTracker
 --- !u!1001 &839087017420586658

@@ -109,7 +109,12 @@ namespace CursedHarvest
 
             if (deathEffectPrefab != null)
             {
-                Instantiate(deathEffectPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                GameObject vfx = Instantiate(deathEffectPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                if (vfx.GetComponent<VfxAutoDestroy>() == null)
+                {
+                    if (Application.isPlaying) Destroy(vfx, 0.45f);
+                    else DestroyImmediate(vfx);
+                }
             }
 
             if (onDeathHazardPrefab != null)

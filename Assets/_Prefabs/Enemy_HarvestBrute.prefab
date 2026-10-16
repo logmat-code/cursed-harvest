@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4018352622472531329}
   - component: {fileID: 679729311516508308}
   - component: {fileID: 863602759839577817}
+  - component: {fileID: 7736155014855492420}
   - component: {fileID: 1281782409463587970}
-  - component: {fileID: 6500318357210154108}
+  - component: {fileID: 6003993607248062088}
   m_Layer: 7
   m_Name: Enemy_HarvestBrute
   m_TagString: Enemy
@@ -93,6 +94,32 @@ MonoBehaviour:
   bobFrequency: 10
   bobAmplitude: 0.08
   tiltAngle: 6
+--- !u!114 &7736155014855492420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8367468221150221336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85712de3b0c694637a0f8bdefa732a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.EnemyLocomotion
+  cycleDistance: 1.5
+  maxStrideAngle: 11
+  maxKneeBend: 5
+  hipBobHeight: 0.008
+  torsoLeanAngle: 0
+  lateralRollAngle: 0
+  shoulderTiltAngle: 0
+  armSwingAngle: 2
+  armRestPitch: 0
+  hasWeaponInHand: 1
+  isAsymmetricLimp: 0
+  breathRate: 1
+  breathAmplitude: 0.0035
+  idleMicroShift: 0.6
 --- !u!114 &1281782409463587970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,8 +140,8 @@ MonoBehaviour:
   onDeathHazardPrefab: {fileID: 0}
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
-  deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &6500318357210154108
+  deathEffectPrefab: {fileID: 276821299728828542, guid: 83afd1fe2584d4b569ed02e2b877b199, type: 3}
+--- !u!114 &6003993607248062088
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,7 +150,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8367468221150221336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 8606cf74a28a0403e8f764c868658d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.PooledObjectTracker
 --- !u!1 &8565563896413637462

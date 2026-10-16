@@ -6,9 +6,9 @@ namespace CursedHarvest
     {
         [Header("Target & Follow")]
         [SerializeField] private Transform target;
-        [SerializeField] private Vector3 offset = new Vector3(0f, 11.0f, -7.5f);
-        [SerializeField] private float smoothTime = 0.15f;
-        [SerializeField] private float cameraPitch = 52f;
+        [SerializeField] private Vector3 offset = new Vector3(0f, 15.0f, -10.5f);
+        [SerializeField] private float smoothTime = 0.14f;
+        [SerializeField] private float cameraPitch = 54.5f;
 
         [Header("Screen Shake")]
         private float shakeDuration;
@@ -32,10 +32,10 @@ namespace CursedHarvest
             }
         }
 
-        public void TriggerShake(float duration = 0.18f, float magnitude = 0.18f)
+        public void TriggerShake(float duration = 0.14f, float magnitude = 0.10f)
         {
-            shakeDuration = Mathf.Max(shakeDuration, duration);
-            shakeMagnitude = Mathf.Clamp(Mathf.Max(shakeMagnitude, magnitude), 0f, 0.20f);
+            shakeDuration = Mathf.Clamp(Mathf.Max(shakeDuration, duration), 0f, 0.25f);
+            shakeMagnitude = Mathf.Clamp(Mathf.Max(shakeMagnitude, magnitude), 0f, 0.12f);
         }
 
         private void LateUpdate()
@@ -68,6 +68,10 @@ namespace CursedHarvest
                     shakeMagnitude = 0f;
                 }
             }
+
+            // Clamp camera framing so it stays centered inside the arena clearing
+            targetPosition.x = Mathf.Clamp(targetPosition.x, -21f, 21f);
+            targetPosition.z = Mathf.Clamp(targetPosition.z, -21f + offset.z, 21f + offset.z);
 
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
         }

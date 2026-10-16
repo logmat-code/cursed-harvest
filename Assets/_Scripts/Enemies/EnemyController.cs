@@ -68,6 +68,7 @@ namespace CursedHarvest
 
         public EnemyType Type => enemyType;
         public float MoveSpeed => baseMoveSpeed * speedMultiplier;
+        public bool IsCharging => chargeState == ChargeState.Charging;
         public bool IsAlive
         {
             get
@@ -101,6 +102,17 @@ namespace CursedHarvest
             {
                 playerHealthTarget = playerTarget.GetComponent<PlayerHealth>();
             }
+        }
+
+        public void Initialize(Transform target)
+        {
+            SetTarget(target);
+            OnSpawnFromPool();
+        }
+
+        public void TickMovement()
+        {
+            Update();
         }
 
         public void SetSpeedMultiplier(float mult)
@@ -322,14 +334,7 @@ namespace CursedHarvest
 
         private void UpdateVisualJuice()
         {
-            if (visualRoot == null) return;
-
-            walkCycleTimer += Time.deltaTime * bobFrequency * (MoveSpeed / baseMoveSpeed);
-            float bobY = Mathf.Abs(Mathf.Sin(walkCycleTimer)) * bobAmplitude;
-            visualRoot.localPosition = visualOriginalPos + new Vector3(0f, bobY, 0f);
-
-            float tiltZ = Mathf.Sin(walkCycleTimer * 0.5f) * tiltAngle;
-            visualRoot.localRotation = visualOriginalRot * Quaternion.Euler(0f, 0f, tiltZ);
+            // Handled with procedural anatomical bone animation by EnemyLocomotion
         }
     }
 }

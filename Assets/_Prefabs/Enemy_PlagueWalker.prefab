@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 2579869868996817045}
   - component: {fileID: 4519702538419403122}
   - component: {fileID: 7721041456529424101}
+  - component: {fileID: 4940306793202287008}
   - component: {fileID: 8638474023308476732}
-  - component: {fileID: 5885743647469471747}
+  - component: {fileID: 7174110864068904707}
   m_Layer: 7
   m_Name: Enemy_PlagueWalker
   m_TagString: Enemy
@@ -93,6 +94,32 @@ MonoBehaviour:
   bobFrequency: 10
   bobAmplitude: 0.08
   tiltAngle: 6
+--- !u!114 &4940306793202287008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158482730711333813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85712de3b0c694637a0f8bdefa732a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.EnemyLocomotion
+  cycleDistance: 0.95
+  maxStrideAngle: 9
+  maxKneeBend: 4
+  hipBobHeight: 0.004
+  torsoLeanAngle: 1.5
+  lateralRollAngle: 0.5
+  shoulderTiltAngle: 2.5
+  armSwingAngle: 2
+  armRestPitch: 10
+  hasWeaponInHand: 0
+  isAsymmetricLimp: 1
+  breathRate: 1.2
+  breathAmplitude: 0.003
+  idleMicroShift: 0.8
 --- !u!114 &8638474023308476732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,8 +140,8 @@ MonoBehaviour:
   onDeathHazardPrefab: {fileID: 8362435712803397425, guid: 7ac5c39cd207e4420aae0b9a03a4b910, type: 3}
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
-  deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &5885743647469471747
+  deathEffectPrefab: {fileID: 3771140208864044240, guid: 728a7e1019d3b474b900dabed730c0dc, type: 3}
+--- !u!114 &7174110864068904707
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,7 +150,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 158482730711333813}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 8606cf74a28a0403e8f764c868658d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.PooledObjectTracker
 --- !u!1 &3474102674560184034

@@ -43,8 +43,9 @@ GameObject:
   - component: {fileID: 7560124277698370973}
   - component: {fileID: 1445070963498528294}
   - component: {fileID: 3566233197230380533}
+  - component: {fileID: 3970557098205829989}
   - component: {fileID: 4650758301003790497}
-  - component: {fileID: 8576646975400077574}
+  - component: {fileID: 1729997634340654381}
   m_Layer: 7
   m_Name: Enemy_EliteScarecrow
   m_TagString: Enemy
@@ -125,6 +126,32 @@ MonoBehaviour:
   bobFrequency: 10
   bobAmplitude: 0.08
   tiltAngle: 6
+--- !u!114 &3970557098205829989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8829332808655216653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85712de3b0c694637a0f8bdefa732a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.EnemyLocomotion
+  cycleDistance: 1.5
+  maxStrideAngle: 11
+  maxKneeBend: 5
+  hipBobHeight: 0.008
+  torsoLeanAngle: 0
+  lateralRollAngle: 0
+  shoulderTiltAngle: 0
+  armSwingAngle: 2
+  armRestPitch: 0
+  hasWeaponInHand: 1
+  isAsymmetricLimp: 0
+  breathRate: 1
+  breathAmplitude: 0.0035
+  idleMicroShift: 0.6
 --- !u!114 &4650758301003790497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,8 +172,8 @@ MonoBehaviour:
   onDeathHazardPrefab: {fileID: 0}
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
-  deathEffectPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
---- !u!114 &8576646975400077574
+  deathEffectPrefab: {fileID: 276821299728828542, guid: 83afd1fe2584d4b569ed02e2b877b199, type: 3}
+--- !u!114 &1729997634340654381
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,7 +182,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8829332808655216653}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 8606cf74a28a0403e8f764c868658d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursedHarvest.PooledObjectTracker
 --- !u!1001 &2936586208879212969

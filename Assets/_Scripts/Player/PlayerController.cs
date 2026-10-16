@@ -26,6 +26,7 @@ namespace CursedHarvest
         private float walkCycleTimer;
         private Vector3 visualOriginalPos;
         private Quaternion visualOriginalRot;
+        private float aimLockTimer;
 
         public Vector3 MoveInputVector => moveInput;
         public float MoveSpeed => baseMoveSpeed * speedMultiplier;
@@ -100,16 +101,15 @@ namespace CursedHarvest
             velocity.y = verticalVelocity;
             characterController.Move(velocity * Time.deltaTime);
 
-            // Handle rotation
-            if (moveInput.sqrMagnitude > 0.01f)
+            // Handle rotation: prioritize aim lock when aiming/firing
+            if (aimLockTimer > 0f)
+            {
+                aimLockTimer -= Time.deltaTime;
+            }
+            else if (moveInput.sqrMagnitude > 0.01f)
             {
                 Quaternion targetRot = Quaternion.LookRotation(moveInput, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
-                UpdateVisualJuice(true);
-            }
-            else
-            {
-                UpdateVisualJuice(false);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720f * Time.deltaTime);
             }
         }
 
@@ -128,22 +128,7 @@ namespace CursedHarvest
 
         private void UpdateVisualJuice(bool moving)
         {
-            if (visualRoot == null) return;
-
-            if (moving)
-            {
-                walkCycleTimer += Time.deltaTime * bobFrequency * (MoveSpeed / baseMoveSpeed);
-                float bobY = Mathf.Abs(Mathf.Sin(walkCycleTimer)) * bobAmplitude;
-                visualRoot.localPosition = visualOriginalPos + new Vector3(0f, bobY, 0f);
-
-                float tiltZ = Mathf.Sin(walkCycleTimer * 0.5f) * tiltAngle;
-                visualRoot.localRotation = visualOriginalRot * Quaternion.Euler(0f, 0f, tiltZ);
-            }
-            else
-            {
-                visualRoot.localPosition = Vector3.Lerp(visualRoot.localPosition, visualOriginalPos, Time.deltaTime * 10f);
-                visualRoot.localRotation = Quaternion.Slerp(visualRoot.localRotation, visualOriginalRot, Time.deltaTime * 10f);
-            }
+            // Handled with procedural anatomical bone animation by PlayerLocomotion
         }
 
         private void ResetVisualJuice()
@@ -159,7 +144,8 @@ namespace CursedHarvest
             {
                 direction.y = 0f;
                 Quaternion targetRot = Quaternion.LookRotation(direction.normalized, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * 1.5f * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720f * Time.deltaTime);
+                aimLockTimer = 0.15f; // Short buffer so movement does not fight active aim
             }
         }
     }

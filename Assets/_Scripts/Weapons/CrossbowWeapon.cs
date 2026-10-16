@@ -8,9 +8,15 @@ namespace CursedHarvest
         [SerializeField] private ObjectPool boltPool;
         [SerializeField] private Transform firePoint;
         [SerializeField] private Transform visualBowModel;
+        [SerializeField] private GameObject muzzleFlashPrefab;
         [SerializeField] private float spreadAngle = 12f;
 
         private Vector3 bowOriginalLocalPos;
+        private EnemyController currentTarget;
+        private GameObject targetReticle;
+        private LineRenderer reticleLine;
+        private PlayerController playerController;
+        private PlayerCombatPose playerCombatPose;
 
         private void Awake()
         {
@@ -20,14 +26,18 @@ namespace CursedHarvest
             {
                 bowOriginalLocalPos = visualBowModel.localPosition;
             }
+
+            playerController = GetComponentInParent<PlayerController>();
+            playerCombatPose = GetComponentInParent<PlayerCombatPose>();
+            CreateTargetReticle();
         }
 
         private void InitializeStats()
         {
             weaponId = "crossbow";
             weaponName = "Crossbow";
-            baseDamage = 30f;
-            baseCooldown = 0.9f;
+            baseDamage = 38f;          // Punchy single shot: kills standard grunt cleanly
+            baseCooldown = 1.15f;      // Readable, clear firing cadence
             baseRange = 14f;
             baseProjectileSpeed = 26f;
             baseMultishot = 1;
@@ -38,6 +48,14 @@ namespace CursedHarvest
         {
             InitializeStats();
             base.Initialize(manager);
+            if (playerController == null)
+            {
+                playerController = GetComponentInParent<PlayerController>();
+            }
+            if (playerCombatPose == null)
+            {
+                playerCombatPose = GetComponentInParent<PlayerCombatPose>();
+            }
         }
 
         public void SetBoltPool(ObjectPool pool)
@@ -50,27 +68,133 @@ namespace CursedHarvest
             firePoint = point;
         }
 
+        public void SetVisualBowModel(Transform model)
+        {
+            visualBowModel = model;
+            if (visualBowModel != null)
+            {
+                bowOriginalLocalPos = visualBowModel.localPosition;
+            }
+        }
+
+        public void SetMuzzleFlashPrefab(GameObject prefab)
+        {
+            muzzleFlashPrefab = prefab;
+        }
+
+        private void CreateTargetReticle()
+        {
+            if (targetReticle != null) return;
+
+            targetReticle = new GameObject("TargetReticle_Crossbow");
+            targetReticle.hideFlags = HideFlags.DontSave;
+
+            reticleLine = targetReticle.AddComponent<LineRenderer>();
+            reticleLine.useWorldSpace = false;
+            reticleLine.loop = true;
+            reticleLine.positionCount = 4;
+            reticleLine.startWidth = 0.05f;
+            reticleLine.endWidth = 0.05f;
+
+            // Diamond shape centered at origin
+            float r = 0.35f;
+            reticleLine.SetPositions(new Vector3[]
+            {
+                new Vector3(0f, r, 0f),
+                new Vector3(r, 0f, 0f),
+                new Vector3(0f, -r, 0f),
+                new Vector3(-r, 0f, 0f)
+            });
+
+            Shader defaultShader = Shader.Find("Sprites/Default");
+            if (defaultShader != null)
+            {
+                reticleLine.material = new Material(defaultShader);
+            }
+            Color reticleColor = new Color(1f, 0.45f, 0.15f, 0.85f); // Subtle amber/orange indicator
+            reticleLine.startColor = reticleColor;
+            reticleLine.endColor = reticleColor;
+
+            targetReticle.SetActive(false);
+        }
+
+        private void Update()
+        {
+            UpdateTargetTracking();
+        }
+
+        private void UpdateTargetTracking()
+        {
+            Vector3 origin = firePoint != null ? firePoint.position : transform.position + Vector3.up * 1f;
+            currentTarget = EnemyRegistry.GetClosestEnemy(origin, Range);
+
+            if (currentTarget != null && currentTarget.IsAlive)
+            {
+                // Smoothly orient player towards current target
+                Vector3 toTarget = (currentTarget.transform.position - transform.position);
+                toTarget.y = 0f;
+                if (toTarget.sqrMagnitude > 0.01f && playerController != null)
+                {
+                    playerController.FaceDirection(toTarget.normalized);
+                }
+
+                // Position reticle above enemy head
+                if (targetReticle != null)
+                {
+                    if (!targetReticle.activeSelf) targetReticle.SetActive(true);
+                    targetReticle.transform.position = currentTarget.transform.position + Vector3.up * 2.0f;
+                    
+                    // Gentle pulse and billboard rotation towards camera
+                    float pulse = 1f + Mathf.Sin(Time.time * 8f) * 0.12f;
+                    targetReticle.transform.localScale = Vector3.one * pulse;
+
+                    if (Camera.main != null)
+                    {
+                        targetReticle.transform.rotation = Camera.main.transform.rotation;
+                    }
+                }
+            }
+            else
+            {
+                if (targetReticle != null && targetReticle.activeSelf)
+                {
+                    targetReticle.SetActive(false);
+                }
+            }
+        }
+
         protected override bool TryFire(Transform playerTransform)
         {
             Vector3 origin = firePoint != null ? firePoint.position : playerTransform.position + Vector3.up * 1f;
 
-            EnemyController target = EnemyRegistry.GetClosestEnemy(origin, Range);
-            if (target == null || !target.IsAlive)
+            if (currentTarget == null || !currentTarget.IsAlive)
+            {
+                currentTarget = EnemyRegistry.GetClosestEnemy(origin, Range);
+            }
+
+            if (currentTarget == null || !currentTarget.IsAlive)
             {
                 return false;
             }
 
-            Vector3 targetPos = target.transform.position + Vector3.up * 0.8f;
+            Vector3 targetPos = currentTarget.transform.position + Vector3.up * 0.8f;
             Vector3 fireDir = (targetPos - origin).normalized;
-            fireDir.y = 0f; // Keep shots horizontal along the playfield
+            fireDir.y = 0f; // Keep trajectory cleanly along horizontal game plane
             if (fireDir.sqrMagnitude < 0.001f) fireDir = playerTransform.forward;
             fireDir.Normalize();
 
             // Face player towards target
-            PlayerController pc = playerTransform.GetComponent<PlayerController>();
-            if (pc != null)
+            if (playerController != null)
             {
-                pc.FaceDirection(fireDir);
+                playerController.FaceDirection(fireDir);
+            }
+
+            // Muzzle flash burst at firePoint
+            if (muzzleFlashPrefab != null && firePoint != null)
+            {
+                GameObject flash = Instantiate(muzzleFlashPrefab, firePoint.position, Quaternion.LookRotation(fireDir, Vector3.up));
+                flash.transform.localScale = Vector3.one * 0.65f;
+                Destroy(flash, 0.12f);
             }
 
             int count = Multishot;
@@ -88,17 +212,21 @@ namespace CursedHarvest
                     Projectile proj = boltObj.GetComponent<Projectile>();
                     if (proj != null)
                     {
-                        proj.Initialize(Damage, ProjectileSpeed, 4f, Pierce, playerTransform.gameObject);
+                        proj.Initialize(Damage, ProjectileSpeed, 4.5f, Pierce, playerTransform.gameObject);
                     }
                 }
             }
 
-            AudioManager.Instance?.PlaySound(SoundType.CrossbowShoot, 0.7f, 0.05f);
+            AudioManager.Instance?.PlaySound(SoundType.CrossbowShoot, 0.85f, 0.06f);
 
-            // Quick recoil visual kick
-            if (visualBowModel != null)
+            // Visual recoil kickback
+            if (playerCombatPose != null)
             {
-                visualBowModel.localPosition = bowOriginalLocalPos - Vector3.forward * 0.15f;
+                playerCombatPose.PlayRecoil(0.015f);
+            }
+            else if (visualBowModel != null)
+            {
+                visualBowModel.localPosition = bowOriginalLocalPos - Vector3.forward * 0.08f;
             }
 
             return true;
@@ -106,9 +234,26 @@ namespace CursedHarvest
 
         private void LateUpdate()
         {
-            if (visualBowModel != null)
+            if (playerCombatPose == null && visualBowModel != null)
             {
-                visualBowModel.localPosition = Vector3.Lerp(visualBowModel.localPosition, bowOriginalLocalPos, Time.deltaTime * 12f);
+                visualBowModel.localPosition = Vector3.Lerp(visualBowModel.localPosition, bowOriginalLocalPos, Time.deltaTime * 14f);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (targetReticle != null)
+            {
+                targetReticle.SetActive(false);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (targetReticle != null)
+            {
+                Destroy(targetReticle);
+                targetReticle = null;
             }
         }
     }

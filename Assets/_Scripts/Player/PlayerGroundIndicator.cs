@@ -18,6 +18,7 @@ namespace CursedHarvest
         private LineRenderer ringRenderer;
         private LineRenderer arrowRenderer;
         private Transform arrowTransform;
+        private Transform indicatorRoot;
 
         private void Awake()
         {
@@ -31,9 +32,14 @@ namespace CursedHarvest
 
         private void CreateVisuals()
         {
+            GameObject rootObj = new GameObject("IndicatorRoot");
+            rootObj.transform.SetParent(transform, false);
+            rootObj.transform.localPosition = Vector3.zero;
+            indicatorRoot = rootObj.transform;
+
             // 1. Ground Ring
             GameObject ringObj = new GameObject("GroundRing");
-            ringObj.transform.SetParent(transform, false);
+            ringObj.transform.SetParent(indicatorRoot, false);
             ringObj.transform.localPosition = new Vector3(0f, 0.03f, 0f);
 
             ringRenderer = ringObj.AddComponent<LineRenderer>();
@@ -57,7 +63,7 @@ namespace CursedHarvest
 
             // 2. Directional Arrow / Chevron at front of ring
             GameObject arrowObj = new GameObject("DirectionArrow");
-            arrowObj.transform.SetParent(transform, false);
+            arrowObj.transform.SetParent(indicatorRoot, false);
             arrowObj.transform.localPosition = new Vector3(0f, 0.04f, 0f);
             arrowTransform = arrowObj.transform;
 
@@ -81,7 +87,10 @@ namespace CursedHarvest
             if (playerController == null) return;
 
             // Face forward direction of the player
-            transform.rotation = Quaternion.Euler(0f, playerController.transform.eulerAngles.y, 0f);
+            if (indicatorRoot != null)
+            {
+                indicatorRoot.rotation = Quaternion.Euler(0f, playerController.transform.eulerAngles.y, 0f);
+            }
 
             // Determine active color
             Color targetColor = normalColor;
