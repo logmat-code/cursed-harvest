@@ -7,7 +7,19 @@ namespace CursedHarvest
 {
     public class UIManager : MonoBehaviour
     {
-        public static UIManager Instance { get; private set; }
+        private static UIManager _instance;
+        public static UIManager Instance
+        {
+            get
+            {
+                if (_instance == null || !_instance)
+                {
+                    _instance = FindAnyObjectByType<UIManager>();
+                }
+                return (_instance != null && _instance) ? _instance : null;
+            }
+            private set => _instance = value;
+        }
 
         [Header("HUD References")]
         [SerializeField] private Image healthBarFill;
@@ -143,6 +155,11 @@ namespace CursedHarvest
 
         private void OnDestroy()
         {
+            if (_instance == this)
+            {
+                _instance = null;
+            }
+
             LuckyLastSystem.OnChargesChanged -= UpdateLuckyChargesHUD;
             LuckyLastSystem.OnLuckyLastActivated -= ShowLuckyLastBanner;
             LuckyLastSystem.OnLuckyLastEnded -= HideLuckyLastBanner;
@@ -164,6 +181,7 @@ namespace CursedHarvest
 
         public void ShowToast(string title, string subtitle, float duration = 3.5f, Color? accentColor = null)
         {
+            if (this == null || !this) return;
             EnsureToastUI();
             if (toastCoroutine != null) StopCoroutine(toastCoroutine);
             toastCoroutine = StartCoroutine(ToastRoutine(title, subtitle, duration, accentColor ?? new Color(1f, 0.85f, 0.2f)));
@@ -171,6 +189,7 @@ namespace CursedHarvest
 
         private void EnsureToastUI()
         {
+            if (this == null || !this) return;
             if (toastRoot != null) return;
 
             Canvas canvas = GetComponentInParent<Canvas>();

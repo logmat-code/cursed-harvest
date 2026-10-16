@@ -5,7 +5,19 @@ namespace CursedHarvest
 {
     public class DamageNumberManager : MonoBehaviour
     {
-        public static DamageNumberManager Instance { get; private set; }
+        private static DamageNumberManager _instance;
+        public static DamageNumberManager Instance
+        {
+            get
+            {
+                if (_instance == null || !_instance)
+                {
+                    _instance = FindAnyObjectByType<DamageNumberManager>();
+                }
+                return (_instance != null && _instance) ? _instance : null;
+            }
+            private set => _instance = value;
+        }
 
         private class ActiveNumber
         {
@@ -25,12 +37,14 @@ namespace CursedHarvest
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
+            if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
-            Instance = this;
+            _instance = this;
+            pool.Clear();
+            activeNumbers.Clear();
 
             for (int i = 0; i < poolSize; i++)
             {
@@ -38,6 +52,16 @@ namespace CursedHarvest
                 obj.SetActive(false);
                 pool.Enqueue(obj);
             }
+        }
+
+        private void OnDestroy()
+        {
+            if (_instance == this)
+            {
+                _instance = null;
+            }
+            pool.Clear();
+            activeNumbers.Clear();
         }
 
         private void Start()
@@ -75,7 +99,20 @@ namespace CursedHarvest
             // Cap maximum visible damage numbers to prevent screen clutter
             if (activeNumbers.Count >= 12) return;
 
-            GameObject obj = pool.Count > 0 ? pool.Dequeue() : CreateNumberObject(activeNumbers.Count);
+            GameObject obj = null;
+            while (pool.Count > 0)
+            {
+                var candidate = pool.Dequeue();
+                if (candidate != null && candidate)
+                {
+                    obj = candidate;
+                    break;
+                }
+            }
+            if (obj == null)
+            {
+                obj = CreateNumberObject(activeNumbers.Count);
+            }
             obj.SetActive(true);
 
             Vector3 jitter = new Vector3(Random.Range(-0.25f, 0.25f), Random.Range(0f, 0.2f), Random.Range(-0.25f, 0.25f));
