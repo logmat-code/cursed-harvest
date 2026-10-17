@@ -1,9 +1,10 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace CursedHarvest
 {
-    public class CursedSeedPickup : MonoBehaviour, IPoolable
+    public class CursedSeedPickup : MonoBehaviour, IPoolable, ICollectible
     {
         [Header("Seed Settings")]
         [SerializeField] private float magnetRadius = 3.5f;
@@ -20,11 +21,16 @@ namespace CursedHarvest
         private Vector3 spawnPosition;
         private float spawnTime;
         private bool isAttracted;
+        private Coroutine vacuumCoroutine;
+
+        private static float lastSeedSoundTime = -10f;
 
         public static int PlayerSeedCount { get; private set; } = 0;
         private static bool hasCollectedFirstSeed = false;
 
         public static event Action OnFirstSeedCollected;
+
+        public bool IsActive => gameObject.activeInHierarchy;
 
         public static void AddSeeds(int amount)
         {
@@ -64,11 +70,27 @@ namespace CursedHarvest
             poolTracker = GetComponent<PooledObjectTracker>();
         }
 
+        private void OnEnable()
+        {
+            CollectibleRegistry.Register(this);
+        }
+
+        private void OnDisable()
+        {
+            CollectibleRegistry.Unregister(this);
+            if (vacuumCoroutine != null)
+            {
+                StopCoroutine(vacuumCoroutine);
+                vacuumCoroutine = null;
+            }
+        }
+
         public void OnSpawnFromPool()
         {
             spawnPosition = transform.position;
             spawnTime = Time.time;
             isAttracted = false;
+            CollectibleRegistry.Register(this);
 
             if (playerTarget == null)
             {
@@ -80,10 +102,51 @@ namespace CursedHarvest
         public void OnReturnToPool()
         {
             isAttracted = false;
+            CollectibleRegistry.Unregister(this);
+            if (vacuumCoroutine != null)
+            {
+                StopCoroutine(vacuumCoroutine);
+                vacuumCoroutine = null;
+            }
+        }
+
+        public void VacuumTo(Transform playerTransform, float flyDuration = 0.8f)
+        {
+            if (!gameObject.activeInHierarchy) return;
+            if (playerTransform != null) playerTarget = playerTransform;
+            if (vacuumCoroutine != null) StopCoroutine(vacuumCoroutine);
+            vacuumCoroutine = StartCoroutine(VacuumRoutine(playerTransform, flyDuration));
+        }
+
+        private IEnumerator VacuumRoutine(Transform target, float duration)
+        {
+            isAttracted = true;
+            Vector3 startPos = transform.position;
+            float elapsed = 0f;
+            while (elapsed < duration && target != null)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                float ease = t * t;
+                Vector3 targetPos = target.position + Vector3.up * 0.8f;
+                transform.position = Vector3.Lerp(startPos, targetPos, ease);
+
+                if (Vector3.Distance(transform.position, targetPos) <= collectDistance)
+                {
+                    Collect();
+                    vacuumCoroutine = null;
+                    yield break;
+                }
+                yield return null;
+            }
+            Collect();
+            vacuumCoroutine = null;
         }
 
         private void Update()
         {
+            if (vacuumCoroutine != null) return; // Controlled by vacuum coroutine
+
             if (playerTarget == null)
             {
                 GameObject player = GameObject.FindWithTag("Player");
@@ -120,7 +183,11 @@ namespace CursedHarvest
         public void Collect()
         {
             AddSeeds(1);
-            AudioManager.Instance?.PlaySound(SoundType.PickupSeed, 0.85f, 0.05f);
+            if (Time.time >= lastSeedSoundTime + 0.05f)
+            {
+                lastSeedSoundTime = Time.time;
+                AudioManager.Instance?.PlaySound(SoundType.PickupSeed, 0.85f, 0.05f);
+            }
 
             if (!hasCollectedFirstSeed)
             {

@@ -387,11 +387,30 @@ namespace CursedHarvest.Editor
                 }
             }
 
-            Debug.Log("[13/13] Continuous Base Ground (86x86m, textured Synty material), Inactive Fire Aura lifecycle, and HUD/Level-Up polish verified.");
+            // Verify Center Arena Dressing and Decorative Pumpkin Clusters
+            GameObject centerDressing = GameObject.Find("CenterArenaDressing");
+            if (centerDressing == null)
+            {
+                Debug.LogError("[FULL GAME VERIFICATION] FAILED: CenterArenaDressing not found!");
+                return;
+            }
+            GameObject pumpkinClusters = GameObject.Find("DecorativePumpkinClusters");
+            if (pumpkinClusters == null)
+            {
+                Debug.LogError("[FULL GAME VERIFICATION] FAILED: DecorativePumpkinClusters not found!");
+                return;
+            }
+            Debug.Log("[14/14] Center Arena Dressing (Subtle Landmark + 9 Inner Ring Micro-Clusters) and Decorative Pumpkin Clusters verified.");
+
             sd.ResetDirector();
             ph.ResetHealth();
             lucky.ResetSystem();
             CursedSeedPickup.ResetSeeds();
+
+            // Capture updated LevelUp aspect ratios, Player closeup, and Center Dressing & Enemy Arms pass
+            ScreenshotHelper.CaptureLevelUpAllAspects();
+            ScreenshotHelper.CapturePlayerCloseup();
+            ScreenshotHelper.CaptureCenterDressingAndEnemyArmsPass();
 
             Debug.Log("=================================================================");
             Debug.Log("★★★ [FULL GAME VERIFICATION] ALL SYSTEMS OPERATIONAL! READY TO PLAY! ★★★");

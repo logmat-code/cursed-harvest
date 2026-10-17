@@ -42,7 +42,10 @@ namespace CursedHarvest
             int enemyLayer = LayerMask.NameToLayer("Enemy");
             enemyMask = enemyLayer >= 0 ? (1 << enemyLayer) : ~0;
 
-            CreateBlades(transform);
+            if (enabled)
+            {
+                CreateBlades(transform);
+            }
         }
 
         private void OnEnable()

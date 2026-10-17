@@ -9,7 +9,7 @@ namespace CursedHarvest
         [Header("Lucky Last Settings")]
         [SerializeField] private int startingCharges = 1;
         [SerializeField] private int maxCharges = 2;
-        [SerializeField] private float duration = 8f;
+        [SerializeField] private float duration = 12f;
 
         [Header("Buff Multipliers")]
         [SerializeField] private float damageBonus = 0.50f;
@@ -34,6 +34,8 @@ namespace CursedHarvest
         public float RemainingTime => activeTimer;
         public float Duration => duration;
 
+        public static bool IsAnyActive { get; private set; }
+
         public static event Action<int, int> OnChargesChanged;
         public static event Action<float> OnLuckyLastActivated;
         public static event Action OnLuckyLastEnded;
@@ -45,6 +47,7 @@ namespace CursedHarvest
         private void Awake()
         {
             currentCharges = startingCharges;
+            IsAnyActive = false;
             if (Health != null) Health.LethalHitInterceptor = CheckLethalDamage;
         }
 
@@ -58,6 +61,7 @@ namespace CursedHarvest
 
         private void OnDisable()
         {
+            IsAnyActive = false;
             if (Health != null)
             {
                 Health.LethalHitInterceptor = null;
@@ -68,10 +72,15 @@ namespace CursedHarvest
         {
             currentCharges = startingCharges;
             isLuckyLastActive = false;
+            IsAnyActive = false;
             activeTimer = 0f;
             if (activeAuraInstance != null)
             {
                 activeAuraInstance.SetActive(false);
+            }
+            if (Health != null)
+            {
+                Health.LethalHitInterceptor = CheckLethalDamage;
             }
             OnChargesChanged?.Invoke(currentCharges, maxCharges);
         }
@@ -89,28 +98,43 @@ namespace CursedHarvest
 
         public bool CheckLethalDamage(DamageData damage)
         {
-            if (currentCharges > 0 && !isLuckyLastActive)
+            if (isLuckyLastActive)
+            {
+                // Protected from dying while Lucky Last is active!
+                // Keep player alive at minimum 1 HP
+                if (Health != null)
+                {
+                    float remaining = Mathf.Max(1f, Health.CurrentHealth - damage.amount);
+                    Health.SetCurrentHealth(remaining);
+                }
+                return true;
+            }
+
+            if (currentCharges > 0)
             {
                 // Intercept lethal hit!
                 currentCharges--;
                 OnChargesChanged?.Invoke(currentCharges, maxCharges);
 
-                ActivateLuckyLast();
+                float postHitHp = Health != null ? Mathf.Max(0f, Health.CurrentHealth - damage.amount) : 0f;
+                ActivateLuckyLast(postHitHp);
                 return true;
             }
 
-            return false; // No charges or already active -> player dies
+            return false; // No charges and not in Lucky Last -> player dies
         }
 
-        private void ActivateLuckyLast()
+        private void ActivateLuckyLast(float postHitHp = 0f)
         {
             isLuckyLastActive = true;
+            IsAnyActive = true;
             activeTimer = duration;
 
-            // Set HP to exactly 1 HP
+            // World 1 assist: Restore immediately up to minimum 15 HP (max(current, 15))
             if (Health != null)
             {
-                Health.SetCurrentHealth(1f);
+                float minHp = WorldDifficultyConfig.Current.luckyLastMinimumHP;
+                Health.SetCurrentHealth(Mathf.Max(postHitHp, minHp));
             }
 
             // Apply buffs
@@ -156,6 +180,7 @@ namespace CursedHarvest
 
             // End Lucky Last
             isLuckyLastActive = false;
+            IsAnyActive = false;
             activeTimer = 0f;
 
             // Revert buffs

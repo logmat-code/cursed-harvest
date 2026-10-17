@@ -1,9 +1,20 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace CursedHarvest
 {
+    public enum WaveState
+    {
+        Preparing,
+        Spawning,
+        Combat,
+        Cleared,
+        Vacuuming,
+        Intermission
+    }
+
     public class SpawnDirector : MonoBehaviour
     {
         [Header("References")]
@@ -14,30 +25,90 @@ namespace CursedHarvest
         [SerializeField] private ObjectPool chargerPool;
         [SerializeField] private ObjectPool farmerPool;
 
+        [Header("Elites & Boss Prefabs")]
+        [SerializeField] private GameObject scarecrowPrefab;
+        [SerializeField] private GameObject brutePrefab;
+        [SerializeField] private GameObject bossPrefab;
+        [SerializeField] private GameObject healthPickupPrefab;
+
         [Header("Spawn Boundaries")]
-        [SerializeField] private float minSpawnRadius = 20f;
-        [SerializeField] private float maxSpawnRadius = 28f;
+        [SerializeField] private float minSpawnRadius = 18f;
+        [SerializeField] private float maxSpawnRadius = 26f;
         [SerializeField] private float arenaHalfBounds = 31f;
+
+        [Header("Wave Progression")]
+        [SerializeField] private int currentWave = 1;
+        [SerializeField] private WaveState currentState = WaveState.Preparing;
+        [SerializeField] private float intermissionDuration = 12f;
+        [SerializeField] private int maxConcurrentEnemies = 70;
+        [SerializeField] private float spawnInterval = 0.55f;
 
         [Header("Difficulty Curves")]
         [SerializeField] private float runTime;
         [SerializeField] private bool isRunning = true;
         [SerializeField] private bool isEndlessMode = false;
+        [SerializeField] private float postWave10Growth = 1.12f;
 
+        [Header("Boss Wave 10 Configuration")]
+        [SerializeField] private int bossWaveAddCount = 18;
+
+        private int bossGruntsRemaining;
+        private int bossChasersRemaining;
+        private int bossWalkersRemaining;
+        private int bossFarmersRemaining;
+        private int bossChargersRemaining;
+
+        private int totalEnemiesForWave;
+        private int spawnedThisWave;
+        private int enemiesKilledThisWave;
         private float lastSpawnTime;
-        private float nextSpawnInterval = 1.8f;
-        private int maxConcurrentEnemies = 15;
-
-        [Header("Boss Configuration")]
-        [SerializeField] private GameObject bossPrefab;
+        private float intermissionTimer;
+        private float vacuumTimer;
         private bool bossSpawned = false;
 
+        private bool isBossWave = false;
+        private bool isBossIntro = false;
+        private bool isBossAlive = false;
+        private bool bossDefeatedThisWave = false;
+        private GameObject activeBossObj = null;
+        private EnemyHealth activeBossHealth = null;
+        private Coroutine bossIntroCoroutine = null;
+
+        public static readonly int[] WaveCounts = new int[] { 8, 11, 14, 18, 22, 27, 33, 40, 48, 18 };
+
+        public WaveState CurrentState => currentState;
+        public int CurrentWave => currentWave;
+        public int TotalEnemiesForCurrentWave => totalEnemiesForWave;
+        public int SpawnedThisWave => spawnedThisWave;
+        public int EnemiesKilledThisWave => enemiesKilledThisWave;
+        public int EnemiesRemainingThisWave => Mathf.Max(0, totalEnemiesForWave - enemiesKilledThisWave);
+        public float IntermissionTimeRemaining => intermissionTimer;
         public float RunTime => runTime;
         public bool IsEndless => isEndlessMode;
         public int TotalActiveEnemies => EnemyRegistry.Count;
+        public float PostWave10Growth => postWave10Growth;
+        public void SetPostWave10Growth(float growth) => postWave10Growth = growth;
+        public bool IsBossWave => isBossWave;
+        public bool IsBossAlive => isBossAlive;
+        public bool BossDefeatedThisWave => bossDefeatedThisWave;
+        public bool BossSpawned => bossSpawned;
+        public int BossWaveAddCount => bossWaveAddCount;
+        public void SetBossWaveAddCount(int count) => bossWaveAddCount = count;
+        public int BossGruntsRemaining => bossGruntsRemaining;
+        public int BossChasersRemaining => bossChasersRemaining;
+        public int BossWalkersRemaining => bossWalkersRemaining;
+        public int BossFarmersRemaining => bossFarmersRemaining;
+        public int BossChargersRemaining => bossChargersRemaining;
+        public GameObject ActiveBossObject => activeBossObj;
+        public GameObject HealthPickupPrefab => healthPickupPrefab;
 
         public static event Action<float> OnRunTimerUpdated;
+        public static event Action<int, int, int> OnWaveUpdated; // (wave, remaining, total)
+        public static event Action<int> OnWaveStarted; // (wave)
+        public static event Action<int> OnWaveCleared; // (wave)
+        public static event Action<float> OnIntermissionTick; // (remainingSeconds)
         public static event Action OnBossTimeReached;
+        public static event Action<int> OnMilestoneReached;
 
         private void Awake()
         {
@@ -52,25 +123,41 @@ namespace CursedHarvest
         {
             BossController.OnBossDefeated -= HandleBossDefeated;
             BossController.OnBossDefeated += HandleBossDefeated;
+
+            EnemyHealth.OnAnyEnemyDied -= HandleEnemyDied;
+            EnemyHealth.OnAnyEnemyDied += HandleEnemyDied;
         }
 
         private void OnDisable()
         {
             BossController.OnBossDefeated -= HandleBossDefeated;
+            EnemyHealth.OnAnyEnemyDied -= HandleEnemyDied;
         }
 
         public void InitializeDirector()
         {
             BossController.OnBossDefeated -= HandleBossDefeated;
             BossController.OnBossDefeated += HandleBossDefeated;
+
+            EnemyHealth.OnAnyEnemyDied -= HandleEnemyDied;
+            EnemyHealth.OnAnyEnemyDied += HandleEnemyDied;
         }
 
         private void HandleBossDefeated(BossController boss)
         {
-            EnterEndlessMode();
+            isBossAlive = false;
+            bossDefeatedThisWave = true;
+            AudioManager.Instance?.PlayGameplayMusic(2.0f);
+            CheckWaveCompletion();
         }
 
         public void SetBossPrefab(GameObject prefab) => bossPrefab = prefab;
+        public void SetElitePrefabs(GameObject scarecrow, GameObject brute)
+        {
+            scarecrowPrefab = scarecrow;
+            brutePrefab = brute;
+        }
+        public void SetHealthPickupPrefab(GameObject healthPrefab) => healthPickupPrefab = healthPrefab;
 
         public void SetPlayer(Transform player)
         {
@@ -86,6 +173,11 @@ namespace CursedHarvest
             farmerPool = farmer;
         }
 
+        public static int GetEnemyCountForWave(int wave, float growth = 1.12f)
+        {
+            return WorldDifficultyConfig.Current.GetEnemyCountForWave(wave, growth);
+        }
+
         public void ResetDirector()
         {
             runTime = 0f;
@@ -93,16 +185,37 @@ namespace CursedHarvest
             isEndlessMode = false;
             isRunning = true;
             bossSpawned = false;
-            nextSpawnInterval = 1.8f;
-            maxConcurrentEnemies = 15;
+            isBossWave = false;
+            isBossIntro = false;
+            isBossAlive = false;
+            bossDefeatedThisWave = false;
+            activeBossObj = null;
+            activeBossHealth = null;
+            if (bossIntroCoroutine != null)
+            {
+                StopCoroutine(bossIntroCoroutine);
+                bossIntroCoroutine = null;
+            }
+            bossGruntsRemaining = WorldDifficultyConfig.Current.bossGruntQuota;
+            bossChasersRemaining = WorldDifficultyConfig.Current.bossChaserQuota;
+            bossWalkersRemaining = WorldDifficultyConfig.Current.bossWalkerQuota;
+            bossFarmersRemaining = WorldDifficultyConfig.Current.bossFarmerQuota;
+            bossChargersRemaining = WorldDifficultyConfig.Current.bossChargerQuota;
+            currentWave = 1;
+            currentState = WaveState.Preparing;
+            intermissionTimer = 0f;
+            vacuumTimer = 0f;
+            spawnedThisWave = 0;
+            enemiesKilledThisWave = 0;
+            totalEnemiesForWave = GetEnemyCountForWave(1, postWave10Growth);
         }
 
         public void EnterEndlessMode()
         {
             isEndlessMode = true;
             isRunning = true;
-            maxConcurrentEnemies = 120;
-            nextSpawnInterval = 0.35f;
+            maxConcurrentEnemies = 100;
+            spawnInterval = 0.35f;
         }
 
         public GameObject SpawnBoss()
@@ -119,6 +232,272 @@ namespace CursedHarvest
             return bossObj;
         }
 
+        public void StartWave(int wave)
+        {
+            currentWave = wave;
+            isBossWave = (currentWave == 10);
+            totalEnemiesForWave = isBossWave ? bossWaveAddCount : GetEnemyCountForWave(wave, postWave10Growth);
+            spawnedThisWave = 0;
+            enemiesKilledThisWave = 0;
+            lastSpawnTime = Time.time;
+            currentState = WaveState.Spawning;
+
+            OnWaveStarted?.Invoke(currentWave);
+            OnWaveUpdated?.Invoke(currentWave, EnemiesRemainingThisWave, totalEnemiesForWave);
+
+            if (isBossWave)
+            {
+                StartBossWave();
+            }
+            else
+            {
+                isBossIntro = false;
+                isBossAlive = false;
+                bossDefeatedThisWave = false;
+                SpawnMilestoneEnemy(currentWave);
+            }
+        }
+
+        private void StartBossWave()
+        {
+            isBossIntro = true;
+            isBossAlive = false;
+            bossDefeatedThisWave = false;
+            lastSpawnTime = Time.time;
+
+            bossGruntsRemaining = WorldDifficultyConfig.Current.bossGruntQuota;
+            bossChasersRemaining = WorldDifficultyConfig.Current.bossChaserQuota;
+            bossWalkersRemaining = WorldDifficultyConfig.Current.bossWalkerQuota;
+            bossFarmersRemaining = WorldDifficultyConfig.Current.bossFarmerQuota;
+            bossChargersRemaining = WorldDifficultyConfig.Current.bossChargerQuota;
+
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.ShowToast("BOSS WAVE", "THE LAST HARVEST", 3.5f, new Color(1f, 0.25f, 0.25f));
+            }
+
+            AudioManager.Instance?.PlayBossMusic(1.5f);
+
+            if (bossIntroCoroutine != null) StopCoroutine(bossIntroCoroutine);
+            bossIntroCoroutine = StartCoroutine(BossIntroRoutine(1.2f));
+        }
+
+        private IEnumerator BossIntroRoutine(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            isBossIntro = false;
+
+            if (!bossSpawned)
+            {
+                bossSpawned = true;
+                activeBossObj = SpawnBoss();
+                if (activeBossObj != null)
+                {
+                    activeBossHealth = activeBossObj.GetComponent<EnemyHealth>();
+                    isBossAlive = true;
+                }
+                OnBossTimeReached?.Invoke();
+            }
+        }
+
+        private void SpawnMilestoneEnemy(int wave)
+        {
+            // Wave 10 is the Boss Wave exception: NO automatic extra elites!
+            if (wave == 10) return;
+
+            if (wave % 10 == 0)
+            {
+                // Waves 20, 30, etc.
+                GameObject elitePrefab = brutePrefab != null ? brutePrefab : scarecrowPrefab;
+                if (elitePrefab != null)
+                {
+                    Vector3 spawnPos = CalculateSpawnPosition();
+                    GameObject eliteObj = Instantiate(elitePrefab, spawnPos, Quaternion.identity);
+                    EnemyController enemy = eliteObj.GetComponent<EnemyController>();
+                    if (enemy != null)
+                    {
+                        enemy.SetTarget(playerTransform);
+                        ApplyStatScaling(enemy);
+                    }
+                }
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.ShowToast($"WAVE {wave}: CURSED SURGE", "Elite horde approaching!", 3.5f, new Color(1f, 0.35f, 0.2f));
+                }
+                OnMilestoneReached?.Invoke(wave);
+            }
+            else if (wave % 5 == 0)
+            {
+                GameObject elitePrefab = (wave % 10 == 5) ? (scarecrowPrefab != null ? scarecrowPrefab : brutePrefab) : brutePrefab;
+                if (elitePrefab != null)
+                {
+                    Vector3 spawnPos = CalculateSpawnPosition();
+                    GameObject eliteObj = Instantiate(elitePrefab, spawnPos, Quaternion.identity);
+                    EnemyController enemy = eliteObj.GetComponent<EnemyController>();
+                    if (enemy != null)
+                    {
+                        enemy.SetTarget(playerTransform);
+                        ApplyStatScaling(enemy);
+                    }
+                }
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.ShowToast("ELITE APPROACHING", "An elite fiend has arisen!", 3.0f, new Color(1f, 0.8f, 0.2f));
+                }
+                OnMilestoneReached?.Invoke(wave);
+            }
+        }
+
+        private void HandleEnemyDied(EnemyHealth enemyHealth, DamageData damage)
+        {
+            if (currentState == WaveState.Spawning || currentState == WaveState.Combat)
+            {
+                enemiesKilledThisWave++;
+                OnWaveUpdated?.Invoke(currentWave, EnemiesRemainingThisWave, totalEnemiesForWave);
+
+                CheckWaveCompletion();
+            }
+        }
+
+        private void CheckWaveCompletion()
+        {
+            if (currentState != WaveState.Spawning && currentState != WaveState.Combat) return;
+
+            // In boss wave: requires boss dead, all wave adds spawned, all adds killed, and zero active enemies left
+            if (isBossWave)
+            {
+                if (bossDefeatedThisWave && spawnedThisWave >= totalEnemiesForWave && enemiesKilledThisWave >= totalEnemiesForWave && EnemyRegistry.Count == 0)
+                {
+                    CompleteWave();
+                }
+            }
+            else
+            {
+                if (spawnedThisWave >= totalEnemiesForWave && enemiesKilledThisWave >= totalEnemiesForWave && EnemyRegistry.Count == 0)
+                {
+                    CompleteWave();
+                }
+            }
+        }
+
+        private void CompleteWave()
+        {
+            currentState = WaveState.Cleared;
+            OnWaveCleared?.Invoke(currentWave);
+
+            currentState = WaveState.Vacuuming;
+            vacuumTimer = 0.8f;
+            TriggerWaveVacuum();
+        }
+
+        private void TriggerWaveVacuum()
+        {
+            if (playerTransform != null)
+            {
+                CollectibleRegistry.TriggerVacuumAll(playerTransform, 0.8f);
+            }
+        }
+
+        private void HandleBossWaveCleared()
+        {
+            isBossWave = false;
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.ShowVictoryModal();
+            }
+            else
+            {
+                EnterEndlessMode();
+                StartIntermission();
+            }
+        }
+
+        public void StartIntermissionAfterBoss()
+        {
+            StartIntermission();
+        }
+
+        private void StartIntermission()
+        {
+            currentState = WaveState.Intermission;
+            intermissionTimer = intermissionDuration;
+
+            // Supply Drop & Pre-Boss Recovery logic
+            float playerHpPct = 1f;
+            if (playerTransform != null)
+            {
+                PlayerHealth ph = playerTransform.GetComponent<PlayerHealth>();
+                if (ph != null && ph.MaxHealth > 0f)
+                {
+                    playerHpPct = ph.CurrentHealth / ph.MaxHealth;
+                }
+            }
+
+            int supplyCount = WorldDifficultyConfig.Current.GetSupplyDropCount(currentWave, playerHpPct);
+            if (supplyCount > 0)
+            {
+                SpawnGuaranteedHealthDrop(supplyCount);
+            }
+
+            OnIntermissionTick?.Invoke(intermissionTimer);
+        }
+
+        public List<GameObject> SpawnGuaranteedHealthDrop(int count = 1)
+        {
+            List<GameObject> spawned = new List<GameObject>();
+            if (playerTransform == null) return spawned;
+
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 dir2D = UnityEngine.Random.insideUnitCircle.normalized;
+                if (dir2D.sqrMagnitude < 0.01f) dir2D = Vector2.up;
+                float dist = UnityEngine.Random.Range(2.5f, 3.8f) + (i * 0.8f);
+                Vector3 spawnPos = playerTransform.position + new Vector3(dir2D.x * dist, 0f, dir2D.y * dist);
+
+                // Ground raycast
+                Ray ray = new Ray(spawnPos + Vector3.up * 8f, Vector3.down);
+                if (Physics.Raycast(ray, out RaycastHit hit, 16f))
+                {
+                    spawnPos.y = hit.point.y + 0.35f;
+                }
+                else
+                {
+                    spawnPos.y = 0.45f;
+                }
+
+                GameObject healthObj = null;
+                if (GameManager.Instance != null && GameManager.Instance.HealthPool != null)
+                {
+                    healthObj = GameManager.Instance.HealthPool.Get(spawnPos, Quaternion.identity);
+                }
+                else if (healthPickupPrefab != null)
+                {
+                    healthObj = Instantiate(healthPickupPrefab, spawnPos, Quaternion.identity);
+                }
+
+                if (healthObj != null)
+                {
+                    HealthRestorePickup hr = healthObj.GetComponent<HealthRestorePickup>();
+                    if (hr != null) hr.Initialize(20f);
+                    spawned.Add(healthObj);
+                }
+            }
+
+            if (UIManager.Instance != null)
+            {
+                if (currentWave == WorldDifficultyConfig.Current.preBossWave && count > 1)
+                {
+                    UIManager.Instance.ShowToast("PRE-BOSS RECOVERY", "2x Health Restores dropped for the Boss fight!", 3.5f, new Color(0.35f, 0.95f, 0.45f));
+                }
+                else
+                {
+                    UIManager.Instance.ShowToast("SUPPLY DROP", "Guaranteed Health Restore (+20 HP)", 3.0f, new Color(0.35f, 0.95f, 0.45f));
+                }
+            }
+
+            return spawned;
+        }
+
         private void Update()
         {
             if (!isRunning) return;
@@ -126,93 +505,88 @@ namespace CursedHarvest
             runTime += Time.deltaTime;
             OnRunTimerUpdated?.Invoke(runTime);
 
-            UpdateDifficultyScaling();
-
-            if (Time.time >= lastSpawnTime + nextSpawnInterval)
+            switch (currentState)
             {
-                lastSpawnTime = Time.time;
-                TrySpawnWave();
+                case WaveState.Preparing:
+                    StartWave(currentWave);
+                    break;
+
+                case WaveState.Spawning:
+                    float effectiveInterval = isBossWave ? WorldDifficultyConfig.Current.bossAddSpawnInterval : spawnInterval;
+                    if (Time.time >= lastSpawnTime + effectiveInterval)
+                    {
+                        lastSpawnTime = Time.time;
+                        TrySpawnWaveBatch();
+                    }
+                    if (spawnedThisWave >= totalEnemiesForWave)
+                    {
+                        currentState = WaveState.Combat;
+                    }
+                    break;
+
+                case WaveState.Combat:
+                    CheckWaveCompletion();
+                    break;
+
+                case WaveState.Cleared:
+                    currentState = WaveState.Vacuuming;
+                    vacuumTimer = 0.8f;
+                    TriggerWaveVacuum();
+                    break;
+
+                case WaveState.Vacuuming:
+                    vacuumTimer -= Time.deltaTime;
+                    if (vacuumTimer <= 0f)
+                    {
+                        if (isBossWave)
+                        {
+                            HandleBossWaveCleared();
+                        }
+                        else
+                        {
+                            StartIntermission();
+                        }
+                    }
+                    break;
+
+                case WaveState.Intermission:
+                    // Modal pause check: If a modal (Level Up, Pause, etc.) is open, intermission timer freezes
+                    if (UIManager.Instance != null && UIManager.Instance.IsModalOpen)
+                    {
+                        return;
+                    }
+
+                    intermissionTimer -= Time.deltaTime;
+                    OnIntermissionTick?.Invoke(intermissionTimer);
+
+                    if (intermissionTimer <= 0f)
+                    {
+                        intermissionTimer = 0f;
+                        currentWave++;
+                        currentState = WaveState.Preparing;
+                    }
+                    break;
             }
         }
 
-        private void UpdateDifficultyScaling()
-        {
-            if (isEndlessMode)
-            {
-                maxConcurrentEnemies = Mathf.Min(120, 70 + (int)((runTime - 720f) / 10f));
-                nextSpawnInterval = Mathf.Max(0.25f, 0.4f - (runTime - 720f) * 0.0005f);
-                return;
-            }
-
-            // Timeline based progression (00:00 to 12:00 = 720 seconds)
-            float t = runTime;
-
-            // Explicit first-minute onboarding curve (Pasos 12 & 13)
-            if (t < 10f)
-            {
-                // 00:00 - 00:10: Slow grunts, space to learn movement & auto-aim
-                maxConcurrentEnemies = 3;
-                nextSpawnInterval = 2.8f;
-            }
-            else if (t < 25f)
-            {
-                // 00:10 - 00:25: Grunts drop guaranteed XP crystals
-                maxConcurrentEnemies = 6;
-                nextSpawnInterval = 2.0f;
-            }
-            else if (t < 45f)
-            {
-                // 00:25 - 00:45: First expected level-up reached comfortably
-                maxConcurrentEnemies = 10;
-                nextSpawnInterval = 1.6f;
-            }
-            else if (t < 60f)
-            {
-                // 00:45 - 01:00: Introduce second enemy type (Masked Chaser)
-                maxConcurrentEnemies = 15;
-                nextSpawnInterval = 1.3f;
-            }
-            else if (t < 180f) // 1-3 mins: Increasing pressure
-            {
-                float p = (t - 60f) / 120f;
-                maxConcurrentEnemies = (int)Mathf.Lerp(15, 28, p);
-                nextSpawnInterval = Mathf.Lerp(1.3f, 1.0f, p);
-            }
-            else if (t < 360f) // 3-6 mins: Increasing pressure
-            {
-                float p = (t - 180f) / 180f;
-                maxConcurrentEnemies = (int)Mathf.Lerp(28, 48, p);
-                nextSpawnInterval = Mathf.Lerp(1.0f, 0.7f, p);
-            }
-            else if (t < 540f) // 6-9 mins: Heavy horde
-            {
-                float p = (t - 360f) / 180f;
-                maxConcurrentEnemies = (int)Mathf.Lerp(48, 70, p);
-                nextSpawnInterval = Mathf.Lerp(0.7f, 0.5f, p);
-            }
-            else if (t < 720f) // 9-12 mins: Chaos & Boss prep
-            {
-                float p = (t - 540f) / 180f;
-                maxConcurrentEnemies = (int)Mathf.Lerp(70, 95, p);
-                nextSpawnInterval = Mathf.Lerp(0.5f, 0.35f, p);
-            }
-            else if (!bossSpawned)
-            {
-                bossSpawned = true;
-                SpawnBoss();
-                OnBossTimeReached?.Invoke();
-            }
-        }
-
-        private void TrySpawnWave()
+        private void TrySpawnWaveBatch()
         {
             if (playerTransform == null) return;
-            if (EnemyRegistry.Count >= maxConcurrentEnemies) return;
+            if (isBossIntro) return; // Wait during dramatic boss intro
+            if (spawnedThisWave >= totalEnemiesForWave) return;
 
-            int toSpawn = Mathf.Clamp(maxConcurrentEnemies - EnemyRegistry.Count, 1, 3);
-            for (int i = 0; i < toSpawn; i++)
+            int currentConcurrentLimit = isBossWave ? WorldDifficultyConfig.Current.bossMaxConcurrentAdds : maxConcurrentEnemies;
+            if (EnemyRegistry.Count >= currentConcurrentLimit) return;
+
+            int remainingToSpawn = totalEnemiesForWave - spawnedThisWave;
+            int roomInConcurrent = currentConcurrentLimit - EnemyRegistry.Count;
+            int batchSize = isBossWave ? 1 : Mathf.Min(UnityEngine.Random.Range(2, 4), Mathf.Min(remainingToSpawn, roomInConcurrent));
+
+            for (int i = 0; i < batchSize; i++)
             {
-                ObjectPool chosenPool = SelectPoolForCurrentTime();
+                if (spawnedThisWave >= totalEnemiesForWave) break;
+
+                ObjectPool chosenPool = isBossWave ? SelectBossWavePool() : SelectPoolForCurrentWave();
                 if (chosenPool == null) chosenPool = gruntPool;
                 if (chosenPool == null) return;
 
@@ -224,54 +598,132 @@ namespace CursedHarvest
                     enemy.SetTarget(playerTransform);
                     ApplyStatScaling(enemy);
                 }
+
+                spawnedThisWave++;
             }
+
+            OnWaveUpdated?.Invoke(currentWave, EnemiesRemainingThisWave, totalEnemiesForWave);
         }
 
-        private ObjectPool SelectPoolForCurrentTime()
+        private ObjectPool SelectBossWavePool()
         {
-            float t = runTime;
-
-            if (isEndlessMode)
+            float hpPct = 1f;
+            if (activeBossHealth != null && activeBossHealth.MaxHealth > 0f)
             {
-                // In endless mode, all pools are active
+                hpPct = activeBossHealth.CurrentHealth / activeBossHealth.MaxHealth;
+            }
+
+            ObjectPool selectedPool = null;
+
+            // Phase 1: Boss > 70% HP -> Grunts (quota 6) & Chasers (quota 4)
+            if (hpPct > 0.70f)
+            {
+                if (bossGruntsRemaining > 0 && bossChasersRemaining > 0)
+                {
+                    selectedPool = (UnityEngine.Random.value < 0.65f && gruntPool != null) ? gruntPool : (chaserPool != null ? chaserPool : gruntPool);
+                }
+                else if (bossGruntsRemaining > 0 && gruntPool != null)
+                {
+                    selectedPool = gruntPool;
+                }
+                else if (bossChasersRemaining > 0 && chaserPool != null)
+                {
+                    selectedPool = chaserPool;
+                }
+            }
+            // Phase 2: 70% - 40% HP -> Chasers, Walkers, Farmers
+            else if (hpPct > 0.40f)
+            {
+                List<ObjectPool> p2 = new List<ObjectPool>();
+                if (bossWalkersRemaining > 0 && plaguePool != null) p2.Add(plaguePool);
+                if (bossFarmersRemaining > 0 && farmerPool != null) p2.Add(farmerPool);
+                if (bossChasersRemaining > 0 && chaserPool != null) p2.Add(chaserPool);
+
+                if (p2.Count > 0)
+                {
+                    selectedPool = p2[UnityEngine.Random.Range(0, p2.Count)];
+                }
+            }
+            // Phase 3: < 40% HP -> Chargers, Farmers, Walkers, Chasers
+            else
+            {
+                List<ObjectPool> p3 = new List<ObjectPool>();
+                if (bossChargersRemaining > 0 && chargerPool != null) p3.Add(chargerPool);
+                if (bossFarmersRemaining > 0 && farmerPool != null) p3.Add(farmerPool);
+                if (bossWalkersRemaining > 0 && plaguePool != null) p3.Add(plaguePool);
+                if (bossChasersRemaining > 0 && chaserPool != null) p3.Add(chaserPool);
+
+                if (p3.Count > 0)
+                {
+                    selectedPool = p3[UnityEngine.Random.Range(0, p3.Count)];
+                }
+            }
+
+            // Fallback: If phase-preferred quotas are exhausted, select any pool that still has remaining quota
+            if (selectedPool == null)
+            {
+                if (bossGruntsRemaining > 0 && gruntPool != null) selectedPool = gruntPool;
+                else if (bossChasersRemaining > 0 && chaserPool != null) selectedPool = chaserPool;
+                else if (bossWalkersRemaining > 0 && plaguePool != null) selectedPool = plaguePool;
+                else if (bossFarmersRemaining > 0 && farmerPool != null) selectedPool = farmerPool;
+                else if (bossChargersRemaining > 0 && chargerPool != null) selectedPool = chargerPool;
+                else selectedPool = gruntPool;
+            }
+
+            // Decrement the selected quota
+            if (selectedPool == gruntPool && bossGruntsRemaining > 0) bossGruntsRemaining--;
+            else if (selectedPool == chaserPool && bossChasersRemaining > 0) bossChasersRemaining--;
+            else if (selectedPool == plaguePool && bossWalkersRemaining > 0) bossWalkersRemaining--;
+            else if (selectedPool == farmerPool && bossFarmersRemaining > 0) bossFarmersRemaining--;
+            else if (selectedPool == chargerPool && bossChargersRemaining > 0) bossChargersRemaining--;
+
+            return selectedPool;
+        }
+
+        private ObjectPool SelectPoolForCurrentWave()
+        {
+            if (isEndlessMode || currentWave > 10)
+            {
                 ObjectPool[] all = new ObjectPool[] { gruntPool, chaserPool, plaguePool, chargerPool, farmerPool };
                 List<ObjectPool> valid = new List<ObjectPool>();
                 for (int i = 0; i < all.Length; i++) if (all[i] != null) valid.Add(all[i]);
                 return valid.Count > 0 ? valid[UnityEngine.Random.Range(0, valid.Count)] : gruntPool;
             }
 
-            if (t < 45f)
+            if (currentWave <= 1)
             {
-                // First 45 seconds: purely grunts to allow learning movement and auto-firing safely
                 return gruntPool;
             }
-            else if (t < 60f)
+            else if (currentWave == 2)
             {
-                // 45s-60s: introduce 25% chasers
-                if (chaserPool != null && UnityEngine.Random.value < 0.25f) return chaserPool;
+                if (chaserPool != null && UnityEngine.Random.value < 0.30f) return chaserPool;
                 return gruntPool;
             }
-            else if (t < 180f)
-            {
-                if (chaserPool != null && UnityEngine.Random.value < 0.35f) return chaserPool;
-                return gruntPool;
-            }
-            else if (t < 360f)
+            else if (currentWave == 3)
             {
                 float roll = UnityEngine.Random.value;
                 if (plaguePool != null && roll < 0.20f) return plaguePool;
                 if (chaserPool != null && roll < 0.50f) return chaserPool;
                 return gruntPool;
             }
-            else if (t < 540f)
+            else if (currentWave == 4)
             {
                 float roll = UnityEngine.Random.value;
-                if (chargerPool != null && roll < 0.20f) return chargerPool;
-                if (plaguePool != null && roll < 0.40f) return plaguePool;
+                if (chargerPool != null && roll < 0.15f) return chargerPool;
+                if (plaguePool != null && roll < 0.35f) return plaguePool;
                 if (chaserPool != null && roll < 0.65f) return chaserPool;
                 return gruntPool;
             }
-            else
+            else if (currentWave == 5)
+            {
+                float roll = UnityEngine.Random.value;
+                if (farmerPool != null && roll < 0.10f) return farmerPool;
+                if (chargerPool != null && roll < 0.25f) return chargerPool;
+                if (plaguePool != null && roll < 0.45f) return plaguePool;
+                if (chaserPool != null && roll < 0.70f) return chaserPool;
+                return gruntPool;
+            }
+            else // Waves 6-10
             {
                 float roll = UnityEngine.Random.value;
                 if (farmerPool != null && roll < 0.20f) return farmerPool;
@@ -301,15 +753,56 @@ namespace CursedHarvest
             EnemyHealth health = enemy.GetComponent<EnemyHealth>();
             if (health == null) return;
 
-            // Small progressive HP boost over run time
-            float timeMinutes = runTime / 60f;
-            float hpMult = 1f + timeMinutes * 0.12f;
+            float hpMult = 1f + (currentWave - 1) * 0.08f;
             if (isEndlessMode)
             {
-                hpMult += (runTime - 720f) / 60f * 0.25f;
+                hpMult += (currentWave - 10) * 0.15f;
             }
 
             health.SetMaxHealth(health.MaxHealth * hpMult);
+        }
+
+        // ==================== TEST & VERIFICATION METHODS ====================
+        public void StartAtWave(int waveNumber)
+        {
+            currentWave = Mathf.Max(1, waveNumber);
+            var active = new List<EnemyController>(EnemyRegistry.ActiveEnemies);
+            for (int i = 0; i < active.Count; i++)
+            {
+                if (active[i] != null)
+                {
+                    var tracker = active[i].GetComponent<PooledObjectTracker>();
+                    if (tracker != null) tracker.ReturnToPool();
+                    else active[i].gameObject.SetActive(false);
+                }
+            }
+            StartWave(currentWave);
+        }
+
+        public void ForceClearCurrentWave()
+        {
+            spawnedThisWave = totalEnemiesForWave;
+            var active = new List<EnemyController>(EnemyRegistry.ActiveEnemies);
+            for (int i = 0; i < active.Count; i++)
+            {
+                if (active[i] != null)
+                {
+                    var health = active[i].GetComponent<EnemyHealth>();
+                    if (health != null && health.IsAlive)
+                    {
+                        health.TakeDamage(new DamageData(9999f, null, Vector3.zero, 0f, active[i].transform.position));
+                    }
+                }
+            }
+            CompleteWave();
+        }
+
+        public void FastForwardIntermission()
+        {
+            if (currentState == WaveState.Intermission)
+            {
+                intermissionTimer = 0.05f;
+            }
         }
     }
 }

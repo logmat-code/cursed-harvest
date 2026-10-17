@@ -442,5 +442,32 @@ namespace CursedHarvest
             clip.SetData(samples, 0);
             return clip;
         }
+
+        public static AudioClip GenerateHeal()
+        {
+            float duration = 0.24f;
+            int totalSamples = (int)(SampleRate * duration);
+            float[] samples = new float[totalSamples];
+
+            for (int i = 0; i < totalSamples; i++)
+            {
+                float t = (float)i / SampleRate;
+                float progress = t / duration;
+
+                // Ascending harmonic chime: C5 (523Hz) -> E5 (659Hz) -> G5 (784Hz)
+                float freq = Mathf.Lerp(523.25f, 783.99f, Mathf.Pow(progress, 0.75f));
+                float tone1 = Mathf.Sin(2f * Mathf.PI * freq * t);
+                float tone2 = Mathf.Sin(2f * Mathf.PI * freq * 1.5f * t) * 0.35f; // Pure 5th harmonic sparkle
+
+                // Smooth bell envelope: quick clean attack, smooth exponential decay
+                float attack = Mathf.Clamp01(t / 0.012f);
+                float decay = Mathf.Exp(-8.5f * progress);
+                samples[i] = (tone1 + tone2) * attack * decay * 0.65f;
+            }
+
+            AudioClip clip = AudioClip.Create("SFX_Heal", totalSamples, 1, SampleRate, false);
+            clip.SetData(samples, 0);
+            return clip;
+        }
     }
 }

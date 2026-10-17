@@ -109,6 +109,9 @@ MonoBehaviour:
   xpDropValue: 300
   seedDropChance: 1
   guaranteedSeedDrop: 1
+  healthDropChance: 1
+  guaranteedHealthDrop: 1
+  healthDropCount: 2
   knockbackResistance: 1
   onDeathHazardPrefab: {fileID: 0}
   renderersToFlash: []
@@ -134,6 +137,7 @@ MonoBehaviour:
   visualRoot: {fileID: 0}
   slamVfxPrefab: {fileID: 2824854994463074288, guid: 07fda0f388e1f4fe3a43a2d689fabf3b, type: 3}
   bombPrefab: {fileID: 1947723091916589460, guid: a3dcf6be08c824c2e89e361b1d22958d, type: 3}
+  contactCooldown: 0.8
 --- !u!114 &8556847067111475277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +157,7 @@ MonoBehaviour:
   torsoLeanAngle: 1
   lateralRollAngle: 1.8
   shoulderTiltAngle: 0
-  armSwingAngle: 4
+  armSwingAngle: 1.2
   armRestPitch: 0
   hasWeaponInHand: 0
   isAsymmetricLimp: 0

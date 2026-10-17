@@ -67,7 +67,27 @@ namespace CursedHarvest
         private readonly List<EnemyController> nearbyBuffer = new List<EnemyController>(16);
 
         public EnemyType Type => enemyType;
-        public float MoveSpeed => baseMoveSpeed * speedMultiplier;
+        public float BaseMoveSpeed => baseMoveSpeed;
+        public float ChargeSpeed => chargeSpeed;
+        public float EffectiveChargeSpeed => (enemyType == EnemyType.DemonCharger || canCharge)
+            ? chargeSpeed * WorldDifficultyConfig.Current.chargerSpeedMultiplier
+            : chargeSpeed;
+        public float MoveSpeed
+        {
+            get
+            {
+                float mult = speedMultiplier;
+                if (enemyType == EnemyType.DemonCharger || canCharge)
+                {
+                    mult *= WorldDifficultyConfig.Current.chargerSpeedMultiplier;
+                }
+                return baseMoveSpeed * mult;
+            }
+        }
+        public float BaseContactDamage => contactDamage;
+        public float BaseChargeDamage => chargeDamage;
+        public float GetEffectiveContactDamage() => contactDamage * WorldDifficultyConfig.Current.enemyDamageMultiplier;
+        public float GetEffectiveChargeDamage() => chargeDamage * WorldDifficultyConfig.Current.enemyDamageMultiplier;
         public bool IsCharging => chargeState == ChargeState.Charging;
         public bool IsAlive
         {
@@ -224,7 +244,7 @@ namespace CursedHarvest
                 else if (chargeState == ChargeState.Charging)
                 {
                     chargeStateTimer -= Time.deltaTime;
-                    Vector3 chargeVel = lockedChargeDirection * chargeSpeed;
+                    Vector3 chargeVel = lockedChargeDirection * EffectiveChargeSpeed;
                     chargeVel.y = -5f;
 
                     if (characterController != null && characterController.enabled)
@@ -235,7 +255,7 @@ namespace CursedHarvest
                     // Check hit during charge
                     if (distToPlayer <= attackRadius * 1.4f && playerHealthTarget != null && playerHealthTarget.IsAlive)
                     {
-                        DamageData chargeDmg = new DamageData(chargeDamage, gameObject, lockedChargeDirection, 10f, transform.position);
+                        DamageData chargeDmg = new DamageData(GetEffectiveChargeDamage(), gameObject, lockedChargeDirection, 10f, transform.position);
                         playerHealthTarget.TakeDamage(chargeDmg);
                         chargeState = ChargeState.Recovery;
                         chargeStateTimer = 0.5f;
@@ -322,7 +342,7 @@ namespace CursedHarvest
             {
                 lastAttackTime = Time.time;
                 DamageData dmg = new DamageData(
-                    contactDamage,
+                    GetEffectiveContactDamage(),
                     gameObject,
                     (playerTarget.position - transform.position).normalized,
                     2f,

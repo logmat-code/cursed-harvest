@@ -8,11 +8,12 @@ namespace CursedHarvest
     {
         [Header("Health Settings")]
         [SerializeField] private float maxHealth = 100f;
-        [SerializeField] private float invulnerabilityDuration = 0.25f;
+        [SerializeField] private float invulnerabilityDuration = 0.60f;
 
         [Header("Visual Feedback")]
         [SerializeField] private Renderer[] renderersToFlash;
         [SerializeField] private Color hitFlashColor = new Color(1f, 0.2f, 0.2f, 1f);
+        [SerializeField] private Color healFlashColor = new Color(0.35f, 0.95f, 0.45f, 1f);
 
         private float currentHealth = 100f;
         private float lastDamageTime = -10f;
@@ -23,8 +24,14 @@ namespace CursedHarvest
         public float MaxHealth => maxHealth;
         public float CurrentHealth => currentHealth;
         public float HealthPercent => Mathf.Clamp01(currentHealth / maxHealth);
+        public float InvulnerabilityDuration => invulnerabilityDuration;
         public bool IsAlive => !isDead && currentHealth > 0;
         public bool IsInvulnerable => Time.time < lastDamageTime + invulnerabilityDuration;
+
+        public void SetInvulnerabilityDuration(float duration)
+        {
+            invulnerabilityDuration = Mathf.Max(0f, duration);
+        }
 
         public void ResetInvulnerability()
         {
@@ -42,6 +49,7 @@ namespace CursedHarvest
 
         private void Awake()
         {
+            invulnerabilityDuration = WorldDifficultyConfig.Current.hitInvulnerability;
             propBlock = new MaterialPropertyBlock();
             if (renderersToFlash == null || renderersToFlash.Length == 0)
             {
@@ -80,11 +88,29 @@ namespace CursedHarvest
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
-        public void Heal(float amount)
+        public float Heal(float amount)
         {
-            if (isDead || amount <= 0) return;
+            if (isDead || amount <= 0f) return 0f;
+            if (currentHealth >= maxHealth) return 0f;
+
+            float previousHealth = currentHealth;
             currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            float actualHealed = currentHealth - previousHealth;
+
+            if (actualHealed > 0f)
+            {
+                OnHealthChanged?.Invoke(currentHealth, maxHealth);
+                PlayHealFeedback(actualHealed);
+            }
+
+            return actualHealed;
+        }
+
+        private void PlayHealFeedback(float amount)
+        {
+            PlayColorFlash(healFlashColor, 0.12f);
+            DamageNumberManager.Instance?.SpawnHealing(transform.position + Vector3.up * 1.3f, amount);
+            AudioManager.Instance?.PlaySound(SoundType.Heal, 0.85f, 0.05f);
         }
 
         public void TakeDamage(DamageData damage)
@@ -124,14 +150,19 @@ namespace CursedHarvest
 
         private void PlayHitFlash()
         {
+            PlayColorFlash(hitFlashColor, 0.10f);
+        }
+
+        public void PlayColorFlash(Color flashColor, float duration = 0.10f)
+        {
             if (flashCoroutine != null)
             {
                 StopCoroutine(flashCoroutine);
             }
-            flashCoroutine = StartCoroutine(HitFlashRoutine());
+            flashCoroutine = StartCoroutine(ColorFlashRoutine(flashColor, duration));
         }
 
-        private IEnumerator HitFlashRoutine()
+        private IEnumerator ColorFlashRoutine(Color flashColor, float duration)
         {
             if (renderersToFlash == null) yield break;
 
@@ -140,13 +171,13 @@ namespace CursedHarvest
                 if (renderersToFlash[i] != null)
                 {
                     renderersToFlash[i].GetPropertyBlock(propBlock);
-                    propBlock.SetColor("_BaseColor", hitFlashColor);
-                    propBlock.SetColor("_Color", hitFlashColor);
+                    propBlock.SetColor("_BaseColor", flashColor);
+                    propBlock.SetColor("_Color", flashColor);
                     renderersToFlash[i].SetPropertyBlock(propBlock);
                 }
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(duration);
 
             for (int i = 0; i < renderersToFlash.Length; i++)
             {

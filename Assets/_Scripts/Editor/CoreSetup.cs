@@ -44,8 +44,33 @@ namespace CursedHarvest.Editor
             GameObject bombPrefab = CreatePumpkinBombPrefab(smallFx);
             GameObject xpPrefab = CreateXpPickupPrefab();
             GameObject seedPrefab = CreateCursedSeedPrefab();
+            GameObject healthPrefab = CreateHealthPickupPrefab();
             GameObject plotPrefab = CreateHarvestPlotPrefab(mediumFx);
             GameObject puddlePrefab = CreatePlaguePuddlePrefab();
+
+            // Mask Variants Definitions from POLYGON Halloween Horror Masks
+            string[] chaserMasks = new string[]
+            {
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Pumpkin_Mask_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Plague_Mask_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Demonic_Mask_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_LED_Mask_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Alpaca_Mask_01_Witch.prefab"
+            };
+
+            string[] farmerMasks = new string[]
+            {
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Pumpkin_Mask_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Plague_Mask_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_LED_Mask_01.prefab"
+            };
+
+            string[] bruteMasks = new string[]
+            {
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Demonic_Mask_01.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Alpaca_Mask_01_Devil.prefab",
+                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Plague_Mask_01.prefab"
+            };
 
             GameObject playerPrefab = CreatePlayerPrefab(boltPrefab, smallFx);
 
@@ -56,9 +81,10 @@ namespace CursedHarvest.Editor
                 "Enemy_MaskedChaser",
                 EnemyType.MaskedChaser,
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Male_01.prefab",
-                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Pumpkin_Mask_01.prefab",
                 null,
-                1.0f, 25f, 4.8f, 12f, false, 0f, false, 0f, false, null, smallFx);
+                null,
+                1.0f, 25f, 4.8f, 12f, false, 0f, false, 0f, false, null, smallFx,
+                chaserMasks, 1.0f, 0.04f, false);
 
             GameObject plaguePrefab = CreateGenericEnemyPrefab(
                 "Enemy_PlagueWalker",
@@ -66,7 +92,8 @@ namespace CursedHarvest.Editor
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Female_01.prefab",
                 "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Plague_Mask_01.prefab",
                 null,
-                1.05f, 55f, 2.7f, 10f, false, 0f, false, 0.1f, false, puddlePrefab, smallFx);
+                1.05f, 55f, 2.7f, 10f, false, 0f, false, 0.1f, false, puddlePrefab, smallFx,
+                null, 0f, 0.04f, false);
 
             GameObject chargerPrefab = CreateGenericEnemyPrefab(
                 "Enemy_DemonCharger",
@@ -74,7 +101,8 @@ namespace CursedHarvest.Editor
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Charred_01.prefab",
                 "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Demonic_Mask_01.prefab",
                 "Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Axe_01.prefab",
-                1.28f, 70f, 3.2f, 15f, true, 25f, false, 0.2f, false, null, mediumFx);
+                1.28f, 70f, 3.2f, 15f, true, 25f, false, 0.2f, false, null, mediumFx,
+                null, 0f, 0.04f, false);
 
             GameObject farmerPrefab = CreateGenericEnemyPrefab(
                 "Enemy_CursedFarmer",
@@ -82,7 +110,8 @@ namespace CursedHarvest.Editor
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Male_01.prefab",
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/Attachments/SM_Gen_Chr_Attach_Hat_01.prefab",
                 "Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Spade_01.prefab",
-                1.30f, 130f, 2.2f, 26f, false, 0f, false, 0.5f, false, null, mediumFx);
+                1.30f, 130f, 2.2f, 26f, false, 0f, false, 0.5f, false, null, mediumFx,
+                farmerMasks, 0.30f, 0.04f, false);
 
             GameObject scarecrowPrefab = CreateGenericEnemyPrefab(
                 "Enemy_EliteScarecrow",
@@ -90,15 +119,17 @@ namespace CursedHarvest.Editor
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Male_01.prefab",
                 "Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_01.prefab",
                 null,
-                1.55f, 380f, 2.0f, 20f, false, 0f, true, 0.75f, true, null, mediumFx);
+                1.55f, 380f, 2.0f, 20f, false, 0f, true, 0.75f, true, null, mediumFx,
+                null, 0f, 0.35f, false);
 
             GameObject brutePrefab = CreateGenericEnemyPrefab(
                 "Enemy_HarvestBrute",
                 EnemyType.HarvestBrute,
                 "Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Charred_01.prefab",
-                "Assets/Synty/PolygonHalloweenMasks/Prefabs/SM_Prop_Demonic_Mask_01.prefab",
+                null,
                 "Assets/Synty/PolygonGeneric/Prefabs/Weapons/SM_Gen_Wep_Pickaxe_01.prefab",
-                1.70f, 480f, 2.1f, 32f, false, 0f, false, 1.0f, true, null, mediumFx);
+                1.70f, 480f, 2.1f, 32f, false, 0f, false, 1.0f, true, null, mediumFx,
+                bruteMasks, 0.45f, 0.35f, false);
 
             GameObject bossPrefab = CreateBossPrefab(bombPrefab, largeFx);
 
@@ -114,7 +145,10 @@ namespace CursedHarvest.Editor
                 bombPrefab,
                 xpPrefab,
                 seedPrefab,
-                plotPrefab);
+                plotPrefab,
+                healthPrefab,
+                scarecrowPrefab,
+                brutePrefab);
 
             Debug.Log("[CursedHarvest] Complete Game Build (Phases 1-6) Finished Successfully!");
         }
@@ -367,6 +401,79 @@ namespace CursedHarvest.Editor
             return saved;
         }
 
+        private static GameObject CreateHealthPickupPrefab()
+        {
+            string targetPath = $"{PrefabsPath}/HealthRestorePickup.prefab";
+            GameObject potionSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Props/SM_Gen_Prop_Potion_01.prefab");
+
+            GameObject instance = new GameObject("HealthRestorePickup");
+            instance.tag = "Pickup";
+            int pickupLayer = LayerMask.NameToLayer("Pickup");
+            if (pickupLayer >= 0) instance.layer = pickupLayer;
+
+            if (potionSource != null)
+            {
+                GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(potionSource, instance.transform);
+                model.transform.localPosition = Vector3.zero;
+                model.transform.localScale = Vector3.one * 0.95f;
+                RemoveColliders(model);
+            }
+            else
+            {
+                GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                sphere.transform.SetParent(instance.transform, false);
+                sphere.transform.localScale = Vector3.one * 0.4f;
+                RemoveColliders(sphere);
+            }
+
+            SphereCollider col = instance.AddComponent<SphereCollider>();
+            col.isTrigger = true;
+            col.radius = 0.5f;
+
+            Rigidbody rb = instance.AddComponent<Rigidbody>();
+            rb.isKinematic = true;
+            rb.useGravity = false;
+
+            // Soft restorative healing green light
+            GameObject lightObj = new GameObject("HealLight");
+            lightObj.transform.SetParent(instance.transform, false);
+            Light l = lightObj.AddComponent<Light>();
+            l.type = LightType.Point;
+            l.color = new Color(0.38f, 1.0f, 0.55f);
+            l.range = 2.8f;
+            l.intensity = 1.8f;
+
+            // Gentle ascending healing particles
+            GameObject psObj = new GameObject("HealWisps");
+            psObj.transform.SetParent(instance.transform, false);
+            ParticleSystem ps = psObj.AddComponent<ParticleSystem>();
+            var main = ps.main;
+            main.duration = 1.0f;
+            main.loop = true;
+            main.startLifetime = 0.65f;
+            main.startSpeed = 0.35f;
+            main.startSize = 0.12f;
+            main.startColor = new Color(0.45f, 1.0f, 0.60f, 0.75f);
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            var emission = ps.emission;
+            emission.rateOverTime = 4f;
+            var shape = ps.shape;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = 0.25f;
+
+            var rend = psObj.GetComponent<ParticleSystemRenderer>();
+            Material sparkMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/SimpleFX/Materials/FX_GunFlash.mat");
+            if (sparkMat == null) sparkMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/SimpleFX/Materials/FX_Base.mat");
+            if (sparkMat != null) rend.material = sparkMat;
+
+            instance.AddComponent<HealthRestorePickup>();
+            instance.AddComponent<PooledObjectTracker>();
+
+            GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, targetPath);
+            UnityEngine.Object.DestroyImmediate(instance);
+            return saved;
+        }
+
         private static GameObject CreateHarvestPlotPrefab(GameObject mediumFx = null)
         {
             string targetPath = $"{PrefabsPath}/HarvestPlot.prefab";
@@ -374,6 +481,10 @@ namespace CursedHarvest.Editor
             GameObject pumpkinSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_01.prefab");
             GameObject luckyVfx = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Fireworks_Green_Large.prefab");
             GameObject cursedVfx = mediumFx != null ? mediumFx : AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Explosion_Rubble.prefab");
+            GameObject rootSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Root_01.prefab");
+            GameObject leavesSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Leaves_01.prefab");
+            GameObject fogSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/FX/FX_Fog_01.prefab");
+            if (fogSource == null) fogSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SimpleFX/Prefabs/FX_Steam.prefab");
 
             GameObject instance = new GameObject("HarvestPlot");
             instance.tag = "HarvestPlot";
@@ -381,8 +492,29 @@ namespace CursedHarvest.Editor
             if (dirtSource != null)
             {
                 GameObject dirt = (GameObject)PrefabUtility.InstantiatePrefab(dirtSource, instance.transform);
-                dirt.transform.localPosition = new Vector3(0f, -0.05f, 0f);
-                dirt.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                dirt.transform.localPosition = new Vector3(0f, 0.04f, 0f);
+                dirt.transform.localScale = new Vector3(0.58f, 0.58f, 0.58f);
+                RemoveColliders(dirt);
+            }
+
+            // Corrupt ritual roots emerging from soil
+            if (rootSource != null)
+            {
+                GameObject root = (GameObject)PrefabUtility.InstantiatePrefab(rootSource, instance.transform);
+                root.transform.localPosition = new Vector3(-0.55f, 0.06f, -0.35f);
+                root.transform.localRotation = Quaternion.Euler(0f, 50f, 0f);
+                root.transform.localScale = new Vector3(0.55f, 0.55f, 0.55f);
+                RemoveColliders(root);
+            }
+
+            // Autumn dead leaves around plot rim
+            if (leavesSource != null)
+            {
+                GameObject leaves = (GameObject)PrefabUtility.InstantiatePrefab(leavesSource, instance.transform);
+                leaves.transform.localPosition = new Vector3(0.45f, 0.06f, 0.40f);
+                leaves.transform.localRotation = Quaternion.Euler(0f, 130f, 0f);
+                leaves.transform.localScale = Vector3.one * 0.75f;
+                RemoveColliders(leaves);
             }
 
             // Stone shrine statue landmark behind the plot
@@ -390,31 +522,41 @@ namespace CursedHarvest.Editor
             if (statueSource != null)
             {
                 GameObject statue = (GameObject)PrefabUtility.InstantiatePrefab(statueSource, instance.transform);
-                statue.transform.localPosition = new Vector3(0f, 0f, 0.75f);
+                statue.transform.localPosition = new Vector3(0f, 0.06f, 0.75f);
                 statue.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
                 statue.transform.localScale = new Vector3(0.42f, 0.42f, 0.42f);
+                RemoveColliders(statue);
+            }
+
+            // Local faint ground mist
+            if (fogSource != null)
+            {
+                GameObject mist = (GameObject)PrefabUtility.InstantiatePrefab(fogSource, instance.transform);
+                mist.transform.localPosition = new Vector3(0f, 0.08f, 0f);
+                mist.transform.localScale = new Vector3(1.8f, 0.4f, 1.8f);
             }
 
             // Growing pumpkin child
             GameObject growingPumpkin = new GameObject("GrowingPumpkin");
             growingPumpkin.transform.SetParent(instance.transform, false);
-            growingPumpkin.transform.localPosition = new Vector3(0f, 0.2f, 0f);
+            growingPumpkin.transform.localPosition = new Vector3(0f, 0.28f, 0f);
 
             if (pumpkinSource != null)
             {
                 GameObject pModel = (GameObject)PrefabUtility.InstantiatePrefab(pumpkinSource, growingPumpkin.transform);
                 pModel.transform.localPosition = Vector3.zero;
+                RemoveColliders(pModel);
             }
 
-            // Beacon / plot light
+            // Beacon / plot light (IDLE starts in soft atmospheric warm amber)
             GameObject lightObj = new GameObject("PlotLight");
             lightObj.transform.SetParent(instance.transform, false);
-            lightObj.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            lightObj.transform.localPosition = new Vector3(0f, 0.75f, 0f);
             Light l = lightObj.AddComponent<Light>();
             l.type = LightType.Point;
-            l.color = new Color(0.4f, 1f, 0.4f);
-            l.range = 6.0f;
-            l.intensity = 1.8f;
+            l.color = new Color(1.0f, 0.65f, 0.25f);
+            l.range = 7.5f;
+            l.intensity = 1.6f;
 
             HarvestPlot plot = instance.AddComponent<HarvestPlot>();
             SerializedObject soPlot = new SerializedObject(plot);
@@ -538,11 +680,11 @@ namespace CursedHarvest.Editor
             fireAuraWeapon.enabled = false;
             wm.AddWeapon(fireAuraWeapon);
 
-            // Strip any editor-time cloned objects so Player starts with a clean body
+            // Strip any editor-time cloned objects or inactive weapon containers so Player starts with a clean body
             Transform[] allKids = root.GetComponentsInChildren<Transform>(true);
             foreach (Transform kid in allKids)
             {
-                if (kid != null && kid.name.Contains("(Clone)"))
+                if (kid != null && (kid.name.Contains("(Clone)") || kid.name.Contains("ScytheBladesContainer")))
                 {
                     UnityEngine.Object.DestroyImmediate(kid.gameObject);
                 }
@@ -594,20 +736,12 @@ namespace CursedHarvest.Editor
 
             if (pumpkinSource != null)
             {
-                Transform parent = headBone != null ? headBone : visual.transform;
-                GameObject pumpkin = (GameObject)PrefabUtility.InstantiatePrefab(pumpkinSource, parent);
-                if (headBone != null)
-                {
-                    pumpkin.transform.localPosition = new Vector3(0f, 0.15f, 0.05f);
-                    pumpkin.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-                    pumpkin.transform.localScale = Vector3.one * 0.45f;
-                }
-                else
-                {
-                    pumpkin.transform.localPosition = new Vector3(0f, 1.45f, 0f);
-                    pumpkin.transform.localRotation = Quaternion.identity;
-                    pumpkin.transform.localScale = Vector3.one * 0.45f;
-                }
+                // Parent pumpkin head directly to visual.transform so it maintains clean character-forward alignment and rests squarely on the neck
+                GameObject pumpkin = (GameObject)PrefabUtility.InstantiatePrefab(pumpkinSource, visual.transform);
+                pumpkin.transform.localPosition = new Vector3(0f, 1.34f, 0.02f);
+                pumpkin.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                pumpkin.transform.localScale = Vector3.one * 0.46f;
+                RemoveColliders(pumpkin);
             }
 
             EnemyController ec = root.AddComponent<EnemyController>();
@@ -622,8 +756,9 @@ namespace CursedHarvest.Editor
             if (propFx != null && explosionEffect != null)
             {
                 propFx.objectReferenceValue = explosionEffect;
-                soEh.ApplyModifiedProperties();
             }
+            soEh.FindProperty("healthDropChance").floatValue = 0.04f;
+            soEh.ApplyModifiedProperties();
 
             GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, targetPath);
             UnityEngine.Object.DestroyImmediate(root);
@@ -711,7 +846,11 @@ namespace CursedHarvest.Editor
             float knockbackRes,
             bool guaranteedSeed,
             GameObject hazardPrefab,
-            GameObject deathEffect = null)
+            GameObject deathEffect = null,
+            string[] maskVariants = null,
+            float maskChance = 0f,
+            float healthDropChance = 0.04f,
+            bool guaranteedHealth = false)
         {
             string targetPath = $"{PrefabsPath}/{prefabName}.prefab";
             GameObject bodySource = AssetDatabase.LoadAssetAtPath<GameObject>(bodyPath);
@@ -745,7 +884,7 @@ namespace CursedHarvest.Editor
                 Transform[] bones = body.GetComponentsInChildren<Transform>(true);
                 foreach (Transform b in bones)
                 {
-                    if (headBone == null && (b.name.Contains("Head") || b.name.Contains("Neck")))
+                    if (headBone == null && (b.name == "Head" || b.name.Contains("Head")))
                     {
                         headBone = b;
                     }
@@ -760,23 +899,68 @@ namespace CursedHarvest.Editor
             {
                 Transform parent = headBone != null ? headBone : visual.transform;
                 GameObject head = (GameObject)PrefabUtility.InstantiatePrefab(headSource, parent);
+                RemoveColliders(head);
                 if (headBone != null)
                 {
-                    head.transform.localPosition = new Vector3(0f, 0.12f, 0.05f);
-                    head.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-                    head.transform.localScale = Vector3.one * 0.5f;
+                    head.transform.localPosition = Vector3.zero;
+                    head.transform.localRotation = Quaternion.identity;
+                    head.transform.localScale = Vector3.one;
                 }
                 else
                 {
                     head.transform.localPosition = new Vector3(0f, 1.45f, 0f);
                     head.transform.localRotation = Quaternion.identity;
-                    head.transform.localScale = Vector3.one * 0.55f;
+                    head.transform.localScale = Vector3.one;
+                }
+            }
+
+            // Mask Variants System
+            if (maskVariants != null && maskVariants.Length > 0 && headBone != null)
+            {
+                GameObject maskSocket = new GameObject("MaskSocket");
+                maskSocket.transform.SetParent(headBone, false);
+                maskSocket.transform.localPosition = Vector3.zero;
+                maskSocket.transform.localRotation = Quaternion.identity;
+                maskSocket.transform.localScale = Vector3.one;
+
+                List<GameObject> instantiatedMasks = new List<GameObject>();
+                for (int i = 0; i < maskVariants.Length; i++)
+                {
+                    string mPath = maskVariants[i];
+                    GameObject mSource = AssetDatabase.LoadAssetAtPath<GameObject>(mPath);
+                    if (mSource != null)
+                    {
+                        GameObject mObj = (GameObject)PrefabUtility.InstantiatePrefab(mSource, maskSocket.transform);
+                        RemoveColliders(mObj);
+
+                        float maskScale = (type == EnemyType.CursedFarmer) ? 0.95f : 1.0f;
+                        mObj.transform.localPosition = Vector3.zero;
+                        mObj.transform.localRotation = Quaternion.identity;
+                        mObj.transform.localScale = Vector3.one * maskScale;
+                        mObj.SetActive(false);
+                        instantiatedMasks.Add(mObj);
+                    }
+                }
+
+                if (instantiatedMasks.Count > 0)
+                {
+                    EnemyMaskVariant emv = root.AddComponent<EnemyMaskVariant>();
+                    SerializedObject soEmv = new SerializedObject(emv);
+                    SerializedProperty spList = soEmv.FindProperty("maskVariants");
+                    spList.arraySize = instantiatedMasks.Count;
+                    for (int m = 0; m < instantiatedMasks.Count; m++)
+                    {
+                        spList.GetArrayElementAtIndex(m).objectReferenceValue = instantiatedMasks[m];
+                    }
+                    soEmv.FindProperty("maskChance").floatValue = maskChance;
+                    soEmv.ApplyModifiedProperties();
                 }
             }
 
             if (handSource != null && handBone != null)
             {
                 GameObject handItem = (GameObject)PrefabUtility.InstantiatePrefab(handSource, handBone);
+                RemoveColliders(handItem);
                 handItem.transform.localPosition = new Vector3(0.05f, 0.05f, 0.1f);
                 handItem.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
                 handItem.transform.localScale = Vector3.one * 0.85f;
@@ -801,6 +985,8 @@ namespace CursedHarvest.Editor
             soEh.FindProperty("xpDropValue").floatValue = hp * 0.35f;
             soEh.FindProperty("seedDropChance").floatValue = 0.25f;
             soEh.FindProperty("guaranteedSeedDrop").boolValue = guaranteedSeed;
+            soEh.FindProperty("healthDropChance").floatValue = healthDropChance;
+            soEh.FindProperty("guaranteedHealthDrop").boolValue = guaranteedHealth;
             soEh.FindProperty("knockbackResistance").floatValue = knockbackRes;
             if (hazardPrefab != null) soEh.FindProperty("onDeathHazardPrefab").objectReferenceValue = hazardPrefab;
             if (explosionEffect != null) soEh.FindProperty("deathEffectPrefab").objectReferenceValue = explosionEffect;
@@ -874,6 +1060,9 @@ namespace CursedHarvest.Editor
             soEh.FindProperty("xpDropValue").floatValue = 300f;
             soEh.FindProperty("seedDropChance").floatValue = 1.0f;
             soEh.FindProperty("guaranteedSeedDrop").boolValue = true;
+            soEh.FindProperty("healthDropChance").floatValue = 1.0f;
+            soEh.FindProperty("guaranteedHealthDrop").boolValue = true;
+            soEh.FindProperty("healthDropCount").intValue = 2;
             soEh.FindProperty("knockbackResistance").floatValue = 1.0f;
             if (explosionEffect != null) soEh.FindProperty("deathEffectPrefab").objectReferenceValue = explosionEffect;
             soEh.ApplyModifiedProperties();
@@ -909,8 +1098,13 @@ namespace CursedHarvest.Editor
             GameObject bombPrefab,
             GameObject xpPrefab,
             GameObject seedPrefab,
-            GameObject plotPrefab)
+            GameObject plotPrefab,
+            GameObject healthPrefab = null,
+            GameObject scarecrowPrefab = null,
+            GameObject brutePrefab = null)
         {
+            if (scarecrowPrefab == null) scarecrowPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Enemy_EliteScarecrow.prefab");
+            if (brutePrefab == null) brutePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Enemy_HarvestBrute.prefab");
             string scenePath = $"{ScenesPath}/MainGame.unity";
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
@@ -973,6 +1167,7 @@ namespace CursedHarvest.Editor
             ObjectPool bombPool = bombPrefab != null ? CreatePool(poolsRoot.transform, "BombPool", bombPrefab, 20) : null;
             ObjectPool xpPool = CreatePool(poolsRoot.transform, "XpPool", xpPrefab, 60);
             ObjectPool seedPool = CreatePool(poolsRoot.transform, "SeedPool", seedPrefab, 25);
+            ObjectPool healthPool = healthPrefab != null ? CreatePool(poolsRoot.transform, "HealthPool", healthPrefab, 20) : null;
 
             // 6. Player Instance
             GameObject playerInstance = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab);
@@ -999,6 +1194,8 @@ namespace CursedHarvest.Editor
             spawnDirector.SetPlayer(playerInstance.transform);
             spawnDirector.SetPools(gruntPool, chaserPool, plaguePool, chargerPool, farmerPool);
             if (bossPrefab != null) spawnDirector.SetBossPrefab(bossPrefab);
+            spawnDirector.SetElitePrefabs(scarecrowPrefab, brutePrefab);
+            if (healthPrefab != null) spawnDirector.SetHealthPickupPrefab(healthPrefab);
 
             // 8. UI Canvas & HUD
             CreateUICanvas();
@@ -1013,7 +1210,9 @@ namespace CursedHarvest.Editor
             soGm.FindProperty("enemyPool").objectReferenceValue = gruntPool;
             soGm.FindProperty("xpPool").objectReferenceValue = xpPool;
             soGm.FindProperty("seedPool").objectReferenceValue = seedPool;
+            if (healthPool != null) soGm.FindProperty("healthPool").objectReferenceValue = healthPool;
             soGm.FindProperty("cameraFollow").objectReferenceValue = camFollow;
+            soGm.FindProperty("autoSpawnEnemies").boolValue = false;
             soGm.ApplyModifiedProperties();
 
             // 10. Audio & Polish Managers
@@ -1110,11 +1309,21 @@ namespace CursedHarvest.Editor
             Text bannerText = CreateText(luckyBanner, "BannerText", "★ LUCKY LAST ACTIVE! ★", 20, TextAnchor.MiddleCenter, new Color(1f, 0.90f, 0.3f), defaultFont);
             luckyBanner.SetActive(false);
 
-            // Top-Center: Survival Timer Pill (integrated minimalist)
-            GameObject topCenter = CreateUIObject("TopCenterHUD", canvasObj.transform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(90, 26), new Vector2(0, -18));
-            CreateImage(topCenter, "TimerBg", new Color(0.06f, 0.07f, 0.10f, 0.80f));
-            Text timerText = CreateText(topCenter, "TimerText", "00:00", 16, TextAnchor.MiddleCenter, new Color(0.94f, 0.93f, 0.88f), defaultFont);
+            // Top-Center: Wave & Survival Timer Pill (integrated folk horror HUD)
+            GameObject topCenter = CreateUIObject("TopCenterHUD", canvasObj.transform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(210, 50), new Vector2(0, -32));
+            CreateImage(topCenter, "TimerBg", new Color(0.06f, 0.07f, 0.10f, 0.85f));
+
+            Text waveText = CreateText(topCenter, "WaveText", "WAVE 1", 15, TextAnchor.MiddleCenter, new Color(0.96f, 0.76f, 0.26f), defaultFont);
+            waveText.fontStyle = FontStyle.Bold;
+            waveText.rectTransform.anchoredPosition = new Vector2(-48, 10);
+
+            Text timerText = CreateText(topCenter, "TimerText", "00:00", 14, TextAnchor.MiddleCenter, new Color(0.94f, 0.93f, 0.88f), defaultFont);
             timerText.fontStyle = FontStyle.Bold;
+            timerText.rectTransform.anchoredPosition = new Vector2(48, 10);
+
+            Text waveRemText = CreateText(topCenter, "WaveRemainingText", "8 REMAINING", 12, TextAnchor.MiddleCenter, new Color(0.90f, 0.88f, 0.82f), defaultFont);
+            waveRemText.fontStyle = FontStyle.Bold;
+            waveRemText.rectTransform.anchoredPosition = new Vector2(0, -11);
 
             // Top-Right: Cursed Seeds Badge (compact icon + count)
             GameObject topRight = CreateUIObject("TopRightHUD", canvasObj.transform, new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1), new Vector2(70, 26), new Vector2(-24, -18));
@@ -1149,22 +1358,25 @@ namespace CursedHarvest.Editor
             lvlText.fontStyle = FontStyle.Bold;
             lvlText.rectTransform.anchoredPosition = new Vector2(0, 16);
 
-            // Level Up Modal (90% uniform dark overlay, large desktop-readable cards, integrated reroll)
+            // Level Up Modal (90% uniform dark overlay, safe area margins, adaptive responsive layout)
             GameObject lvlModal = CreateUIObject("LevelUpModal", canvasObj.transform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
-            CreateImage(lvlModal, "DarkOverlay", new Color(0.03f, 0.04f, 0.06f, 0.90f)); // 90% uniform dark overlay
+            CreateImage(lvlModal, "DarkOverlay", new Color(0.03f, 0.04f, 0.06f, 0.92f)); // 92% uniform dark overlay
 
-            Text lvlTitle = CreateText(lvlModal, "Title", "CHOOSE AN UPGRADE", 42, TextAnchor.MiddleCenter, new Color(0.96f, 0.95f, 0.92f), defaultFont);
+            // Dedicated LevelUpSafeArea container with relative margins (6% horizontal, 8% vertical)
+            GameObject safeArea = CreateUIObject("LevelUpSafeArea", lvlModal.transform, new Vector2(0.06f, 0.08f), new Vector2(0.94f, 0.92f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+
+            Text lvlTitle = CreateText(safeArea, "Title", "CHOOSE AN UPGRADE", 38, TextAnchor.MiddleCenter, new Color(0.96f, 0.95f, 0.92f), defaultFont);
             lvlTitle.fontStyle = FontStyle.Bold;
-            lvlTitle.rectTransform.sizeDelta = new Vector2(950, 60); // Large prominent headline
-            lvlTitle.rectTransform.anchoredPosition = new Vector2(0, 285);
+            lvlTitle.rectTransform.sizeDelta = new Vector2(850, 52);
+            lvlTitle.rectTransform.anchoredPosition = new Vector2(0, 255);
 
-            Text lvlSub = CreateText(lvlModal, "Subtitle", "Death whispers of renewed power...", 19, TextAnchor.MiddleCenter, new Color(0.68f, 0.72f, 0.78f), defaultFont);
-            lvlSub.rectTransform.sizeDelta = new Vector2(800, 32);
-            lvlSub.rectTransform.anchoredPosition = new Vector2(0, 245);
+            Text lvlSub = CreateText(safeArea, "Subtitle", "Death whispers of renewed power...", 18, TextAnchor.MiddleCenter, new Color(0.68f, 0.75f, 0.82f), defaultFont);
+            lvlSub.rectTransform.sizeDelta = new Vector2(750, 28);
+            lvlSub.rectTransform.anchoredPosition = new Vector2(0, 218);
 
-            GameObject cardsContainer = CreateUIObject("CardsContainer", lvlModal.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1150, 430), new Vector2(0, 15));
+            GameObject cardsContainer = CreateUIObject("CardsContainer", safeArea.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1020, 395), new Vector2(0, -6));
             HorizontalLayoutGroup hlg = cardsContainer.AddComponent<HorizontalLayoutGroup>();
-            hlg.spacing = 36;
+            hlg.spacing = 24;
             hlg.childAlignment = TextAnchor.MiddleCenter;
             hlg.childControlWidth = false;
             hlg.childControlHeight = false;
@@ -1177,15 +1389,15 @@ namespace CursedHarvest.Editor
                 cardUIs[i] = CreateUpgradeCard(cardsContainer.transform, i + 1, defaultFont);
             }
 
-            GameObject rerollBtnObj = CreateButton(lvlModal.transform, "RerollButton", "REROLL — 1 LEFT [R]", new Color(0.11f, 0.12f, 0.16f), defaultFont);
+            GameObject rerollBtnObj = CreateButton(safeArea.transform, "RerollButton", "REROLL — 1 LEFT [R]", new Color(0.12f, 0.13f, 0.17f), defaultFont);
             RectTransform rtReroll = rerollBtnObj.GetComponent<RectTransform>();
-            rtReroll.anchoredPosition = new Vector2(0, -255);
-            rtReroll.sizeDelta = new Vector2(320, 48);
+            rtReroll.anchoredPosition = new Vector2(0, -242);
+            rtReroll.sizeDelta = new Vector2(320, 46);
             Button btnReroll = rerollBtnObj.GetComponent<Button>();
             Text txtReroll = rerollBtnObj.GetComponentInChildren<Text>();
             if (txtReroll != null)
             {
-                txtReroll.fontSize = 20;
+                txtReroll.fontSize = 19;
                 txtReroll.fontStyle = FontStyle.Bold;
                 txtReroll.color = new Color(0.95f, 0.93f, 0.88f); // ivory
             }
@@ -1232,16 +1444,24 @@ namespace CursedHarvest.Editor
             GameObject vicModal = CreateUIObject("VictoryModal", canvasObj.transform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
             CreateImage(vicModal, "DarkOverlay", new Color(0.05f, 0.15f, 0.05f, 0.88f));
 
-            Text vicTitle = CreateText(vicModal, "Title", "THE LAST HARVEST DEFEATED!", 44, TextAnchor.MiddleCenter, Color.yellow, defaultFont);
+            Text vicTitle = CreateText(vicModal, "Title", "YOU GOT LUCKY.", 44, TextAnchor.MiddleCenter, Color.yellow, defaultFont);
+            vicTitle.rectTransform.sizeDelta = new Vector2(850, 70);
+            vicTitle.horizontalOverflow = HorizontalWrapMode.Overflow;
             vicTitle.rectTransform.anchoredPosition = new Vector2(0, 140);
 
-            Text vicSub = CreateText(vicModal, "Sub", "YOU SURVIVED THE CURSED HARVEST!\n\nEnter Endless Mode to test your power against limitless hordes.", 24, TextAnchor.MiddleCenter, Color.white, defaultFont);
-            vicSub.rectTransform.sizeDelta = new Vector2(800, 120);
+            Text vicSub = CreateText(vicModal, "Sub", "THE LAST HARVEST HAS FALLEN!\n\nONE LAST NIGHT?", 24, TextAnchor.MiddleCenter, Color.white, defaultFont);
+            vicSub.rectTransform.sizeDelta = new Vector2(850, 120);
             vicSub.rectTransform.anchoredPosition = new Vector2(0, 20);
 
-            GameObject vicBtnObj = CreateButton(vicModal.transform, "EndlessButton", "ENTER ENDLESS MODE [ENTER]", new Color(0.2f, 0.7f, 0.3f), defaultFont);
+            GameObject vicBtnObj = CreateButton(vicModal.transform, "EndlessButton", "ENTER ONE LAST NIGHT [ENTER]", new Color(0.2f, 0.7f, 0.3f), defaultFont);
             vicBtnObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -120);
-            vicBtnObj.GetComponent<RectTransform>().sizeDelta = new Vector2(360, 55);
+            vicBtnObj.GetComponent<RectTransform>().sizeDelta = new Vector2(460, 55);
+            Text btnVicText = vicBtnObj.GetComponentInChildren<Text>();
+            if (btnVicText != null)
+            {
+                btnVicText.rectTransform.sizeDelta = new Vector2(460, 55);
+                btnVicText.horizontalOverflow = HorizontalWrapMode.Overflow;
+            }
             Button btnVic = vicBtnObj.GetComponent<Button>();
 
             vicModal.SetActive(false);
@@ -1327,7 +1547,10 @@ namespace CursedHarvest.Editor
             soUim.FindProperty("healthText").objectReferenceValue = hpText;
             soUim.FindProperty("luckyChargesText").objectReferenceValue = luckyText;
             soUim.FindProperty("luckyLastBanner").objectReferenceValue = luckyBanner;
+            soUim.FindProperty("luckyLastTimerText").objectReferenceValue = bannerText;
             soUim.FindProperty("timerText").objectReferenceValue = timerText;
+            soUim.FindProperty("waveText").objectReferenceValue = waveText;
+            soUim.FindProperty("waveRemainingText").objectReferenceValue = waveRemText;
             soUim.FindProperty("xpBarFill").objectReferenceValue = imgXpFill;
             soUim.FindProperty("levelText").objectReferenceValue = lvlText;
             soUim.FindProperty("killCountText").objectReferenceValue = killText;
@@ -1350,6 +1573,7 @@ namespace CursedHarvest.Editor
 
             soUim.FindProperty("victoryModal").objectReferenceValue = vicModal;
             soUim.FindProperty("victoryTitleText").objectReferenceValue = vicTitle;
+            soUim.FindProperty("victorySubtitleText").objectReferenceValue = vicSub;
             soUim.FindProperty("continueEndlessButton").objectReferenceValue = btnVic;
 
             soUim.FindProperty("titleModal").objectReferenceValue = titleModal;
@@ -1364,8 +1588,8 @@ namespace CursedHarvest.Editor
 
         private static UpgradeCardUI CreateUpgradeCard(Transform parent, int slotIndex, Font font)
         {
-            // Enlarged 350x410 card with antique copper border (#614d33) for clear Game View readability
-            GameObject cardObj = CreateUIObject($"Card_{slotIndex}", parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(350, 410), Vector2.zero);
+            // Responsive 315x390 card with antique copper border (#614d33) fitting 16:9, 16:10, and 4:3 viewports
+            GameObject cardObj = CreateUIObject($"Card_{slotIndex}", parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(315, 390), Vector2.zero);
             CreateImage(cardObj, "CardBorder", new Color(0.38f, 0.30f, 0.20f, 1f));
 
             // Inner body inset by 2px (dark charcoal #14171c)
@@ -1373,39 +1597,39 @@ namespace CursedHarvest.Editor
             RectTransform rtBody = bodyObj.GetComponent<RectTransform>();
             rtBody.offsetMin = new Vector2(2, 2);
             rtBody.offsetMax = new Vector2(-2, -2);
-            CreateImage(bodyObj, "BodyBg", new Color(0.08f, 0.09f, 0.11f, 0.94f));
+            CreateImage(bodyObj, "BodyBg", new Color(0.08f, 0.09f, 0.11f, 0.95f));
 
-            // Badge at top y = -12 (320x26) - font size 18 bold
-            Text cat = CreateText(bodyObj, "Category", "★ NEW WEAPON ★", 18, TextAnchor.MiddleCenter, new Color(0.25f, 0.95f, 0.50f), font);
+            // Badge at top y = -14 (290x26) - font size 16 bold
+            Text cat = CreateText(bodyObj, "Category", "★ NEW WEAPON ★", 16, TextAnchor.MiddleCenter, new Color(0.25f, 0.95f, 0.50f), font);
             cat.fontStyle = FontStyle.Bold;
             RectTransform rtCat = cat.rectTransform;
             rtCat.anchorMin = new Vector2(0.5f, 1f);
             rtCat.anchorMax = new Vector2(0.5f, 1f);
             rtCat.pivot = new Vector2(0.5f, 1f);
-            rtCat.sizeDelta = new Vector2(320, 26);
-            rtCat.anchoredPosition = new Vector2(0, -12);
+            rtCat.sizeDelta = new Vector2(290, 26);
+            rtCat.anchoredPosition = new Vector2(0, -14);
 
-            // Title at y = -44 (320x42): font size 26 bold ivory
-            Text title = CreateText(bodyObj, "Title", "Upgrade Title", 26, TextAnchor.MiddleCenter, new Color(0.96f, 0.95f, 0.90f), font);
+            // Title at y = -46 (290x38): font size 22 bold ivory
+            Text title = CreateText(bodyObj, "Title", "Upgrade Title", 22, TextAnchor.MiddleCenter, new Color(0.96f, 0.95f, 0.90f), font);
             title.fontStyle = FontStyle.Bold;
             RectTransform rtTitle = title.rectTransform;
             rtTitle.anchorMin = new Vector2(0.5f, 1f);
             rtTitle.anchorMax = new Vector2(0.5f, 1f);
             rtTitle.pivot = new Vector2(0.5f, 1f);
-            rtTitle.sizeDelta = new Vector2(320, 42);
-            rtTitle.anchoredPosition = new Vector2(0, -44);
+            rtTitle.sizeDelta = new Vector2(290, 38);
+            rtTitle.anchoredPosition = new Vector2(0, -46);
 
-            // Horizontal 2px divider at y = -90 (310x2)
+            // Horizontal 2px divider at y = -86 (280x2)
             GameObject divObj = CreateImage(bodyObj, "Divider", new Color(0.29f, 0.24f, 0.17f, 0.90f));
             RectTransform rtDiv = divObj.GetComponent<RectTransform>();
             rtDiv.anchorMin = new Vector2(0.5f, 1f);
             rtDiv.anchorMax = new Vector2(0.5f, 1f);
             rtDiv.pivot = new Vector2(0.5f, 1f);
-            rtDiv.sizeDelta = new Vector2(310, 2);
-            rtDiv.anchoredPosition = new Vector2(0, -90);
+            rtDiv.sizeDelta = new Vector2(280, 2);
+            rtDiv.anchoredPosition = new Vector2(0, -86);
 
-            // Description at y = -100 (310x140): font size 21, soft ivory (#dcd7cc), wrapped cleanly
-            Text desc = CreateText(bodyObj, "Description", "+25% Damage", 21, TextAnchor.UpperCenter, new Color(0.88f, 0.86f, 0.82f), font);
+            // Description at y = -96 (280x135): font size 17, soft ivory (#dcd7cc), wrapped cleanly
+            Text desc = CreateText(bodyObj, "Description", "+25% Damage", 17, TextAnchor.UpperCenter, new Color(0.88f, 0.86f, 0.82f), font);
             desc.horizontalOverflow = HorizontalWrapMode.Wrap;
             desc.verticalOverflow = VerticalWrapMode.Truncate;
             desc.lineSpacing = 1.15f;
@@ -1413,31 +1637,31 @@ namespace CursedHarvest.Editor
             rtDesc.anchorMin = new Vector2(0.5f, 1f);
             rtDesc.anchorMax = new Vector2(0.5f, 1f);
             rtDesc.pivot = new Vector2(0.5f, 1f);
-            rtDesc.sizeDelta = new Vector2(310, 140);
-            rtDesc.anchoredPosition = new Vector2(0, -100);
+            rtDesc.sizeDelta = new Vector2(280, 135);
+            rtDesc.anchoredPosition = new Vector2(0, -96);
 
-            // Level text at y = 72 from bottom (310x26): font size 18 bold aged gold
-            Text lvl = CreateText(bodyObj, "Level", "LEVEL 1 / 5", 18, TextAnchor.MiddleCenter, new Color(0.85f, 0.72f, 0.32f), font);
+            // Level text at y = 66 from bottom (280x24): font size 16 bold aged gold
+            Text lvl = CreateText(bodyObj, "Level", "LEVEL 1 / 5", 16, TextAnchor.MiddleCenter, new Color(0.85f, 0.72f, 0.32f), font);
             lvl.fontStyle = FontStyle.Bold;
             RectTransform rtLvl = lvl.rectTransform;
             rtLvl.anchorMin = new Vector2(0.5f, 0f);
             rtLvl.anchorMax = new Vector2(0.5f, 0f);
             rtLvl.pivot = new Vector2(0.5f, 0f);
-            rtLvl.sizeDelta = new Vector2(310, 26);
-            rtLvl.anchoredPosition = new Vector2(0, 72);
+            rtLvl.sizeDelta = new Vector2(280, 24);
+            rtLvl.anchoredPosition = new Vector2(0, 66);
 
-            // Select button at y = 12 from bottom (280x52): label SELECT [{slotIndex}], font size 21 bold
+            // Select button at y = 12 from bottom (270x46): label SELECT [{slotIndex}], font size 19 bold
             GameObject btnObj = CreateButton(bodyObj.transform, "SelectButton", $"SELECT [{slotIndex}]", new Color(0.12f, 0.14f, 0.18f), font);
             RectTransform rtBtn = btnObj.GetComponent<RectTransform>();
             rtBtn.anchorMin = new Vector2(0.5f, 0f);
             rtBtn.anchorMax = new Vector2(0.5f, 0f);
             rtBtn.pivot = new Vector2(0.5f, 0f);
             rtBtn.anchoredPosition = new Vector2(0, 12);
-            rtBtn.sizeDelta = new Vector2(280, 52);
+            rtBtn.sizeDelta = new Vector2(270, 46);
             Text btnTxt = btnObj.GetComponentInChildren<Text>();
             if (btnTxt != null)
             {
-                btnTxt.fontSize = 21;
+                btnTxt.fontSize = 19;
                 btnTxt.fontStyle = FontStyle.Bold;
                 btnTxt.color = new Color(0.96f, 0.95f, 0.90f);
             }
@@ -1753,6 +1977,17 @@ namespace CursedHarvest.Editor
             foreach (var c in cols) UnityEngine.Object.DestroyImmediate(c);
         }
 
+        public static float SampleGroundHeight(Vector3 pos)
+        {
+            Physics.SyncTransforms();
+            RaycastHit hit;
+            if (Physics.Raycast(new Vector3(pos.x, 20f, pos.z), Vector3.down, out hit, 40f))
+            {
+                return hit.point.y;
+            }
+            return 0f;
+        }
+
         private static void CreateRusticFence(Transform parent, Vector3 startPos, Vector3 endPos, GameObject logPrefab, GameObject plank1, GameObject plank2, bool isBroken)
         {
             if (logPrefab == null || plank1 == null) return;
@@ -1790,6 +2025,59 @@ namespace CursedHarvest.Editor
             btmPlank.transform.rotation = rot * Quaternion.Euler(UnityEngine.Random.Range(-4f, 4f), 90f, UnityEngine.Random.Range(-3f, 3f));
             btmPlank.transform.localScale = new Vector3(length * 0.31f, 0.75f, 0.85f);
             RemoveColliders(btmPlank);
+        }
+
+        private static void CreatePumpkinCluster(Transform parent, Vector3 centerPos, GameObject unlitPrefab, GameObject litPrefab, int count, float radius)
+        {
+            if (unlitPrefab == null) return;
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 circle = UnityEngine.Random.insideUnitCircle * radius;
+                Vector3 pos = centerPos + new Vector3(circle.x, 0f, circle.y);
+                pos.y = SampleGroundHeight(pos);
+                // 1 out of 4 can be a soft lit lantern, the rest unlit
+                bool isLit = litPrefab != null && (i == 0 && UnityEngine.Random.value < 0.25f);
+                GameObject prefab = isLit ? litPrefab : unlitPrefab;
+
+                GameObject p = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
+                p.transform.position = pos;
+                float yaw = UnityEngine.Random.Range(0f, 360f);
+                float tiltX = UnityEngine.Random.Range(-8f, 8f);
+                float tiltZ = UnityEngine.Random.Range(-8f, 8f);
+                p.transform.rotation = Quaternion.Euler(tiltX, yaw, tiltZ);
+                float scale = UnityEngine.Random.Range(0.55f, 0.85f);
+                p.transform.localScale = Vector3.one * scale;
+                RemoveColliders(p);
+
+                if (isLit)
+                {
+                    GameObject pLight = new GameObject("SoftClusterLanternLight");
+                    pLight.transform.SetParent(p.transform, false);
+                    pLight.transform.localPosition = new Vector3(0f, 0.35f, 0f);
+                    Light l = pLight.AddComponent<Light>();
+                    l.type = LightType.Point;
+                    l.color = new Color(1f, 0.55f, 0.18f); // Soft warm amber
+                    l.range = 3.2f;
+                    l.intensity = 0.9f;
+                }
+            }
+        }
+
+        private static void SpawnInnerRingCluster(Transform parent, Vector3 centerPos, GameObject[] prefabs, Vector3[] localOffsets, float[] scales)
+        {
+            for (int i = 0; i < prefabs.Length; i++)
+            {
+                if (prefabs[i] == null) continue;
+                GameObject item = (GameObject)PrefabUtility.InstantiatePrefab(prefabs[i], parent);
+                Vector3 off = i < localOffsets.Length ? localOffsets[i] : Vector3.zero;
+                Vector3 targetPos = centerPos + off;
+                targetPos.y = SampleGroundHeight(targetPos) + off.y;
+                item.transform.position = targetPos;
+                item.transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
+                float sc = i < scales.Length ? scales[i] : 1f;
+                item.transform.localScale = Vector3.one * sc;
+                RemoveColliders(item);
+            }
         }
 
         private static void BuildAtmosphericLandmarks(Transform arenaRoot, GameObject plotPrefab)
@@ -1830,6 +2118,12 @@ namespace CursedHarvest.Editor
             GameObject shrub1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Shrub_01.prefab");
             GameObject shrub2 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Shrub_02.prefab");
             GameObject vines1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Vines_01.prefab");
+
+            GameObject dirtPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Ground_Dirt_01.prefab");
+            GameObject leavesPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Leaves_01.prefab");
+            GameObject pebbles1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Rock_Pebbles_01.prefab");
+            GameObject pebbles3 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Rock_Pebbles_03.prefab");
+            GameObject twigPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Twig_02.prefab");
 
             GameObject statue1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Props/SM_Gen_Prop_Statue_01.prefab");
             GameObject statue4 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Props/SM_Gen_Prop_Statue_04.prefab");
@@ -2157,11 +2451,21 @@ namespace CursedHarvest.Editor
             for (int pIdx = 0; pIdx < plotPositions.Length; pIdx++)
             {
                 Vector3 pPos = plotPositions[pIdx];
+                pPos.y = SampleGroundHeight(pPos);
 
                 if (plotPrefab != null)
                 {
                     GameObject plotObj = (GameObject)PrefabUtility.InstantiatePrefab(plotPrefab, arenaRoot);
                     plotObj.transform.position = pPos;
+                }
+
+                // Tilled dark earth foundation beneath each plot
+                if (dirtPrefab != null)
+                {
+                    GameObject pDirt = (GameObject)PrefabUtility.InstantiatePrefab(dirtPrefab, landmarksParent.transform);
+                    pDirt.transform.position = pPos + new Vector3(0f, 0.02f, 0f);
+                    pDirt.transform.localScale = new Vector3(0.68f, 0.68f, 0.68f);
+                    RemoveColliders(pDirt);
                 }
 
                 // Plot-specific thematic dressing
@@ -2176,6 +2480,14 @@ namespace CursedHarvest.Editor
                         v.transform.localScale = Vector3.one * 0.9f;
                         RemoveColliders(v);
                     }
+                    if (root1 != null)
+                    {
+                        GameObject rt = (GameObject)PrefabUtility.InstantiatePrefab(root1, landmarksParent.transform);
+                        rt.transform.position = pPos + new Vector3(1.4f, 0.02f, 1.4f);
+                        rt.transform.rotation = Quaternion.Euler(0f, 120f, 0f);
+                        rt.transform.localScale = Vector3.one * 0.6f;
+                        RemoveColliders(rt);
+                    }
                 }
                 else if (pIdx == 0) // NE Plot: Shrine stone & pot
                 {
@@ -2186,6 +2498,13 @@ namespace CursedHarvest.Editor
                         pl.transform.position = pPos + new Vector3(1.8f, 0f, -1.2f);
                         pl.transform.localScale = Vector3.one * 0.7f;
                         RemoveColliders(pl);
+                    }
+                    if (pebbles1 != null)
+                    {
+                        GameObject pb = (GameObject)PrefabUtility.InstantiatePrefab(pebbles1, landmarksParent.transform);
+                        pb.transform.position = pPos + new Vector3(1.2f, 0.02f, -1.6f);
+                        pb.transform.localScale = Vector3.one * 0.65f;
+                        RemoveColliders(pb);
                     }
                 }
                 else if (pIdx == 2) // SW Plot: Spade & sack
@@ -2199,6 +2518,14 @@ namespace CursedHarvest.Editor
                         sp.transform.localScale = Vector3.one * 0.8f;
                         RemoveColliders(sp);
                     }
+                    if (plankPrefab1 != null)
+                    {
+                        GameObject pl = (GameObject)PrefabUtility.InstantiatePrefab(plankPrefab1, landmarksParent.transform);
+                        pl.transform.position = pPos + new Vector3(1.5f, 0.02f, -1.2f);
+                        pl.transform.rotation = Quaternion.Euler(0f, 65f, 0f);
+                        pl.transform.localScale = Vector3.one * 0.75f;
+                        RemoveColliders(pl);
+                    }
                 }
                 else // SE Plot: Timber rail & leaves
                 {
@@ -2210,9 +2537,16 @@ namespace CursedHarvest.Editor
                         pot.transform.localScale = Vector3.one * 0.75f;
                         RemoveColliders(pot);
                     }
+                    if (leavesPrefab != null)
+                    {
+                        GameObject lv = (GameObject)PrefabUtility.InstantiatePrefab(leavesPrefab, landmarksParent.transform);
+                        lv.transform.position = pPos + new Vector3(-1.4f, 0.02f, 1.4f);
+                        lv.transform.localScale = Vector3.one * 0.8f;
+                        RemoveColliders(lv);
+                    }
                 }
 
-                // Warm beacon pumpkin lantern at each plot
+                // Ambient corner pumpkin lantern at each plot (soft accent, does not wash out ritual state light)
                 if (lanternLitPrefab != null)
                 {
                     GameObject lantern = (GameObject)PrefabUtility.InstantiatePrefab(lanternLitPrefab, landmarksParent.transform);
@@ -2226,9 +2560,19 @@ namespace CursedHarvest.Editor
                     pLight.transform.localPosition = new Vector3(0f, 0.4f, 0f);
                     Light l = pLight.AddComponent<Light>();
                     l.type = LightType.Point;
-                    l.color = new Color(1f, 0.62f, 0.2f);
-                    l.range = 7f;
-                    l.intensity = 2.2f;
+                    l.color = new Color(1f, 0.58f, 0.18f);
+                    l.range = 4.2f;
+                    l.intensity = 1.0f;
+                }
+
+                // Unlit decorative pumpkins resting by plot perimeter
+                if (lanternUnlitPrefab != null)
+                {
+                    GameObject up = (GameObject)PrefabUtility.InstantiatePrefab(lanternUnlitPrefab, landmarksParent.transform);
+                    up.transform.position = pPos + new Vector3(-1.95f, 0f, -1.25f);
+                    up.transform.rotation = Quaternion.Euler(UnityEngine.Random.Range(-5f, 5f), UnityEngine.Random.Range(0f, 360f), 0f);
+                    up.transform.localScale = Vector3.one * 0.62f;
+                    RemoveColliders(up);
                 }
 
                 if (fogPrefab != null)
@@ -2237,6 +2581,167 @@ namespace CursedHarvest.Editor
                     mist.transform.position = pPos + new Vector3(0f, 0.05f, 0f);
                     mist.transform.localScale = new Vector3(2.6f, 0.5f, 2.6f);
                 }
+            }
+
+            // ==========================================
+            // CENTER ARENA DRESSING & SUBTLE LANDMARK
+            // ==========================================
+            GameObject centerParent = new GameObject("CenterArenaDressing");
+            centerParent.transform.SetParent(landmarksParent.transform, false);
+
+            // 1. Subtle Central Landmark (Height < 0.35m, 0 colliders, open kiting)
+            // Sunken rural ritual plinth / ancient stone base embedded in dark tilled dirt
+            float gy = SampleGroundHeight(Vector3.zero);
+
+            if (dirtPrefab != null)
+            {
+                GameObject cDirt = (GameObject)PrefabUtility.InstantiatePrefab(dirtPrefab, centerParent.transform);
+                cDirt.transform.position = new Vector3(0f, gy + 0.02f, 0f);
+                cDirt.transform.localScale = new Vector3(0.72f, 0.72f, 0.72f);
+                RemoveColliders(cDirt);
+            }
+
+            if (plinth2 != null)
+            {
+                GameObject cPlinth = (GameObject)PrefabUtility.InstantiatePrefab(plinth2, centerParent.transform);
+                cPlinth.transform.position = new Vector3(0f, gy + 0.04f, 0f);
+                cPlinth.transform.rotation = Quaternion.Euler(0f, 45f, 0f);
+                cPlinth.transform.localScale = new Vector3(0.85f, 0.42f, 0.85f);
+                RemoveColliders(cPlinth);
+            }
+
+            // Flat perimeter stone slabs & pebbles around central rim
+            Vector3[] centerStoneOffsets = new Vector3[]
+            {
+                new Vector3(0.95f, 0.02f, 0.95f),
+                new Vector3(-0.95f, 0.02f, 0.95f),
+                new Vector3(-0.95f, 0.02f, -0.95f),
+                new Vector3(0.95f, 0.02f, -0.95f)
+            };
+            foreach (var stoneOff in centerStoneOffsets)
+            {
+                GameObject sPrefab = pebbles1 ?? rock4;
+                if (sPrefab != null)
+                {
+                    GameObject s = (GameObject)PrefabUtility.InstantiatePrefab(sPrefab, centerParent.transform);
+                    Vector3 sPos = stoneOff;
+                    sPos.y = SampleGroundHeight(sPos) + 0.02f;
+                    s.transform.position = sPos;
+                    s.transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
+                    s.transform.localScale = Vector3.one * 0.7f;
+                    RemoveColliders(s);
+                }
+            }
+
+            // Autumn dead leaves, flat rusted tool, and unlit pumpkin on the central slab
+            if (leavesPrefab != null)
+            {
+                GameObject l = (GameObject)PrefabUtility.InstantiatePrefab(leavesPrefab, centerParent.transform);
+                l.transform.position = new Vector3(0.2f, gy + 0.14f, -0.15f);
+                l.transform.rotation = Quaternion.Euler(0f, 110f, 0f);
+                l.transform.localScale = Vector3.one * 0.7f;
+                RemoveColliders(l);
+            }
+            if (pickaxePrefab != null)
+            {
+                GameObject p = (GameObject)PrefabUtility.InstantiatePrefab(pickaxePrefab, centerParent.transform);
+                p.transform.position = new Vector3(0.05f, gy + 0.16f, 0.12f);
+                p.transform.rotation = Quaternion.Euler(0f, 35f, 90f);
+                p.transform.localScale = Vector3.one * 0.75f;
+                RemoveColliders(p);
+            }
+            if (lanternUnlitPrefab != null)
+            {
+                GameObject up = (GameObject)PrefabUtility.InstantiatePrefab(lanternUnlitPrefab, centerParent.transform);
+                up.transform.position = new Vector3(0.72f, gy + 0.08f, -0.65f);
+                up.transform.rotation = Quaternion.Euler(6f, 220f, -4f);
+                up.transform.localScale = Vector3.one * 0.65f;
+                RemoveColliders(up);
+            }
+            if (fogPrefab != null)
+            {
+                GameObject cMist = (GameObject)PrefabUtility.InstantiatePrefab(fogPrefab, centerParent.transform);
+                cMist.transform.position = new Vector3(0f, gy + 0.08f, 0f);
+                cMist.transform.localScale = new Vector3(1.6f, 0.35f, 1.6f);
+            }
+
+            // 2. Inner Ring Micro-Clusters (r = 6m - 18m, 9 micro-clusters of 2-4 items, 0 colliders)
+            // Cluster 1: NNE Diagonal (4.5, 0, 9.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(4.5f, 0f, 9.5f),
+                new GameObject[] { dirtPrefab, pebbles3 ?? rock2, plankPrefab1 },
+                new Vector3[] { Vector3.zero, new Vector3(0.4f, 0.02f, -0.3f), new Vector3(-0.35f, 0.02f, 0.35f) },
+                new float[] { 0.55f, 0.75f, 0.8f });
+
+            // Cluster 2: ENE Diagonal (9.5, 0, 4.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(9.5f, 0f, 4.5f),
+                new GameObject[] { leavesPrefab, pot1, shrub1 },
+                new Vector3[] { Vector3.zero, new Vector3(0.35f, 0f, -0.3f), new Vector3(-0.4f, 0f, 0.25f) },
+                new float[] { 0.75f, 0.65f, 0.45f });
+
+            // Cluster 3: ESE Diagonal (9.5, 0, -4.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(9.5f, 0f, -4.5f),
+                new GameObject[] { pebbles1 ?? rock4, ropePrefab, spadePrefab },
+                new Vector3[] { Vector3.zero, new Vector3(-0.35f, 0.02f, 0.3f), new Vector3(0.3f, 0.04f, -0.25f) },
+                new float[] { 0.7f, 0.6f, 0.75f });
+
+            // Cluster 4: SSE Diagonal (4.5, 0, -9.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(4.5f, 0f, -9.5f),
+                new GameObject[] { dirtPrefab, plankPrefab2, leavesPrefab },
+                new Vector3[] { Vector3.zero, new Vector3(0.4f, 0.02f, 0.25f), new Vector3(-0.3f, 0.02f, -0.35f) },
+                new float[] { 0.55f, 0.8f, 0.7f });
+
+            // Cluster 5: SSW Diagonal (-4.5, 0, -9.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(-4.5f, 0f, -9.5f),
+                new GameObject[] { skullPrefab, pebbles3 ?? rock5, twigPrefab ?? plankPrefab1 },
+                new Vector3[] { new Vector3(0f, -0.05f, 0f), new Vector3(0.4f, 0.02f, -0.25f), new Vector3(-0.35f, 0.02f, 0.3f) },
+                new float[] { 0.8f, 0.7f, 0.7f });
+
+            // Cluster 6: WSW Diagonal (-9.5, 0, -4.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(-9.5f, 0f, -4.5f),
+                new GameObject[] { root1, dirtPrefab, pebbles1 ?? rock4 },
+                new Vector3[] { Vector3.zero, new Vector3(0.35f, -0.02f, 0.35f), new Vector3(-0.3f, 0.02f, -0.3f) },
+                new float[] { 0.5f, 0.55f, 0.7f });
+
+            // Cluster 7: WNW Diagonal (-9.5, 0, 4.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(-9.5f, 0f, 4.5f),
+                new GameObject[] { pot2, leavesPrefab, plankPrefab1 },
+                new Vector3[] { Vector3.zero, new Vector3(-0.35f, 0.02f, -0.3f), new Vector3(0.4f, 0.02f, 0.25f) },
+                new float[] { 0.65f, 0.7f, 0.8f });
+
+            // Cluster 8: NNW Diagonal (-4.5, 0, 9.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(-4.5f, 0f, 9.5f),
+                new GameObject[] { pebbles1 ?? rock2, shrub2 ?? shrub1, lanternUnlitPrefab },
+                new Vector3[] { Vector3.zero, new Vector3(0.4f, 0f, 0.3f), new Vector3(-0.35f, 0.02f, -0.35f) },
+                new float[] { 0.7f, 0.45f, 0.6f });
+
+            // Cluster 9: North Axis Midpoint (0, 0, 11.5)
+            SpawnInnerRingCluster(centerParent.transform, new Vector3(0f, 0f, 11.5f),
+                new GameObject[] { dirtPrefab, plankPrefab2, leavesPrefab },
+                new Vector3[] { Vector3.zero, new Vector3(0.45f, 0.02f, -0.2f), new Vector3(-0.35f, 0.02f, 0.3f) },
+                new float[] { 0.5f, 0.85f, 0.75f });
+
+            // ==========================================
+            // NON-INTERACTIVE DECORATIVE PUMPKIN CLUSTERS
+            // ==========================================
+            GameObject pumpkinClustersParent = new GameObject("DecorativePumpkinClusters");
+            pumpkinClustersParent.transform.SetParent(landmarksParent.transform, false);
+
+            Vector3[] clusterLocations = new Vector3[]
+            {
+                new Vector3(16.5f, 0f, 8.5f),    // NE path bend near fence
+                new Vector3(-4.0f, 0f, 19.0f),   // North path entrance near rustic stone
+                new Vector3(-18.5f, 0f, 10.0f),  // NW blighted perimeter near dead tree
+                new Vector3(-19.0f, 0f, -4.5f),  // West path edge near timber pile
+                new Vector3(-10.5f, 0f, -17.5f), // SW farm quadrant near rustic fence
+                new Vector3(5.5f, 0f, -19.0f),   // South path entrance near fence rail
+                new Vector3(18.5f, 0f, -9.5f),   // SE quadrant near weathered plinth
+                new Vector3(19.0f, 0f, 4.0f)     // East path bend near old pine tree
+            };
+
+            foreach (var cLoc in clusterLocations)
+            {
+                int pCount = UnityEngine.Random.Range(3, 5);
+                CreatePumpkinCluster(pumpkinClustersParent.transform, cLoc, lanternUnlitPrefab, lanternLitPrefab, pCount, 1.2f);
             }
 
             // ==========================================

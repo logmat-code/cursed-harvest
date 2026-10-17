@@ -19,6 +19,7 @@ namespace CursedHarvest
 
         public GameObject Prefab => prefab;
         public int ActiveCount => activeObjects.Count;
+        public int InitialCapacity => initialCapacity;
 
         public void Initialize(GameObject prefabToPool, int capacity)
         {

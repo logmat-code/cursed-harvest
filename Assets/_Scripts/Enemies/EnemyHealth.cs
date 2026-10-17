@@ -11,6 +11,9 @@ namespace CursedHarvest
         [SerializeField] private float xpDropValue = 10f;
         [SerializeField] private float seedDropChance = 0.25f;
         [SerializeField] private bool guaranteedSeedDrop = false;
+        [SerializeField] private float healthDropChance = 0.04f; // 4% for common enemies in World 1
+        [SerializeField] private bool guaranteedHealthDrop = false;
+        [SerializeField] private int healthDropCount = 1;
         [SerializeField] private float knockbackResistance = 0f;
         [SerializeField] private GameObject onDeathHazardPrefab;
 
@@ -52,6 +55,39 @@ namespace CursedHarvest
         {
             maxHealth = Mathf.Max(1f, newMax);
             currentHealth = maxHealth;
+        }
+
+        public bool IsEliteEnemy
+        {
+            get
+            {
+                if (enemyController == null) enemyController = GetComponent<EnemyController>();
+                if (enemyController != null)
+                {
+                    if (enemyController.Type == EnemyType.EliteScarecrow || enemyController.Type == EnemyType.HarvestBrute)
+                    {
+                        return true;
+                    }
+                }
+                return healthDropChance >= 0.15f;
+            }
+        }
+
+        public float HealthDropChance => GetEffectiveHealthDropChance();
+        public float BaseHealthDropChance => healthDropChance;
+        public bool GuaranteedHealthDrop => guaranteedHealthDrop;
+        public int HealthDropCount => healthDropCount;
+
+        public float GetEffectiveHealthDropChance()
+        {
+            return WorldDifficultyConfig.Current.GetEffectiveHealthDropChance(IsEliteEnemy, LuckyLastSystem.IsAnyActive);
+        }
+
+        public void SetHealthDropSettings(float chance, bool guaranteed = false, int count = 1)
+        {
+            healthDropChance = Mathf.Clamp01(chance);
+            guaranteedHealthDrop = guaranteed;
+            healthDropCount = Mathf.Max(1, count);
         }
 
         public void OnSpawnFromPool()
@@ -142,6 +178,30 @@ namespace CursedHarvest
             if (dropSeed && GameManager.Instance != null && GameManager.Instance.SeedPool != null)
             {
                 GameManager.Instance.SeedPool.Get(transform.position + Vector3.up * 0.3f, Quaternion.identity);
+            }
+
+            // Drop Health Restore Pickup (4%/35% normal, 8%/50% during Lucky Last)
+            float effectiveDropChance = GetEffectiveHealthDropChance();
+            bool dropHealth = guaranteedHealthDrop || (UnityEngine.Random.value <= effectiveDropChance);
+            if (dropHealth && GameManager.Instance != null && GameManager.Instance.HealthPool != null)
+            {
+                int countToDrop = Mathf.Max(1, healthDropCount);
+                for (int d = 0; d < countToDrop; d++)
+                {
+                    Vector3 offset = (countToDrop > 1) ? (UnityEngine.Random.insideUnitSphere * 0.75f) : Vector3.zero;
+                    offset.y = 0f;
+                    Vector3 dropOrigin = transform.position + offset;
+                    Vector3 spawnPos = dropOrigin;
+                    if (Physics.Raycast(dropOrigin + Vector3.up * 1.5f, Vector3.down, out RaycastHit hit, 4.0f, ~0, QueryTriggerInteraction.Ignore))
+                    {
+                        spawnPos = hit.point + Vector3.up * 0.25f;
+                    }
+                    else
+                    {
+                        spawnPos.y = Mathf.Max(0.25f, spawnPos.y + 0.25f);
+                    }
+                    GameManager.Instance.HealthPool.Get(spawnPos, Quaternion.identity);
+                }
             }
 
             if (poolTracker != null)

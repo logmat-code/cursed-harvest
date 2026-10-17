@@ -28,6 +28,8 @@ namespace CursedHarvest
         [SerializeField] private GameObject luckyLastBanner;
         [SerializeField] private Text luckyLastTimerText;
         [SerializeField] private Text timerText;
+        [SerializeField] private Text waveText;
+        [SerializeField] private Text waveRemainingText;
         [SerializeField] private Image xpBarFill;
         [SerializeField] private Text levelText;
         [SerializeField] private Text killCountText;
@@ -57,6 +59,7 @@ namespace CursedHarvest
         [Header("Boss Victory / Endless Modal")]
         [SerializeField] private GameObject victoryModal;
         [SerializeField] private Text victoryTitleText;
+        [SerializeField] private Text victorySubtitleText;
         [SerializeField] private Button continueEndlessButton;
 
         [Header("Title / Instructions Modal")]
@@ -69,6 +72,9 @@ namespace CursedHarvest
         [SerializeField] private Button closeCreditsButton;
 
         private UpgradeManager upgradeManager;
+        private LuckyLastSystem luckyLastSystem;
+        [SerializeField] private int pendingLevelUps = 0;
+        public int PendingLevelUps => pendingLevelUps;
         private List<UpgradeData> currentChoices = new List<UpgradeData>();
         private bool isPaused;
 
@@ -132,25 +138,47 @@ namespace CursedHarvest
                     UpdateXpHUD(xp.CurrentXP, xp.RequiredXP, xp.ProgressPercent);
                     SetLevelText(xp.CurrentLevel);
                 }
+                luckyLastSystem = player.GetComponent<LuckyLastSystem>();
             }
+        }
 
+        private void OnEnable()
+        {
+            LuckyLastSystem.OnChargesChanged -= UpdateLuckyChargesHUD;
             LuckyLastSystem.OnChargesChanged += UpdateLuckyChargesHUD;
+            LuckyLastSystem.OnLuckyLastActivated -= ShowLuckyLastBanner;
             LuckyLastSystem.OnLuckyLastActivated += ShowLuckyLastBanner;
+            LuckyLastSystem.OnLuckyLastEnded -= HideLuckyLastBanner;
             LuckyLastSystem.OnLuckyLastEnded += HideLuckyLastBanner;
 
+            GameManager.OnEnemiesKilledChanged -= UpdateKillCountHUD;
             GameManager.OnEnemiesKilledChanged += UpdateKillCountHUD;
+            SpawnDirector.OnRunTimerUpdated -= UpdateTimerHUD;
             SpawnDirector.OnRunTimerUpdated += UpdateTimerHUD;
+            SpawnDirector.OnWaveStarted -= HandleWaveStarted;
+            SpawnDirector.OnWaveStarted += HandleWaveStarted;
+            SpawnDirector.OnWaveUpdated -= HandleWaveUpdated;
+            SpawnDirector.OnWaveUpdated += HandleWaveUpdated;
+            SpawnDirector.OnWaveCleared -= HandleWaveCleared;
+            SpawnDirector.OnWaveCleared += HandleWaveCleared;
+            SpawnDirector.OnIntermissionTick -= HandleIntermissionTick;
+            SpawnDirector.OnIntermissionTick += HandleIntermissionTick;
+            CursedSeedPickup.OnFirstSeedCollected -= HandleFirstSeedCollected;
             CursedSeedPickup.OnFirstSeedCollected += HandleFirstSeedCollected;
+        }
 
-            // Start game immediately without blocking text modal
-            if (titleModal != null)
-            {
-                titleModal.SetActive(false);
-            }
-            Time.timeScale = 1f;
-
-            // Onboarding movement toast (Paso 10)
-            ShowToast("WASD — MOVE  •  SPACE — DASH", "Weapons fire automatically.", 4.5f, new Color(1f, 0.85f, 0.2f));
+        private void OnDisable()
+        {
+            LuckyLastSystem.OnChargesChanged -= UpdateLuckyChargesHUD;
+            LuckyLastSystem.OnLuckyLastActivated -= ShowLuckyLastBanner;
+            LuckyLastSystem.OnLuckyLastEnded -= HideLuckyLastBanner;
+            GameManager.OnEnemiesKilledChanged -= UpdateKillCountHUD;
+            SpawnDirector.OnRunTimerUpdated -= UpdateTimerHUD;
+            SpawnDirector.OnWaveStarted -= HandleWaveStarted;
+            SpawnDirector.OnWaveUpdated -= HandleWaveUpdated;
+            SpawnDirector.OnWaveCleared -= HandleWaveCleared;
+            SpawnDirector.OnIntermissionTick -= HandleIntermissionTick;
+            CursedSeedPickup.OnFirstSeedCollected -= HandleFirstSeedCollected;
         }
 
         private void OnDestroy()
@@ -159,13 +187,6 @@ namespace CursedHarvest
             {
                 _instance = null;
             }
-
-            LuckyLastSystem.OnChargesChanged -= UpdateLuckyChargesHUD;
-            LuckyLastSystem.OnLuckyLastActivated -= ShowLuckyLastBanner;
-            LuckyLastSystem.OnLuckyLastEnded -= HideLuckyLastBanner;
-            GameManager.OnEnemiesKilledChanged -= UpdateKillCountHUD;
-            SpawnDirector.OnRunTimerUpdated -= UpdateTimerHUD;
-            CursedSeedPickup.OnFirstSeedCollected -= HandleFirstSeedCollected;
         }
 
         private void HandleFirstSeedCollected()
@@ -258,6 +279,16 @@ namespace CursedHarvest
             toastCoroutine = null;
         }
 
+        public void HideToast()
+        {
+            if (toastCoroutine != null)
+            {
+                StopCoroutine(toastCoroutine);
+                toastCoroutine = null;
+            }
+            if (toastRoot != null) toastRoot.SetActive(false);
+        }
+
         private void Update()
         {
             if (creditsModal != null && creditsModal.activeSelf)
@@ -305,6 +336,15 @@ namespace CursedHarvest
                 if (pct <= 0.25f)
                 {
                     healthBarFill.color = GetBaseHealthColor(pct);
+                }
+            }
+
+            // Real-time Lucky Last countdown
+            if (luckyLastBanner != null && luckyLastBanner.activeSelf && luckyLastSystem != null)
+            {
+                if (luckyLastTimerText != null)
+                {
+                    luckyLastTimerText.text = $"★ LUCKY LAST: {luckyLastSystem.RemainingTime:F1}s ★";
                 }
             }
         }
@@ -437,7 +477,7 @@ namespace CursedHarvest
         public void ShowLuckyLastBanner(float duration)
         {
             if (luckyLastBanner != null) luckyLastBanner.SetActive(true);
-            ShowToast("LUCKY LAST!", "Death cheated. 8 seconds of boosted power.", 2.5f, new Color(1f, 0.35f, 0.2f));
+            ShowToast("LUCKY LAST!", $"Death cheated. {Mathf.RoundToInt(duration)} seconds of boosted power.", 2.5f, new Color(1f, 0.35f, 0.2f));
         }
 
         public void HideLuckyLastBanner()
@@ -483,6 +523,17 @@ namespace CursedHarvest
         public void ShowLevelUp(int newLevel)
         {
             SetLevelText(newLevel);
+            if (levelUpModal != null && levelUpModal.activeSelf)
+            {
+                pendingLevelUps++;
+                return;
+            }
+
+            OpenLevelUpModal();
+        }
+
+        private void OpenLevelUpModal()
+        {
             if (upgradeManager == null)
             {
                 GameObject player = GameObject.FindWithTag("Player");
@@ -492,7 +543,12 @@ namespace CursedHarvest
             if (upgradeManager == null) return;
 
             currentChoices = upgradeManager.GetRandomUpgradeChoices(3);
-            if (currentChoices.Count == 0) return; // All maxed out
+            if (currentChoices.Count == 0)
+            {
+                if (levelUpModal != null) levelUpModal.SetActive(false);
+                Time.timeScale = 1f;
+                return; // All maxed out
+            }
 
             Time.timeScale = 0f; // Pause game
 
@@ -561,8 +617,83 @@ namespace CursedHarvest
                 upgradeManager.ApplyUpgrade(currentChoices[index]);
             }
 
+            if (pendingLevelUps > 0)
+            {
+                pendingLevelUps--;
+                OpenLevelUpModal();
+                return;
+            }
+
             if (levelUpModal != null) levelUpModal.SetActive(false);
             Time.timeScale = 1f; // Resume
+        }
+
+        // ==================== WAVE HUD & HANDLERS ====================
+        private void HandleWaveStarted(int wave)
+        {
+            int total = SpawnDirector.GetEnemyCountForWave(wave);
+            UpdateWaveHUD(wave, total, total);
+            if (wave == 10)
+            {
+                ShowToast("BOSS WAVE", "THE LAST HARVEST", 3.5f, new Color(1f, 0.25f, 0.25f));
+            }
+            else
+            {
+                ShowToast($"WAVE {wave}", "Survive the harvest horde!", 2.2f, new Color(1f, 0.65f, 0.15f));
+            }
+        }
+
+        private void HandleWaveUpdated(int wave, int remaining, int total)
+        {
+            UpdateWaveHUD(wave, remaining, total);
+        }
+
+        private void HandleWaveCleared(int wave)
+        {
+            if (wave == 10)
+            {
+                ShowToast("THE LAST HARVEST FALLEN!", "Vacuuming boss spoils...", 2.5f, new Color(1f, 0.85f, 0.2f));
+            }
+            else
+            {
+                ShowToast($"WAVE {wave} CLEARED!", "Vacuuming spoils...", 2.0f, new Color(0.2f, 1f, 0.45f));
+            }
+            UpdateIntermissionHUD(12f);
+        }
+
+        private void HandleIntermissionTick(float seconds)
+        {
+            UpdateIntermissionHUD(seconds);
+        }
+
+        public void UpdateWaveHUD(int wave, int remaining, int total)
+        {
+            if (waveText != null)
+            {
+                waveText.text = $"WAVE {wave}";
+            }
+            if (waveRemainingText != null)
+            {
+                if (wave == 10)
+                {
+                    waveRemainingText.text = "THE LAST HARVEST";
+                    waveRemainingText.color = new Color(1f, 0.35f, 0.25f);
+                }
+                else
+                {
+                    waveRemainingText.text = $"{remaining} REMAINING";
+                    waveRemainingText.color = new Color(0.95f, 0.94f, 0.90f);
+                }
+            }
+        }
+
+        public void UpdateIntermissionHUD(float remainingSeconds)
+        {
+            if (waveRemainingText != null)
+            {
+                waveRemainingText.text = $"NEXT WAVE IN {Mathf.CeilToInt(remainingSeconds)}s";
+                waveRemainingText.color = new Color(0.96f, 0.76f, 0.26f);
+            }
         }
 
         // ==================== PAUSE MODAL ====================
@@ -619,6 +750,19 @@ namespace CursedHarvest
         {
             if (victoryModal != null)
             {
+                if (victoryTitleText != null)
+                {
+                    victoryTitleText.text = "YOU GOT LUCKY.";
+                }
+                if (victorySubtitleText != null)
+                {
+                    victorySubtitleText.text = "THE LAST HARVEST HAS FALLEN!\n\nONE LAST NIGHT?";
+                }
+                if (continueEndlessButton != null)
+                {
+                    Text btnTxt = continueEndlessButton.GetComponentInChildren<Text>();
+                    if (btnTxt != null) btnTxt.text = "ENTER ONE LAST NIGHT [ENTER]";
+                }
                 victoryModal.SetActive(true);
             }
         }
@@ -629,7 +773,11 @@ namespace CursedHarvest
             if (victoryModal != null) victoryModal.SetActive(false);
             Time.timeScale = 1f;
             SpawnDirector sd = FindFirstObjectByType<SpawnDirector>();
-            if (sd != null) sd.EnterEndlessMode();
+            if (sd != null)
+            {
+                sd.EnterEndlessMode();
+                sd.StartIntermissionAfterBoss();
+            }
         }
 
         // ==================== BOSS HUD ====================

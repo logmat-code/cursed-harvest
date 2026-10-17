@@ -42,3 +42,5 @@ Assets/*.unitypackage.meta
 Assets/SourceFiles*
 Assets/POLYGON*_SourceFiles*
 *.log
+wave_verify_log.txt
+*.marker

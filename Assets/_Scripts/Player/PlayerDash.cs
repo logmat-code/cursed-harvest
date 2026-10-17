@@ -7,7 +7,7 @@ namespace CursedHarvest
     public class PlayerDash : MonoBehaviour
     {
         [Header("Dash Settings")]
-        [SerializeField] private float baseCooldown = 2.2f;
+        [SerializeField] private float baseCooldown = 1.90f;
         [SerializeField] private float dashSpeed = 18f;
         [SerializeField] private float dashDuration = 0.16f;
 
@@ -22,6 +22,7 @@ namespace CursedHarvest
         private bool isDashing;
         private Vector3 dashDirection;
 
+        public float BaseCooldown => baseCooldown;
         public float Cooldown => baseCooldown * cooldownMultiplier;
         public float CooldownRemaining => Mathf.Max(0f, (lastDashTime + Cooldown) - Time.time);
         public float CooldownPercent => Mathf.Clamp01(CooldownRemaining / Cooldown);
@@ -33,6 +34,7 @@ namespace CursedHarvest
 
         private void Awake()
         {
+            baseCooldown = WorldDifficultyConfig.Current.dashBaseCooldown;
             playerController = GetComponent<PlayerController>();
             playerHealth = GetComponent<PlayerHealth>();
             if (visualRoot == null && transform.childCount > 0)

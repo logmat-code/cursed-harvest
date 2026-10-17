@@ -63,7 +63,8 @@ namespace CursedHarvest
                     float dist = Vector3.Distance(transform.position, playerTransform.position);
                     if (dist <= damageRadius)
                     {
-                        DamageData dmg = new DamageData(damagePerTick, gameObject, Vector3.up, 0f, transform.position);
+                        float effectiveDmg = damagePerTick * WorldDifficultyConfig.Current.enemyDamageMultiplier;
+                        DamageData dmg = new DamageData(effectiveDmg, gameObject, Vector3.up, 0f, transform.position);
                         playerHealth.TakeDamage(dmg);
                     }
                 }

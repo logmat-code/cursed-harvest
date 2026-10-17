@@ -24,6 +24,8 @@ namespace CursedHarvest
         private Transform playerTransform;
         private PlayerHealth playerHealth;
 
+        [SerializeField] private float contactCooldown = 0.8f;
+        private float lastContactDamageTime = -10f;
         private float lastSlamTime = -5f;
         private float lastMortarTime = -3f;
         private float lastSummonTime = -10f;
@@ -32,6 +34,13 @@ namespace CursedHarvest
 
         public string BossName => bossName;
         public EnemyHealth Health => enemyHealth;
+        public float BaseContactDamage => contactDamage;
+        public float BaseSlamDamage => slamDamage;
+        public float ContactDamage => contactDamage;
+        public float SlamDamage => slamDamage;
+        public float GetEffectiveContactDamage() => contactDamage * WorldDifficultyConfig.Current.bossDamageMultiplier;
+        public float GetEffectiveSlamDamage() => slamDamage * WorldDifficultyConfig.Current.bossDamageMultiplier;
+        public float GetEffectiveMortarDamage() => 25f * WorldDifficultyConfig.Current.bossDamageMultiplier;
 
         public static event Action<BossController> OnBossSpawned;
         public static event Action<BossController> OnBossDefeated;
@@ -106,7 +115,6 @@ namespace CursedHarvest
             if (UIManager.Instance != null)
             {
                 UIManager.Instance.HideBossBar();
-                UIManager.Instance.ShowVictoryModal();
             }
 
             // Drop 5 Cursed Seeds
@@ -116,6 +124,35 @@ namespace CursedHarvest
                 {
                     Vector2 c = UnityEngine.Random.insideUnitCircle * 3f;
                     GameManager.Instance.SeedPool.Get(transform.position + new Vector3(c.x, 0.4f, c.y), Quaternion.identity);
+                }
+            }
+
+            // Drop 2 Health Restore Pickups (+20 HP each)
+            if (GameManager.Instance != null && GameManager.Instance.HealthPool != null)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Vector2 h = UnityEngine.Random.insideUnitCircle * 2.5f;
+                    GameObject hpObj = GameManager.Instance.HealthPool.Get(transform.position + new Vector3(h.x, 0.4f, h.y), Quaternion.identity);
+                    if (hpObj != null)
+                    {
+                        HealthRestorePickup hr = hpObj.GetComponent<HealthRestorePickup>();
+                        if (hr != null) hr.Initialize(20f);
+                    }
+                }
+            }
+            else
+            {
+                SpawnDirector sd = UnityEngine.Object.FindFirstObjectByType<SpawnDirector>();
+                if (sd != null && sd.HealthPickupPrefab != null)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Vector2 h = UnityEngine.Random.insideUnitCircle * 2.5f;
+                        GameObject hpObj = Instantiate(sd.HealthPickupPrefab, transform.position + new Vector3(h.x, 0.4f, h.y), Quaternion.identity);
+                        HealthRestorePickup hr = hpObj.GetComponent<HealthRestorePickup>();
+                        if (hr != null) hr.Initialize(20f);
+                    }
                 }
             }
 
@@ -168,10 +205,11 @@ namespace CursedHarvest
                 transform.rotation = Quaternion.Slerp(transform.rotation, rot, 8f * Time.deltaTime);
             }
 
-            // Contact damage
-            if (dist <= 2.2f && playerHealth != null && playerHealth.IsAlive)
+            // Contact damage (scaled by World 1 bossDamageMultiplier = 0.90f)
+            if (dist <= 2.2f && Time.time >= lastContactDamageTime + contactCooldown && playerHealth != null && playerHealth.IsAlive)
             {
-                DamageData contactDmg = new DamageData(contactDamage, gameObject, moveDir, 4f, transform.position);
+                lastContactDamageTime = Time.time;
+                DamageData contactDmg = new DamageData(GetEffectiveContactDamage(), gameObject, moveDir, 4f, transform.position);
                 playerHealth.TakeDamage(contactDmg);
             }
         }
@@ -196,7 +234,7 @@ namespace CursedHarvest
                 {
                     Vector3 blastDir = (playerTransform.position - transform.position).normalized;
                     blastDir.y = 0.2f;
-                    DamageData slamDmg = new DamageData(slamDamage, gameObject, blastDir, 14f, transform.position);
+                    DamageData slamDmg = new DamageData(GetEffectiveSlamDamage(), gameObject, blastDir, 14f, transform.position);
                     playerHealth.TakeDamage(slamDmg);
                 }
             }
@@ -216,6 +254,7 @@ namespace CursedHarvest
             if (playerTransform == null) return;
 
             Vector3 origin = transform.position + Vector3.up * 2f;
+            float mortarDmg = GetEffectiveMortarDamage();
             for (int i = 0; i < 3; i++)
             {
                 Vector2 spread = UnityEngine.Random.insideUnitCircle * 4f;
@@ -232,7 +271,7 @@ namespace CursedHarvest
                         {
                             int playerLayer = LayerMask.NameToLayer("Player");
                             LayerMask mask = playerLayer >= 0 ? (1 << playerLayer) : ~0;
-                            proj.Initialize(origin, target, 14f, 25f, 6f, mask, slamVfxPrefab);
+                            proj.Initialize(origin, target, 14f, mortarDmg, 6f, mask, slamVfxPrefab);
                         }
                     }
                 }

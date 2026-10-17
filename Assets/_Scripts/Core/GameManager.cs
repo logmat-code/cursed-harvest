@@ -23,10 +23,11 @@ namespace CursedHarvest
         [SerializeField] private ObjectPool enemyPool;
         [SerializeField] private ObjectPool xpPool;
         [SerializeField] private ObjectPool seedPool;
+        [SerializeField] private ObjectPool healthPool;
         [SerializeField] private TopDownCameraFollow cameraFollow;
 
         [Header("Phase 1 Test Spawner")]
-        [SerializeField] private bool autoSpawnEnemies = true;
+        [SerializeField] private bool autoSpawnEnemies = false;
         [SerializeField] private int maxTestEnemies = 8;
         [SerializeField] private float spawnInterval = 1.5f;
         [SerializeField] private float spawnRadius = 14f;
@@ -41,6 +42,7 @@ namespace CursedHarvest
         public ObjectPool EnemyPool => enemyPool;
         public ObjectPool XpPool => xpPool;
         public ObjectPool SeedPool => seedPool;
+        public ObjectPool HealthPool => healthPool;
 
         public static event Action<int> OnEnemiesKilledChanged;
 

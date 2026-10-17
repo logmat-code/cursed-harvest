@@ -20,7 +20,8 @@ namespace CursedHarvest
         HarvestLucky,
         HarvestCursed,
         BossSlam,
-        ButtonClick
+        ButtonClick,
+        Heal
     }
 
     public class AudioManager : MonoBehaviour
@@ -154,6 +155,7 @@ namespace CursedHarvest
             clips[SoundType.HarvestCursed] = SoundFXGenerator.GenerateHarvestCursed();
             clips[SoundType.BossSlam] = SoundFXGenerator.GenerateBossSlam();
             clips[SoundType.ButtonClick] = SoundFXGenerator.GenerateButtonClick();
+            clips[SoundType.Heal] = SoundFXGenerator.GenerateHeal();
 
             proceduralDroneClip = SoundFXGenerator.GenerateAmbientSpookyDrone();
         }

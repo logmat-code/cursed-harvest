@@ -150,6 +150,67 @@ namespace CursedHarvest
             activeNumbers.Add(entry);
         }
 
+        public void SpawnHealing(Vector3 worldPos, float amount)
+        {
+            if (amount <= 0f) return;
+            int rounded = Mathf.RoundToInt(amount);
+            string text = $"+{rounded} HP";
+            Color healColor = new Color(0.35f, 0.95f, 0.45f, 1f); // Soft luminous healing green
+            SpawnText(worldPos, text, healColor, 0.55f);
+        }
+
+        public void SpawnText(Vector3 worldPos, string text, Color color, float duration = 0.50f)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            if (activeNumbers.Count >= 16) return;
+
+            GameObject obj = null;
+            while (pool.Count > 0)
+            {
+                var candidate = pool.Dequeue();
+                if (candidate != null && candidate)
+                {
+                    obj = candidate;
+                    break;
+                }
+            }
+            if (obj == null)
+            {
+                obj = CreateNumberObject(activeNumbers.Count);
+            }
+            obj.SetActive(true);
+
+            Vector3 jitter = new Vector3(Random.Range(-0.15f, 0.15f), Random.Range(0f, 0.15f), Random.Range(-0.15f, 0.15f));
+            Vector3 pos = worldPos + jitter;
+            obj.transform.position = pos;
+
+            if (cameraTransform == null && Camera.main != null)
+            {
+                cameraTransform = Camera.main.transform;
+            }
+            if (cameraTransform != null)
+            {
+                obj.transform.rotation = cameraTransform.rotation;
+            }
+
+            TextMesh tm = obj.GetComponent<TextMesh>();
+            tm.text = text;
+            tm.color = color;
+
+            ActiveNumber entry = new ActiveNumber
+            {
+                gameObject = obj,
+                textMesh = tm,
+                startPos = pos,
+                velocity = new Vector3(Random.Range(-0.15f, 0.15f), Random.Range(1.3f, 1.7f), Random.Range(-0.15f, 0.15f)),
+                timer = 0f,
+                duration = duration,
+                baseColor = color
+            };
+
+            activeNumbers.Add(entry);
+        }
+
         private void Update()
         {
             if (activeNumbers.Count == 0) return;
@@ -188,6 +249,19 @@ namespace CursedHarvest
                     num.textMesh.color = c;
                 }
             }
+        }
+
+        public void ClearActiveNumbers()
+        {
+            foreach (var num in activeNumbers)
+            {
+                if (num.gameObject != null)
+                {
+                    num.gameObject.SetActive(false);
+                    pool.Enqueue(num.gameObject);
+                }
+            }
+            activeNumbers.Clear();
         }
     }
 }
