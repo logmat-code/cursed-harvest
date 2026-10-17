@@ -37,6 +37,87 @@ namespace CursedHarvest.Editor
             }
         }
 
+        [MenuItem("Cursed Harvest/Test/Verify MainGame Scene")]
+        public static void RunSceneCheckAndExit()
+        {
+            try
+            {
+                var scene = EditorSceneManager.OpenScene("Assets/_Scenes/MainGame.unity", OpenSceneMode.Single);
+                if (!scene.IsValid())
+                {
+                    Debug.LogError("[SCENE VERIFY] FAILED: MainGame.unity is not valid!");
+                    EditorApplication.Exit(1);
+                    return;
+                }
+                Debug.Log("[SCENE VERIFY] MainGame.unity loaded successfully.");
+
+                // 1. Main Camera
+                var cam = GameObject.FindWithTag("MainCamera");
+                if (cam == null) cam = GameObject.Find("Main Camera");
+                bool camOk = cam != null && cam.GetComponent<Camera>() != null;
+                Debug.Log($"[SCENE VERIFY] Main Camera exists: {camOk}");
+
+                // 2. Player
+                var player = GameObject.FindWithTag("Player");
+                if (player == null) player = GameObject.Find("Player");
+                bool playerOk = player != null && player.GetComponent<PlayerController>() != null && player.GetComponent<PlayerHealth>() != null;
+                Debug.Log($"[SCENE VERIFY] Player exists: {playerOk}");
+
+                // 3. SpawnDirector
+                var sd = UnityEngine.Object.FindAnyObjectByType<SpawnDirector>();
+                bool sdOk = sd != null;
+                Debug.Log($"[SCENE VERIFY] SpawnDirector exists: {sdOk}");
+
+                // 4. UIManager
+                var uim = UnityEngine.Object.FindAnyObjectByType<UIManager>();
+                bool uimOk = uim != null;
+                Debug.Log($"[SCENE VERIFY] UIManager exists: {uimOk}");
+
+                // 5. Missing components check
+                int missingCount = 0;
+                foreach (var go in scene.GetRootGameObjects())
+                {
+                    missingCount += CheckMissingComponents(go);
+                }
+                Debug.Log($"[SCENE VERIFY] Total Missing Components across Scene: {missingCount}");
+
+                if (camOk && playerOk && sdOk && uimOk && missingCount == 0)
+                {
+                    Debug.Log("★★★ [SCENE VERIFY] ALL CHECKS PASSED: Main Camera, Player, SpawnDirector, UIManager intact with 0 missing references! ★★★");
+                    EditorApplication.Exit(0);
+                }
+                else
+                {
+                    Debug.LogError("[SCENE VERIFY] Scene verification failed requirements!");
+                    EditorApplication.Exit(1);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[SCENE VERIFY] Exception: {ex}");
+                EditorApplication.Exit(1);
+            }
+        }
+
+        private static int CheckMissingComponents(GameObject go)
+        {
+            int missing = 0;
+            var components = go.GetComponents<Component>();
+            for (int i = 0; i < components.Length; i++)
+            {
+                if (components[i] == null)
+                {
+                    Debug.LogWarning($"[SCENE VERIFY] Missing component on GameObject: {go.name}");
+                    missing++;
+                }
+            }
+            for (int i = 0; i < go.transform.childCount; i++)
+            {
+                missing += CheckMissingComponents(go.transform.GetChild(i).gameObject);
+            }
+            return missing;
+        }
+
 
         static PlayModeVerifier()
         {
