@@ -325,7 +325,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   impactVfxPrefab: {fileID: 191114, guid: 834c99069a124aa439d5795c3579843b, type: 3}
-  trail: {fileID: 0}
+  trail: {fileID: 7485677469463851525}
 --- !u!114 &92355967919804387
 MonoBehaviour:
   m_ObjectHideFlags: 0

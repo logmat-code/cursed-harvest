@@ -90,7 +90,7 @@ MonoBehaviour:
   chargeDamage: 25
   canSummonMinions: 0
   summonCooldown: 8
-  visualRoot: {fileID: 0}
+  visualRoot: {fileID: 4673001807782495726}
   bobFrequency: 10
   bobAmplitude: 0.08
   tiltAngle: 6
@@ -141,7 +141,9 @@ MonoBehaviour:
   healthDropCount: 1
   knockbackResistance: 0
   onDeathHazardPrefab: {fileID: 0}
-  renderersToFlash: []
+  renderersToFlash:
+  - {fileID: 2561242636575128835}
+  - {fileID: 4286890025610050495}
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 3771140208864044240, guid: 728a7e1019d3b474b900dabed730c0dc, type: 3}
 --- !u!114 &395514878538800862
@@ -263,6 +265,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1479028106056636139, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}
   m_PrefabInstance: {fileID: 4590200627768464955}
   m_PrefabAsset: {fileID: 0}
+--- !u!23 &4286890025610050495 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 346140439290375556, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}
+  m_PrefabInstance: {fileID: 4590200627768464955}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5494326432475028565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -320,6 +327,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+--- !u!137 &2561242636575128835 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8049225955309494614, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}
+  m_PrefabInstance: {fileID: 5494326432475028565}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8763938147078641518 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3864096761209981755, guid: 5f1e3ed9628a12543adb9c996e045e24, type: 3}

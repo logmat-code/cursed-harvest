@@ -1,0 +1,41 @@
+=================================================================
+[WORLD & FRONTEND SUITE] Starting Setup, Build Settings & QA...
+=================================================================
+[SETUP] Ensuring Assets/_Scenes/MainMenu.unity...
+Creating fresh MainMenu.unity scene...
+MainMenu.unity saved successfully at Assets/_Scenes/MainMenu.unity
+[SETUP] Configuring EditorBuildSettings.scenes...
+EditorBuildSettings configured: [0] MainMenu.unity, [1] MainGame.unity
+
+--- RUNNING QA TESTS ---
+[TEST 1] Verifying 5 Worlds WorldConfig Integrity...
+  • World 1: 'THE CURSED FARM' (EASY) — 10 Waves, Req: W0 -> OK
+  • World 2: 'THE ASHEN ORCHARDS' (NORMAL) — 10 Waves, Req: W1 -> OK
+  • World 3: 'THE BLACKENED MIRE' (HARD) — 10 Waves, Req: W2 -> OK
+  • World 4: 'THE BLOODWOOD TIMBER' (VERY HARD) — 15 Waves, Req: W3 -> OK
+  • World 5: 'THE ETERNAL ECLIPSE' (NIGHTMARE) — 20 Waves, Req: W4 -> OK
+[TEST 1 PASSED] All 5 WorldConfigs validated successfully!
+[TEST 2] Verifying GameSession Progression & Save System...
+[TEST 2 PASSED] Progression and PlayerPrefs save system validated!
+[TEST 3] Verifying Harvest Stay-In-Zone Channeling Mechanics...
+[TEST 3 PASSED] Harvest stay-in-zone channeling & grace mechanics verified!
+[TEST 4] Verifying Pause Modal & TimeScale Mechanics...
+  • TopRight HUD non-overlapping separation verified! (Gap: 8.0px)
+[TEST 4 PASSED] Pause modal and timeScale toggle verified!
+[TEST 5] Verifying Boss Wave Abstraction & Encounter Routing...
+[TEST 5 PASSED] Mid-Boss vs Final Boss routing correctly validated!
+
+[QA RESULTS] Tests Passed: 5/5
+
+--- GENERATING SCREENSHOTS ---
+[SCREENSHOT] Home_Screen captured -> /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Documentation/Screenshots/Home_Screen.png
+[SCREENSHOT] WorldSelect_Screen captured -> /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Documentation/Screenshots/WorldSelect_Screen.png
+[SCREENSHOT] Upgrades_Screen captured -> /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Documentation/Screenshots/Upgrades_Screen.png
+[SCREENSHOT] Pause_Modal captured -> /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Documentation/Screenshots/Pause_Modal.png
+[SCREENSHOT] Gameplay_HUD_TopRight captured -> /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Documentation/Screenshots/Gameplay_HUD_TopRight.png
+[SCREENSHOT] Gameplay_HUD_16x10 captured -> /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Documentation/Screenshots/Gameplay_HUD_16x10.png
+[SCREENSHOT] Gameplay_HUD_4x3 captured -> /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Documentation/Screenshots/Gameplay_HUD_4x3.png
+[SCREENSHOT] Harvest_Channeling_Progress captured -> /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Documentation/Screenshots/Harvest_Channeling_Progress.png
+=================================================================
+[WORLD & FRONTEND SUITE] Execution Complete!
+=================================================================

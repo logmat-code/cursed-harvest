@@ -142,7 +142,7 @@ MonoBehaviour:
   chargeDamage: 0
   canSummonMinions: 0
   summonCooldown: 8
-  visualRoot: {fileID: 0}
+  visualRoot: {fileID: 89058190576314173}
   bobFrequency: 10
   bobAmplitude: 0.08
   tiltAngle: 6
@@ -193,7 +193,12 @@ MonoBehaviour:
   healthDropCount: 1
   knockbackResistance: 0.5
   onDeathHazardPrefab: {fileID: 0}
-  renderersToFlash: []
+  renderersToFlash:
+  - {fileID: 6922483322941223012}
+  - {fileID: 8025565075902293358}
+  - {fileID: 3509493148022361912}
+  - {fileID: 2853398154862519098}
+  - {fileID: 8310956429280582642}
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 276821299728828542, guid: 83afd1fe2584d4b569ed02e2b877b199, type: 3}
 --- !u!114 &8946655121689097706
@@ -309,6 +314,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d24101f0bd4410148b0505c0ea4028e5, type: 3}
+--- !u!23 &6922483322941223012 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4713704234531177026, guid: d24101f0bd4410148b0505c0ea4028e5, type: 3}
+  m_PrefabInstance: {fileID: 2412778079123829286}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8095982547028527883 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5846056983385585965, guid: d24101f0bd4410148b0505c0ea4028e5, type: 3}
@@ -561,6 +571,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4926018034414755665, guid: 89e401adace34884084d47323dfed9fc, type: 3}
   m_PrefabInstance: {fileID: 6147643135806457145}
   m_PrefabAsset: {fileID: 0}
+--- !u!23 &3509493148022361912 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7342250238101850625, guid: 89e401adace34884084d47323dfed9fc, type: 3}
+  m_PrefabInstance: {fileID: 6147643135806457145}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8025565075902293358 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4192948242259058775, guid: 89e401adace34884084d47323dfed9fc, type: 3}
+  m_PrefabInstance: {fileID: 6147643135806457145}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8310956429280582642 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2740055589493694155, guid: 89e401adace34884084d47323dfed9fc, type: 3}
+  m_PrefabInstance: {fileID: 6147643135806457145}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6876168544597796093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -618,6 +643,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72b4eb657d88d5d4ca05e983848f7bef, type: 3}
+--- !u!23 &2853398154862519098 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8715661946560612295, guid: 72b4eb657d88d5d4ca05e983848f7bef, type: 3}
+  m_PrefabInstance: {fileID: 6876168544597796093}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4022385565869152341 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7547870798837284008, guid: 72b4eb657d88d5d4ca05e983848f7bef, type: 3}

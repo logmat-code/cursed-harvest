@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 namespace CursedHarvest
 {
+    public enum UILayoutMode
+    {
+        Landscape,
+        Portrait
+    }
+
     public class UIManager : MonoBehaviour
     {
         private static UIManager _instance;
@@ -20,6 +26,15 @@ namespace CursedHarvest
             }
             private set => _instance = value;
         }
+
+        [Header("Platform & Layout Architecture")]
+        [SerializeField] private UILayoutMode currentLayoutMode = UILayoutMode.Landscape;
+        public UILayoutMode CurrentLayoutMode => currentLayoutMode;
+
+        [Header("Top-Right HUD Elements")]
+        [SerializeField] private RectTransform topRightHUDContainer;
+        [SerializeField] private RectTransform seedBadgeRoot;
+        [SerializeField] private RectTransform statusEffectsContainer;
 
         [Header("HUD References")]
         [SerializeField] private Image healthBarFill;
@@ -45,22 +60,30 @@ namespace CursedHarvest
         [SerializeField] private GameObject pauseModal;
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button restartButton;
+        [SerializeField] private Button pauseWorldSelectButton;
+        [SerializeField] private Button pauseHomeButton;
 
         [Header("Game Over Modal")]
         [SerializeField] private GameObject gameOverModal;
         [SerializeField] private Text gameOverStatsText;
         [SerializeField] private Button retryButton;
+        [SerializeField] private Button gameOverWorldSelectButton;
+        [SerializeField] private Button gameOverHomeButton;
+
+        [Header("HUD Controls")]
+        [SerializeField] private Button hudPauseButton;
 
         [Header("Boss HUD")]
         [SerializeField] private GameObject bossBarRoot;
         [SerializeField] private Image bossBarFill;
         [SerializeField] private Text bossNameText;
 
-        [Header("Boss Victory / Endless Modal")]
+        [Header("Boss Victory / World Complete Modal")]
         [SerializeField] private GameObject victoryModal;
         [SerializeField] private Text victoryTitleText;
         [SerializeField] private Text victorySubtitleText;
         [SerializeField] private Button continueEndlessButton;
+        [SerializeField] private Button victoryWorldSelectButton;
 
         [Header("Title / Instructions Modal")]
         [SerializeField] private GameObject titleModal;
@@ -94,6 +117,14 @@ namespace CursedHarvest
                                   (titleModal != null && titleModal.activeSelf) ||
                                   (creditsModal != null && creditsModal.activeSelf);
 
+        public bool IsGamePaused => isPaused;
+        public GameObject PauseModal => pauseModal;
+        public Button HudPauseButton => hudPauseButton;
+        public Button ResumeButton => resumeButton;
+        public RectTransform TopRightHUDContainer => topRightHUDContainer;
+        public RectTransform SeedBadgeRoot => seedBadgeRoot;
+        public RectTransform StatusEffectsContainer => statusEffectsContainer;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -103,11 +134,22 @@ namespace CursedHarvest
             }
             Instance = this;
 
+            EnsureHUDAndModals();
+
+            if (hudPauseButton != null) hudPauseButton.onClick.AddListener(TogglePause);
             if (resumeButton != null) resumeButton.onClick.AddListener(ResumeGame);
             if (restartButton != null) restartButton.onClick.AddListener(RestartRun);
+            if (pauseWorldSelectButton != null) pauseWorldSelectButton.onClick.AddListener(ReturnToWorldSelect);
+            if (pauseHomeButton != null) pauseHomeButton.onClick.AddListener(ReturnToHome);
+
             if (retryButton != null) retryButton.onClick.AddListener(RestartRun);
+            if (gameOverWorldSelectButton != null) gameOverWorldSelectButton.onClick.AddListener(ReturnToWorldSelect);
+            if (gameOverHomeButton != null) gameOverHomeButton.onClick.AddListener(ReturnToHome);
+
             if (rerollButton != null) rerollButton.onClick.AddListener(OnRerollClicked);
-            if (continueEndlessButton != null) continueEndlessButton.onClick.AddListener(CloseVictoryModal);
+            if (continueEndlessButton != null) continueEndlessButton.onClick.AddListener(HandleVictoryContinue);
+            if (victoryWorldSelectButton != null) victoryWorldSelectButton.onClick.AddListener(ReturnToWorldSelect);
+
             if (startRunButton != null) startRunButton.onClick.AddListener(StartRunFromTitle);
             if (openCreditsButton != null) openCreditsButton.onClick.AddListener(ShowCredits);
             if (closeCreditsButton != null) closeCreditsButton.onClick.AddListener(CloseCredits);
@@ -717,7 +759,42 @@ namespace CursedHarvest
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             Time.timeScale = 1f;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            if (GameSession.Instance != null)
+            {
+                GameSession.Instance.RestartRun();
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            }
+        }
+
+        public void ReturnToWorldSelect()
+        {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            Time.timeScale = 1f;
+            if (GameSession.Instance != null)
+            {
+                GameSession.Instance.ReturnToWorldSelect();
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            }
+        }
+
+        public void ReturnToHome()
+        {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            Time.timeScale = 1f;
+            if (GameSession.Instance != null)
+            {
+                GameSession.Instance.ReturnToHome();
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            }
         }
 
         // ==================== GAME OVER MODAL ====================
@@ -741,7 +818,9 @@ namespace CursedHarvest
                     }
 
                     int score = kills * 100 + (int)time * 10 + lvl * 250;
-                    gameOverStatsText.text = $"TIME: {mins:00}:{secs:00}\nKILLS: {kills}\nLEVEL: {lvl}\n\nFINAL SCORE: {score}";
+                    WorldConfig activeConfig = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
+                    int wave = FindFirstObjectByType<SpawnDirector>() != null ? FindFirstObjectByType<SpawnDirector>().CurrentWave : 1;
+                    gameOverStatsText.text = $"{activeConfig.displayName}\nSURVIVED UNTIL WAVE {wave}\nTIME: {mins:00}:{secs:00} | KILLS: {kills} | LEVEL: {lvl}\n\nSCORE: {score}";
                 }
             }
         }
@@ -750,34 +829,77 @@ namespace CursedHarvest
         {
             if (victoryModal != null)
             {
+                WorldConfig activeConfig = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
+
                 if (victoryTitleText != null)
                 {
-                    victoryTitleText.text = "YOU GOT LUCKY.";
+                    victoryTitleText.text = activeConfig.worldId == 1 ? "YOU GOT LUCKY." : "WORLD COMPLETE!";
                 }
                 if (victorySubtitleText != null)
                 {
-                    victorySubtitleText.text = "THE LAST HARVEST HAS FALLEN!\n\nONE LAST NIGHT?";
+                    if (activeConfig.worldId == 1)
+                    {
+                        victorySubtitleText.text = "THE LAST HARVEST HAS FALLEN!\n\nWORLD 1 COMPLETE!\nCONTINUE TO ONE LAST NIGHT?";
+                    }
+                    else
+                    {
+                        victorySubtitleText.text = $"{activeConfig.displayName} PURGED!\n\nTHE HARVEST RECEDES FROM THIS REALM.";
+                    }
                 }
                 if (continueEndlessButton != null)
                 {
                     Text btnTxt = continueEndlessButton.GetComponentInChildren<Text>();
-                    if (btnTxt != null) btnTxt.text = "ENTER ONE LAST NIGHT [ENTER]";
+                    if (btnTxt != null)
+                    {
+                        if (activeConfig.worldId == 1)
+                            btnTxt.text = "CONTINUE: ONE LAST NIGHT [ENTER]";
+                        else if (activeConfig.worldId < 5)
+                            btnTxt.text = $"ENTER WORLD {activeConfig.worldId + 1} [ENTER]";
+                        else
+                            btnTxt.text = "ALL WORLDS PURGED! [ENTER]";
+                    }
+                }
+                if (victoryWorldSelectButton != null)
+                {
+                    Text btnTxt = victoryWorldSelectButton.GetComponentInChildren<Text>();
+                    if (btnTxt != null) btnTxt.text = "RETURN TO WORLD SELECT";
                 }
                 victoryModal.SetActive(true);
             }
         }
 
-        public void CloseVictoryModal()
+        public void HandleVictoryContinue()
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             if (victoryModal != null) victoryModal.SetActive(false);
             Time.timeScale = 1f;
-            SpawnDirector sd = FindFirstObjectByType<SpawnDirector>();
-            if (sd != null)
+
+            WorldConfig activeConfig = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
+            if (activeConfig.worldId == 1)
             {
-                sd.EnterEndlessMode();
-                sd.StartIntermissionAfterBoss();
+                SpawnDirector sd = FindFirstObjectByType<SpawnDirector>();
+                if (sd != null)
+                {
+                    sd.EnterEndlessMode();
+                    sd.StartIntermissionAfterBoss();
+                }
             }
+            else
+            {
+                if (activeConfig.worldId < 5)
+                {
+                    GameSession.Instance.StartRun(activeConfig.worldId + 1);
+                }
+                else
+                {
+                    GameSession.Instance.ReturnToWorldSelect();
+                }
+            }
+        }
+
+        public void CloseVictoryModal()
+        {
+            HandleVictoryContinue();
         }
 
         // ==================== BOSS HUD ====================
@@ -799,6 +921,385 @@ namespace CursedHarvest
         public void HideBossBar()
         {
             if (bossBarRoot != null) bossBarRoot.SetActive(false);
+        }
+
+        // ==================== DYNAMIC HUD & MODAL FALLBACKS ====================
+        public void EnsureHUDAndModals()
+        {
+            Font defaultFont = Font.CreateDynamicFontFromOSFont("Arial", 20);
+
+            // 1. Top-Right HUD Dedicated Container (SafeArea Margin: -28, -24)
+            Transform trTrans = transform.Find("TopRightHUD");
+            GameObject trObj;
+            if (trTrans == null)
+            {
+                trObj = new GameObject("TopRightHUD");
+                trObj.transform.SetParent(transform, false);
+                RectTransform rtTr = trObj.AddComponent<RectTransform>();
+                rtTr.anchorMin = new Vector2(1, 1);
+                rtTr.anchorMax = new Vector2(1, 1);
+                rtTr.pivot = new Vector2(1, 1);
+                rtTr.sizeDelta = new Vector2(180, 90);
+                rtTr.anchoredPosition = new Vector2(-28, -24);
+                topRightHUDContainer = rtTr;
+            }
+            else
+            {
+                trObj = trTrans.gameObject;
+                topRightHUDContainer = trObj.GetComponent<RectTransform>();
+                if (topRightHUDContainer != null)
+                {
+                    topRightHUDContainer.anchorMin = new Vector2(1, 1);
+                    topRightHUDContainer.anchorMax = new Vector2(1, 1);
+                    topRightHUDContainer.pivot = new Vector2(1, 1);
+                    topRightHUDContainer.sizeDelta = new Vector2(180, 90);
+                    topRightHUDContainer.anchoredPosition = new Vector2(-28, -24);
+                }
+            }
+
+            // 1a. Isolated HUD Pause Button (46x46 at top-right corner, local (0, 0))
+            if (hudPauseButton == null)
+            {
+                Transform existingBtn = trObj.transform.Find("HudPauseButton") ?? transform.Find("HudPauseButton");
+                if (existingBtn != null)
+                {
+                    existingBtn.SetParent(trObj.transform, false);
+                    RectTransform rtBtn = existingBtn.GetComponent<RectTransform>();
+                    rtBtn.anchorMin = new Vector2(1, 1);
+                    rtBtn.anchorMax = new Vector2(1, 1);
+                    rtBtn.pivot = new Vector2(1, 1);
+                    rtBtn.sizeDelta = new Vector2(46, 46);
+                    rtBtn.anchoredPosition = Vector2.zero;
+                    hudPauseButton = existingBtn.GetComponent<Button>();
+                }
+                else
+                {
+                    GameObject pBtnObj = CreateSimpleButton(trObj.transform, "HudPauseButton", "||",
+                        new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1),
+                        new Vector2(46, 46), Vector2.zero,
+                        new Color(0.12f, 0.14f, 0.18f, 0.90f),
+                        new Color(0.95f, 0.85f, 0.40f), 22, defaultFont);
+                    hudPauseButton = pBtnObj.GetComponent<Button>();
+                }
+            }
+            else
+            {
+                hudPauseButton.transform.SetParent(trObj.transform, false);
+                RectTransform rtBtn = hudPauseButton.GetComponent<RectTransform>();
+                rtBtn.anchorMin = new Vector2(1, 1);
+                rtBtn.anchorMax = new Vector2(1, 1);
+                rtBtn.pivot = new Vector2(1, 1);
+                rtBtn.sizeDelta = new Vector2(46, 46);
+                rtBtn.anchoredPosition = Vector2.zero;
+            }
+
+            // 1b. Cursed Seeds Badge (84x32 pill to the left of Pause Button: local (-54, -7))
+            Transform sbTrans = trObj.transform.Find("SeedBadge");
+            if (sbTrans == null)
+            {
+                // Check if old seed badge was directly under Canvas or under old StatsBg
+                GameObject sbObj = new GameObject("SeedBadge");
+                sbObj.transform.SetParent(trObj.transform, false);
+                seedBadgeRoot = sbObj.AddComponent<RectTransform>();
+                seedBadgeRoot.anchorMin = new Vector2(1, 1);
+                seedBadgeRoot.anchorMax = new Vector2(1, 1);
+                seedBadgeRoot.pivot = new Vector2(1, 1);
+                seedBadgeRoot.sizeDelta = new Vector2(84, 32);
+                seedBadgeRoot.anchoredPosition = new Vector2(-54, -7);
+
+                Image sbImg = sbObj.AddComponent<Image>();
+                sbImg.color = new Color(0.06f, 0.07f, 0.10f, 0.85f);
+
+                if (seedCountText == null)
+                {
+                    GameObject txtObj = new GameObject("SeedText");
+                    txtObj.transform.SetParent(sbObj.transform, false);
+                    RectTransform rtTxt = txtObj.AddComponent<RectTransform>();
+                    rtTxt.anchorMin = Vector2.zero;
+                    rtTxt.anchorMax = Vector2.one;
+                    rtTxt.offsetMin = Vector2.zero;
+                    rtTxt.offsetMax = Vector2.zero;
+                    Text t = txtObj.AddComponent<Text>();
+                    t.font = defaultFont;
+                    t.fontSize = 15;
+                    t.fontStyle = FontStyle.Bold;
+                    t.alignment = TextAnchor.MiddleCenter;
+                    t.text = "✦ 0";
+                    t.color = new Color(0.35f, 0.95f, 0.55f);
+                    seedCountText = t;
+                }
+                else
+                {
+                    seedCountText.transform.SetParent(sbObj.transform, false);
+                    RectTransform rtTxt = seedCountText.GetComponent<RectTransform>();
+                    rtTxt.anchorMin = Vector2.zero;
+                    rtTxt.anchorMax = Vector2.one;
+                    rtTxt.offsetMin = Vector2.zero;
+                    rtTxt.offsetMax = Vector2.zero;
+                }
+            }
+            else
+            {
+                seedBadgeRoot = sbTrans.GetComponent<RectTransform>();
+                seedBadgeRoot.anchorMin = new Vector2(1, 1);
+                seedBadgeRoot.anchorMax = new Vector2(1, 1);
+                seedBadgeRoot.pivot = new Vector2(1, 1);
+                seedBadgeRoot.sizeDelta = new Vector2(84, 32);
+                seedBadgeRoot.anchoredPosition = new Vector2(-54, -7);
+            }
+
+            // 1c. Status Effects Container (180x32 below buttons at local (0, -52), right aligned)
+            Transform seTrans = trObj.transform.Find("StatusEffectsContainer");
+            if (seTrans == null)
+            {
+                GameObject seObj = new GameObject("StatusEffectsContainer");
+                seObj.transform.SetParent(trObj.transform, false);
+                statusEffectsContainer = seObj.AddComponent<RectTransform>();
+                statusEffectsContainer.anchorMin = new Vector2(1, 1);
+                statusEffectsContainer.anchorMax = new Vector2(1, 1);
+                statusEffectsContainer.pivot = new Vector2(1, 1);
+                statusEffectsContainer.sizeDelta = new Vector2(180, 32);
+                statusEffectsContainer.anchoredPosition = new Vector2(0, -52);
+
+                HorizontalLayoutGroup hlg = seObj.AddComponent<HorizontalLayoutGroup>();
+                hlg.childAlignment = TextAnchor.MiddleRight;
+                hlg.spacing = 6;
+                hlg.childControlWidth = false;
+                hlg.childControlHeight = false;
+            }
+            else
+            {
+                statusEffectsContainer = seTrans.GetComponent<RectTransform>();
+            }
+
+            // 2. Pause Modal
+            if (pauseModal == null)
+            {
+                Transform existingPause = transform.Find("PauseModal");
+                if (existingPause != null)
+                {
+                    pauseModal = existingPause.gameObject;
+                    resumeButton = existingPause.Find("Panel/Body/ResumeButton")?.GetComponent<Button>() ?? existingPause.Find("Panel/ResumeButton")?.GetComponent<Button>();
+                    restartButton = existingPause.Find("Panel/Body/RestartButton")?.GetComponent<Button>() ?? existingPause.Find("Panel/RestartButton")?.GetComponent<Button>();
+                    pauseWorldSelectButton = existingPause.Find("Panel/Body/WorldSelectButton")?.GetComponent<Button>() ?? existingPause.Find("Panel/WorldSelectButton")?.GetComponent<Button>();
+                    pauseHomeButton = existingPause.Find("Panel/Body/HomeButton")?.GetComponent<Button>() ?? existingPause.Find("Panel/HomeButton")?.GetComponent<Button>();
+                }
+                else
+                {
+                    pauseModal = CreatePauseModalObject(defaultFont);
+                }
+            }
+
+            // 3. Game Over Modal World Select & Home buttons
+            if (gameOverModal != null)
+            {
+                if (gameOverWorldSelectButton == null)
+                {
+                    Transform existingWs = gameOverModal.transform.Find("GameOverWorldSelectButton");
+                    if (existingWs != null) gameOverWorldSelectButton = existingWs.GetComponent<Button>();
+                    else
+                    {
+                        GameObject wsBtn = CreateSimpleButton(gameOverModal.transform, "GameOverWorldSelectButton", "WORLD SELECT",
+                            new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                            new Vector2(230, 46), new Vector2(-125, -195),
+                            new Color(0.24f, 0.32f, 0.48f), Color.white, 17, defaultFont);
+                        gameOverWorldSelectButton = wsBtn.GetComponent<Button>();
+                    }
+                }
+
+                if (gameOverHomeButton == null)
+                {
+                    Transform existingHome = gameOverModal.transform.Find("GameOverHomeButton");
+                    if (existingHome != null) gameOverHomeButton = existingHome.GetComponent<Button>();
+                    else
+                    {
+                        GameObject hmBtn = CreateSimpleButton(gameOverModal.transform, "GameOverHomeButton", "HOME",
+                            new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                            new Vector2(230, 46), new Vector2(125, -195),
+                            new Color(0.50f, 0.20f, 0.20f), Color.white, 17, defaultFont);
+                        gameOverHomeButton = hmBtn.GetComponent<Button>();
+                    }
+                }
+            }
+
+            // 4. Victory Modal Return to World Select button
+            if (victoryModal != null && victoryWorldSelectButton == null)
+            {
+                Transform existingWs = victoryModal.transform.Find("ReturnWorldSelectButton");
+                if (existingWs != null) victoryWorldSelectButton = existingWs.GetComponent<Button>();
+                else
+                {
+                    GameObject wsBtn = CreateSimpleButton(victoryModal.transform, "ReturnWorldSelectButton", "RETURN TO WORLD SELECT",
+                        new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                        new Vector2(460, 50), new Vector2(0, -185),
+                        new Color(0.24f, 0.32f, 0.48f), Color.white, 18, defaultFont);
+                    victoryWorldSelectButton = wsBtn.GetComponent<Button>();
+                }
+            }
+        }
+
+        private GameObject CreatePauseModalObject(Font font)
+        {
+            GameObject modal = new GameObject("PauseModal");
+            modal.transform.SetParent(transform, false);
+            RectTransform rtModal = modal.AddComponent<RectTransform>();
+            rtModal.anchorMin = Vector2.zero;
+            rtModal.anchorMax = Vector2.one;
+            rtModal.offsetMin = Vector2.zero;
+            rtModal.offsetMax = Vector2.zero;
+
+            Image darkBg = modal.AddComponent<Image>();
+            darkBg.color = new Color(0.04f, 0.05f, 0.07f, 0.90f);
+
+            // Center Panel
+            GameObject panel = new GameObject("Panel");
+            panel.transform.SetParent(modal.transform, false);
+            RectTransform rtPanel = panel.AddComponent<RectTransform>();
+            rtPanel.anchorMin = new Vector2(0.5f, 0.5f);
+            rtPanel.anchorMax = new Vector2(0.5f, 0.5f);
+            rtPanel.pivot = new Vector2(0.5f, 0.5f);
+            rtPanel.sizeDelta = new Vector2(440, 440);
+            rtPanel.anchoredPosition = Vector2.zero;
+
+            Image panelBorder = panel.AddComponent<Image>();
+            panelBorder.color = new Color(0.38f, 0.30f, 0.20f, 1f); // Antique copper border
+
+            GameObject body = new GameObject("Body");
+            body.transform.SetParent(panel.transform, false);
+            RectTransform rtBody = body.AddComponent<RectTransform>();
+            rtBody.anchorMin = Vector2.zero;
+            rtBody.anchorMax = Vector2.one;
+            rtBody.offsetMin = new Vector2(2, 2);
+            rtBody.offsetMax = new Vector2(-2, -2);
+            Image bodyImg = body.AddComponent<Image>();
+            bodyImg.color = new Color(0.08f, 0.09f, 0.11f, 0.96f);
+
+            // Title
+            GameObject titleObj = new GameObject("Title");
+            titleObj.transform.SetParent(body.transform, false);
+            RectTransform rtTitle = titleObj.AddComponent<RectTransform>();
+            rtTitle.anchorMin = new Vector2(0.5f, 0.5f);
+            rtTitle.anchorMax = new Vector2(0.5f, 0.5f);
+            rtTitle.anchoredPosition = new Vector2(0, 150);
+            rtTitle.sizeDelta = new Vector2(400, 50);
+            Text titleTxt = titleObj.AddComponent<Text>();
+            titleTxt.font = font;
+            titleTxt.text = "PAUSED";
+            titleTxt.fontSize = 36;
+            titleTxt.fontStyle = FontStyle.Bold;
+            titleTxt.alignment = TextAnchor.MiddleCenter;
+            titleTxt.color = new Color(1f, 0.82f, 0.28f);
+
+            // Subtitle
+            GameObject subObj = new GameObject("Subtitle");
+            subObj.transform.SetParent(body.transform, false);
+            RectTransform rtSub = subObj.AddComponent<RectTransform>();
+            rtSub.anchorMin = new Vector2(0.5f, 0.5f);
+            rtSub.anchorMax = new Vector2(0.5f, 0.5f);
+            rtSub.anchoredPosition = new Vector2(0, 110);
+            rtSub.sizeDelta = new Vector2(400, 30);
+            Text subTxt = subObj.AddComponent<Text>();
+            subTxt.font = font;
+            subTxt.text = "THE CURSED HARVEST";
+            subTxt.fontSize = 15;
+            subTxt.alignment = TextAnchor.MiddleCenter;
+            subTxt.color = new Color(0.85f, 0.82f, 0.75f);
+
+            // Buttons
+            GameObject resObj = CreateSimpleButton(body.transform, "ResumeButton", "RESUME [ESC]",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(340, 48), new Vector2(0, 45),
+                new Color(0.22f, 0.58f, 0.30f), Color.white, 19, font);
+            resumeButton = resObj.GetComponent<Button>();
+
+            GameObject rstObj = CreateSimpleButton(body.transform, "RestartButton", "RESTART RUN",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(340, 48), new Vector2(0, -15),
+                new Color(0.58f, 0.38f, 0.18f), Color.white, 19, font);
+            restartButton = rstObj.GetComponent<Button>();
+
+            GameObject wsObj = CreateSimpleButton(body.transform, "WorldSelectButton", "WORLD SELECT",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(340, 48), new Vector2(0, -75),
+                new Color(0.24f, 0.32f, 0.48f), Color.white, 19, font);
+            pauseWorldSelectButton = wsObj.GetComponent<Button>();
+
+            GameObject hmObj = CreateSimpleButton(body.transform, "HomeButton", "HOME",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(340, 48), new Vector2(0, -135),
+                new Color(0.50f, 0.20f, 0.20f), Color.white, 19, font);
+            pauseHomeButton = hmObj.GetComponent<Button>();
+
+            modal.SetActive(false);
+            return modal;
+        }
+
+        private static GameObject CreateSimpleButton(Transform parent, string name, string label,
+            Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot,
+            Vector2 size, Vector2 anchoredPos,
+            Color bgColor, Color textColor, int fontSize, Font font)
+        {
+            GameObject btnObj = new GameObject(name);
+            btnObj.transform.SetParent(parent, false);
+
+            RectTransform rt = btnObj.AddComponent<RectTransform>();
+            rt.anchorMin = anchorMin;
+            rt.anchorMax = anchorMax;
+            rt.pivot = pivot;
+            rt.sizeDelta = size;
+            rt.anchoredPosition = anchoredPos;
+
+            Image img = btnObj.AddComponent<Image>();
+            img.color = bgColor;
+
+            Button btn = btnObj.AddComponent<Button>();
+            btn.targetGraphic = img;
+
+            ColorBlock cb = btn.colors;
+            cb.highlightedColor = Color.Lerp(bgColor, Color.white, 0.25f);
+            cb.pressedColor = Color.Lerp(bgColor, Color.black, 0.25f);
+            btn.colors = cb;
+
+            GameObject textObj = new GameObject("Text");
+            textObj.transform.SetParent(btnObj.transform, false);
+            RectTransform rtText = textObj.AddComponent<RectTransform>();
+            rtText.anchorMin = Vector2.zero;
+            rtText.anchorMax = Vector2.one;
+            rtText.offsetMin = Vector2.zero;
+            rtText.offsetMax = Vector2.zero;
+
+            Text txt = textObj.AddComponent<Text>();
+            txt.font = font;
+            txt.text = label;
+            txt.fontSize = fontSize;
+            txt.fontStyle = FontStyle.Bold;
+            txt.alignment = TextAnchor.MiddleCenter;
+            txt.color = textColor;
+
+            return btnObj;
+        }
+
+        /// <summary>
+        /// Architectural hook for multi-orientation support (WebGL Jam Target = Landscape).
+        /// Future mobile portrait builds can leverage this to re-anchor HUD widgets.
+        /// </summary>
+        public void SetLayoutMode(UILayoutMode mode)
+        {
+            currentLayoutMode = mode;
+            if (currentLayoutMode == UILayoutMode.Landscape)
+            {
+                if (topRightHUDContainer != null)
+                {
+                    topRightHUDContainer.anchoredPosition = new Vector2(-28, -24);
+                }
+            }
+            else // Portrait
+            {
+                if (topRightHUDContainer != null)
+                {
+                    topRightHUDContainer.anchoredPosition = new Vector2(-16, -20);
+                }
+            }
         }
     }
 }

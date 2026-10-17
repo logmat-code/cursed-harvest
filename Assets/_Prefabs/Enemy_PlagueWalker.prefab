@@ -90,7 +90,7 @@ MonoBehaviour:
   chargeDamage: 0
   canSummonMinions: 0
   summonCooldown: 8
-  visualRoot: {fileID: 0}
+  visualRoot: {fileID: 4100682033992949533}
   bobFrequency: 10
   bobAmplitude: 0.08
   tiltAngle: 6
@@ -141,7 +141,11 @@ MonoBehaviour:
   healthDropCount: 1
   knockbackResistance: 0.1
   onDeathHazardPrefab: {fileID: 8362435712803397425, guid: 7ac5c39cd207e4420aae0b9a03a4b910, type: 3}
-  renderersToFlash: []
+  renderersToFlash:
+  - {fileID: 6413747966611226033}
+  - {fileID: 6573522696322352388}
+  - {fileID: 6818258702016019179}
+  - {fileID: 816820369788530713}
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 3771140208864044240, guid: 728a7e1019d3b474b900dabed730c0dc, type: 3}
 --- !u!114 &7174110864068904707
@@ -250,6 +254,16 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1841115922121070558, guid: ae863f6dfdd2cc34fbb2f2da8f79466d, type: 3}
   m_PrefabInstance: {fileID: 85628686088891155}
   m_PrefabAsset: {fileID: 0}
+--- !u!23 &6413747966611226033 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6355145448677152418, guid: ae863f6dfdd2cc34fbb2f2da8f79466d, type: 3}
+  m_PrefabInstance: {fileID: 85628686088891155}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6573522696322352388 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6487979274214731287, guid: ae863f6dfdd2cc34fbb2f2da8f79466d, type: 3}
+  m_PrefabInstance: {fileID: 85628686088891155}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4623596903353533060
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -310,6 +324,11 @@ PrefabInstance:
       addedObject: {fileID: 1782515036019686605}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c469630796c82c4387e97ea9923fb5c, type: 3}
+--- !u!137 &816820369788530713 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5440274886368408221, guid: 3c469630796c82c4387e97ea9923fb5c, type: 3}
+  m_PrefabInstance: {fileID: 4623596903353533060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2806935655676808402 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7412482950346133078, guid: 3c469630796c82c4387e97ea9923fb5c, type: 3}
@@ -318,5 +337,10 @@ Transform:
 --- !u!4 &3145281895646200906 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7749597488202270414, guid: 3c469630796c82c4387e97ea9923fb5c, type: 3}
+  m_PrefabInstance: {fileID: 4623596903353533060}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6818258702016019179 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2212677855049594991, guid: 3c469630796c82c4387e97ea9923fb5c, type: 3}
   m_PrefabInstance: {fileID: 4623596903353533060}
   m_PrefabAsset: {fileID: 0}

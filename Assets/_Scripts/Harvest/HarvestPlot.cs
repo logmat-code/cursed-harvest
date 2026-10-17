@@ -24,10 +24,15 @@ namespace CursedHarvest
     public class HarvestPlot : MonoBehaviour
     {
         [Header("Plot Configuration")]
-        [SerializeField] private float interactionRadius = 2.5f;
+        [SerializeField] private float interactionRadius = 2.8f;
         [SerializeField] private float growDuration = 3.5f;
         [SerializeField] private float cooldownDuration = 6.0f;
         [SerializeField] private float baseLuckyChance = 0.70f;
+
+        [Header("Ground Boundary Visuals (2.8m Folk-Horror Decal Ring)")]
+        [SerializeField] private GameObject boundaryVisualRoot;
+        private LineRenderer boundaryLine;
+        private Material boundaryMaterial;
 
         [Header("Visual References")]
         [SerializeField] private Transform plantSocket;
@@ -49,11 +54,42 @@ namespace CursedHarvest
         private GameObject plantingSeedVisual;
         private float growTimer;
         private float cooldownTimer;
+        private float harvestGraceTimer;
+        private const float HarvestGraceDuration = 1.0f;
+        private bool isHarvestPaused;
+        private float interruptedFeedbackTimer;
         private TextMesh promptTextMesh;
         private Transform cameraTransform;
 
         public PlotState State => currentState;
         public float BaseLuckyChance => baseLuckyChance;
+        public float GrowProgress => growDuration > 0f ? Mathf.Clamp01(growTimer / growDuration) : 0f;
+        public bool IsHarvestPaused => isHarvestPaused;
+        public float HarvestGraceTimer => harvestGraceTimer;
+        public float InteractionRadius => interactionRadius;
+        public float GrowTimer => growTimer;
+        public void SetGrowTimer(float t) => growTimer = t;
+
+        public void SimulateChannelingStep(float dt, float playerDistance)
+        {
+            bool insideZone = playerDistance <= interactionRadius;
+            if (insideZone)
+            {
+                isHarvestPaused = false;
+                harvestGraceTimer = 0f;
+                growTimer += dt;
+            }
+            else
+            {
+                isHarvestPaused = true;
+                harvestGraceTimer += dt;
+                if (harvestGraceTimer >= HarvestGraceDuration)
+                {
+                    InterruptHarvest();
+                    return;
+                }
+            }
+        }
 
         public static event Action<HarvestResult> OnHarvestGambleResolved;
 
@@ -69,6 +105,84 @@ namespace CursedHarvest
             }
 
             CreatePromptTextMesh();
+            EnsureGroundBoundaryVisual();
+        }
+
+        private void EnsureGroundBoundaryVisual()
+        {
+            if (boundaryVisualRoot != null && boundaryLine != null) return;
+
+            Transform existing = transform.Find("HarvestBoundaryVisual");
+            if (existing != null)
+            {
+                boundaryVisualRoot = existing.gameObject;
+                boundaryLine = boundaryVisualRoot.GetComponent<LineRenderer>();
+                if (boundaryLine != null && boundaryLine.material != null)
+                {
+                    boundaryMaterial = boundaryLine.material;
+                }
+                return;
+            }
+
+            boundaryVisualRoot = new GameObject("HarvestBoundaryVisual");
+            boundaryVisualRoot.transform.SetParent(transform, false);
+            boundaryVisualRoot.transform.localPosition = new Vector3(0f, 0.03f, 0f);
+
+            boundaryLine = boundaryVisualRoot.AddComponent<LineRenderer>();
+            boundaryLine.useWorldSpace = false;
+            boundaryLine.loop = true;
+            boundaryLine.startWidth = 0.10f;
+            boundaryLine.endWidth = 0.10f;
+
+            int segments = 48;
+            boundaryLine.positionCount = segments;
+            float radius = interactionRadius; // 2.8f
+            for (int i = 0; i < segments; i++)
+            {
+                float angle = (i / (float)segments) * Mathf.PI * 2f;
+                float x = Mathf.Cos(angle) * radius;
+                float z = Mathf.Sin(angle) * radius;
+                boundaryLine.SetPosition(i, new Vector3(x, 0f, z));
+            }
+
+            // Material: Folk-horror soft rune glow (unlit transparent amber, NOT neon)
+            Shader shader = Shader.Find("Sprites/Default") ?? Shader.Find("Unlit/Color");
+            if (shader != null)
+            {
+                boundaryMaterial = new Material(shader);
+                boundaryMaterial.color = new Color(0.65f, 0.45f, 0.18f, 0.40f);
+                boundaryLine.material = boundaryMaterial;
+            }
+
+            boundaryLine.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            boundaryLine.receiveShadows = false;
+
+            // Add 4 subtle small weathered rune markers at Cardinal points (N, S, E, W)
+            Vector3[] cardinalOffsets = new Vector3[]
+            {
+                new Vector3(0f, 0.04f, radius),
+                new Vector3(radius, 0.04f, 0f),
+                new Vector3(0f, 0.04f, -radius),
+                new Vector3(-radius, 0.04f, 0f)
+            };
+            for (int i = 0; i < cardinalOffsets.Length; i++)
+            {
+                GameObject runeMarker = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                runeMarker.name = $"RuneMarker_{i}";
+                runeMarker.transform.SetParent(boundaryVisualRoot.transform, false);
+                runeMarker.transform.localPosition = cardinalOffsets[i];
+                runeMarker.transform.localScale = new Vector3(0.18f, 0.08f, 0.18f);
+                runeMarker.transform.localRotation = Quaternion.Euler(0f, i * 90f + 45f, 0f);
+
+                Collider col = runeMarker.GetComponent<Collider>();
+                if (col != null) DestroyImmediate(col);
+
+                Renderer r = runeMarker.GetComponent<Renderer>();
+                if (r != null && boundaryMaterial != null)
+                {
+                    r.material = boundaryMaterial;
+                }
+            }
         }
 
         private void CreatePromptTextMesh()
@@ -122,6 +236,7 @@ namespace CursedHarvest
             FindPlayer();
             UpdateBillboardRotation();
             UpdatePromptText();
+            UpdateBoundaryVisualFeedback();
 
             if (currentState == PlotState.Ready)
             {
@@ -186,8 +301,16 @@ namespace CursedHarvest
                 return;
             }
 
+            if (interruptedFeedbackTimer > 0f)
+            {
+                interruptedFeedbackTimer -= Time.deltaTime;
+                promptTextMesh.text = "★ HARVEST INTERRUPTED ★\nStay inside the zone!";
+                promptTextMesh.color = new Color(0.95f, 0.20f, 0.20f);
+                return;
+            }
+
             float dist = Vector3.Distance(transform.position, playerTransform.position);
-            if (dist > interactionRadius + 2.8f)
+            if (dist > interactionRadius + 3.5f && currentState != PlotState.Growing)
             {
                 promptTextMesh.text = "";
                 return;
@@ -212,8 +335,19 @@ namespace CursedHarvest
                     promptTextMesh.color = new Color(1f, 0.85f, 0.25f);
                     break;
                 case PlotState.Growing:
-                    promptTextMesh.text = "HARVESTING...";
-                    promptTextMesh.color = new Color(1f, 0.65f, 0.1f);
+                    float progress = Mathf.Clamp01(growTimer / growDuration);
+                    string bar = GenerateProgressBar(progress, 8);
+                    if (isHarvestPaused)
+                    {
+                        float graceRemaining = Mathf.Max(0f, HarvestGraceDuration - harvestGraceTimer);
+                        promptTextMesh.text = $"HARVEST PAUSED\nRETURN TO HARVEST ({graceRemaining:0.0}s)\n[{bar}] {Mathf.RoundToInt(progress * 100)}%";
+                        promptTextMesh.color = new Color(1f, 0.35f, 0.20f);
+                    }
+                    else
+                    {
+                        promptTextMesh.text = $"HARVESTING...\n[{bar}] {Mathf.RoundToInt(progress * 100)}%";
+                        promptTextMesh.color = new Color(1f, 0.75f, 0.18f);
+                    }
                     break;
                 case PlotState.Cooldown:
                     promptTextMesh.text = $"RECHARGING ({cooldownTimer:0.0}s)";
@@ -223,6 +357,44 @@ namespace CursedHarvest
                     promptTextMesh.text = "";
                     break;
             }
+        }
+
+        private void UpdateBoundaryVisualFeedback()
+        {
+            if (boundaryMaterial == null) return;
+
+            if (currentState == PlotState.Growing)
+            {
+                if (isHarvestPaused)
+                {
+                    // WARNING AMBER-RED
+                    boundaryMaterial.color = new Color(0.90f, 0.28f, 0.18f, 0.70f);
+                }
+                else
+                {
+                    // CHANNELING PULSE: Warm ritual ember glow
+                    float pulse = Mathf.PingPong(Time.time * 2.5f, 1f);
+                    boundaryMaterial.color = Color.Lerp(new Color(0.65f, 0.45f, 0.18f, 0.45f), new Color(0.95f, 0.72f, 0.25f, 0.80f), pulse);
+                }
+            }
+            else if (currentState == PlotState.Ready)
+            {
+                float pulse = Mathf.PingPong(Time.time * 0.8f, 1f);
+                boundaryMaterial.color = new Color(0.55f, 0.38f, 0.16f, 0.35f + pulse * 0.12f);
+            }
+            else
+            {
+                boundaryMaterial.color = new Color(0.35f, 0.30f, 0.25f, 0.20f);
+            }
+        }
+
+        private static string GenerateProgressBar(float progress, int segments = 8)
+        {
+            int filled = Mathf.Clamp(Mathf.RoundToInt(progress * segments), 0, segments);
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(segments);
+            for (int i = 0; i < filled; i++) sb.Append('█');
+            for (int i = filled; i < segments; i++) sb.Append('░');
+            return sb.ToString();
         }
 
         private void CheckPlayerInteraction()
@@ -329,7 +501,35 @@ namespace CursedHarvest
 
         private void UpdateGrowth()
         {
-            growTimer += Time.deltaTime;
+            if (playerTransform == null)
+            {
+                FindPlayer();
+                if (playerTransform == null) return;
+            }
+
+            float dist = Vector3.Distance(transform.position, playerTransform.position);
+            bool insideZone = dist <= interactionRadius;
+
+            if (insideZone)
+            {
+                isHarvestPaused = false;
+                harvestGraceTimer = 0f;
+                growTimer += Time.deltaTime;
+            }
+            else
+            {
+                // Player has exited harvest zone -> pause progress immediately
+                isHarvestPaused = true;
+                harvestGraceTimer += Time.deltaTime;
+
+                if (harvestGraceTimer >= HarvestGraceDuration)
+                {
+                    // Grace period exceeded: reset progress to 0!
+                    InterruptHarvest();
+                    return;
+                }
+            }
+
             float progress = Mathf.Clamp01(growTimer / growDuration);
 
             // Scale pumpkin with pulsing anticipation
@@ -342,14 +542,46 @@ namespace CursedHarvest
             // Pulse light with corrupt ritual energy
             if (plotLight != null)
             {
-                plotLight.color = new Color(1.0f, 0.55f, 0.15f);
-                plotLight.intensity = 1.6f + Mathf.PingPong(Time.time * 4f, 1.4f);
+                if (isHarvestPaused)
+                {
+                    plotLight.color = new Color(0.95f, 0.35f, 0.15f);
+                    plotLight.intensity = 1.4f + Mathf.PingPong(Time.time * 6f, 0.8f);
+                }
+                else
+                {
+                    plotLight.color = new Color(1.0f, 0.55f, 0.15f);
+                    plotLight.intensity = 1.6f + Mathf.PingPong(Time.time * 4f, 1.4f);
+                }
             }
 
             if (growTimer >= growDuration)
             {
                 ResolveHarvest();
             }
+        }
+
+        public void InterruptHarvest()
+        {
+            Debug.Log("[HarvestPlot] Harvest interrupted! Player remained outside zone > 1.0s. Resetting progress to 0.");
+            growTimer = 0f;
+            harvestGraceTimer = 0f;
+            isHarvestPaused = false;
+            interruptedFeedbackTimer = 1.6f;
+
+            if (growingPumpkin != null)
+            {
+                growingPumpkin.transform.localScale = Vector3.zero;
+                growingPumpkin.SetActive(false);
+            }
+
+            if (plotLight != null)
+            {
+                plotLight.color = new Color(0.95f, 0.20f, 0.20f);
+                plotLight.intensity = 1.8f;
+            }
+
+            AudioManager.Instance?.PlaySound(SoundType.HarvestCursed, 0.6f);
+            currentState = PlotState.Ready;
         }
 
         public float CalculateLuckyChance()

@@ -122,7 +122,7 @@ MonoBehaviour:
   chargeDamage: 0
   canSummonMinions: 1
   summonCooldown: 8
-  visualRoot: {fileID: 0}
+  visualRoot: {fileID: 9083590515849128648}
   bobFrequency: 10
   bobAmplitude: 0.08
   tiltAngle: 6
@@ -173,7 +173,11 @@ MonoBehaviour:
   healthDropCount: 1
   knockbackResistance: 0.75
   onDeathHazardPrefab: {fileID: 0}
-  renderersToFlash: []
+  renderersToFlash:
+  - {fileID: 1364733276349880830}
+  - {fileID: 5558620796602610600}
+  - {fileID: 7346092693261501272}
+  - {fileID: 1064674235963025250}
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 276821299728828542, guid: 83afd1fe2584d4b569ed02e2b877b199, type: 3}
 --- !u!114 &1729997634340654381
@@ -248,6 +252,21 @@ PrefabInstance:
       addedObject: {fileID: 8483018900327249975}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89e401adace34884084d47323dfed9fc, type: 3}
+--- !u!137 &1064674235963025250 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2740055589493694155, guid: 89e401adace34884084d47323dfed9fc, type: 3}
+  m_PrefabInstance: {fileID: 2936586208879212969}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1364733276349880830 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4192948242259058775, guid: 89e401adace34884084d47323dfed9fc, type: 3}
+  m_PrefabInstance: {fileID: 2936586208879212969}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &5558620796602610600 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7342250238101850625, guid: 89e401adace34884084d47323dfed9fc, type: 3}
+  m_PrefabInstance: {fileID: 2936586208879212969}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8152041707929314460 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6476465594022878517, guid: 89e401adace34884084d47323dfed9fc, type: 3}
@@ -315,6 +334,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}
+--- !u!23 &7346092693261501272 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 346140439290375556, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}
+  m_PrefabInstance: {fileID: 7007368505066335964}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8483018900327249975 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1479028106056636139, guid: dca1a161a91c15a43bc8e073c4033c32, type: 3}

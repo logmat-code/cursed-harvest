@@ -101,6 +101,7 @@ namespace CursedHarvest
         public int BossChargersRemaining => bossChargersRemaining;
         public GameObject ActiveBossObject => activeBossObj;
         public GameObject HealthPickupPrefab => healthPickupPrefab;
+        public WorldConfig ActiveWorldConfig => (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
 
         public static event Action<float> OnRunTimerUpdated;
         public static event Action<int, int, int> OnWaveUpdated; // (wave, remaining, total)
@@ -218,7 +219,7 @@ namespace CursedHarvest
             spawnInterval = 0.35f;
         }
 
-        public GameObject SpawnBoss()
+        public GameObject SpawnBoss(BossEncounterConfig bossEnc = null)
         {
             if (bossPrefab == null) return null;
             Vector3 spawnPos = playerTransform != null ? playerTransform.position + Vector3.forward * 16f : new Vector3(0f, 0.5f, 16f);
@@ -227,16 +228,42 @@ namespace CursedHarvest
             spawnPos.y = 0.5f;
 
             GameObject bossObj = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
-            BossController boss = bossObj.GetComponent<BossController>();
-            if (boss != null) boss.Initialize();
+            if (bossEnc != null)
+            {
+                if (bossEnc.bossScale != 1.0f) bossObj.transform.localScale = Vector3.one * bossEnc.bossScale;
+                BossController bossCtrl = bossObj.GetComponent<BossController>();
+                if (bossCtrl != null) bossCtrl.Initialize();
+                EnemyHealth eh = bossObj.GetComponent<EnemyHealth>();
+                if (eh != null && bossEnc.bossHealthMultiplier != 1.0f)
+                {
+                    eh.SetMaxHealth(eh.MaxHealth * bossEnc.bossHealthMultiplier);
+                }
+            }
+            else
+            {
+                BossController boss = bossObj.GetComponent<BossController>();
+                if (boss != null) boss.Initialize();
+            }
             return bossObj;
         }
 
         public void StartWave(int wave)
         {
             currentWave = wave;
-            isBossWave = (currentWave == 10);
-            totalEnemiesForWave = isBossWave ? bossWaveAddCount : GetEnemyCountForWave(wave, postWave10Growth);
+            WorldConfig cfg = ActiveWorldConfig;
+            isBossWave = cfg.IsBossWave(wave);
+            BossEncounterConfig bossEnc = isBossWave ? cfg.GetBossEncounter(wave) : null;
+
+            if (isBossWave && bossEnc != null)
+            {
+                bossWaveAddCount = bossEnc.bossAddCount;
+                totalEnemiesForWave = bossWaveAddCount;
+            }
+            else
+            {
+                totalEnemiesForWave = cfg.GetEnemyCountForWave(wave);
+            }
+
             spawnedThisWave = 0;
             enemiesKilledThisWave = 0;
             lastSpawnTime = Time.time;
@@ -247,7 +274,7 @@ namespace CursedHarvest
 
             if (isBossWave)
             {
-                StartBossWave();
+                StartBossWave(bossEnc);
             }
             else
             {
@@ -258,31 +285,48 @@ namespace CursedHarvest
             }
         }
 
-        private void StartBossWave()
+        private void StartBossWave(BossEncounterConfig bossEnc = null)
         {
             isBossIntro = true;
             isBossAlive = false;
             bossDefeatedThisWave = false;
             lastSpawnTime = Time.time;
 
-            bossGruntsRemaining = WorldDifficultyConfig.Current.bossGruntQuota;
-            bossChasersRemaining = WorldDifficultyConfig.Current.bossChaserQuota;
-            bossWalkersRemaining = WorldDifficultyConfig.Current.bossWalkerQuota;
-            bossFarmersRemaining = WorldDifficultyConfig.Current.bossFarmerQuota;
-            bossChargersRemaining = WorldDifficultyConfig.Current.bossChargerQuota;
-
-            if (UIManager.Instance != null)
+            if (bossEnc != null)
             {
-                UIManager.Instance.ShowToast("BOSS WAVE", "THE LAST HARVEST", 3.5f, new Color(1f, 0.25f, 0.25f));
+                bossGruntsRemaining = bossEnc.bossGruntQuota;
+                bossChasersRemaining = bossEnc.bossChaserQuota;
+                bossWalkersRemaining = bossEnc.bossWalkerQuota;
+                bossFarmersRemaining = bossEnc.bossFarmerQuota;
+                bossChargersRemaining = bossEnc.bossChargerQuota;
+
+                string badge = bossEnc.isFinalBoss ? "BOSS WAVE" : "MID-BOSS WAVE";
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.ShowToast(badge, bossEnc.bossName, 3.5f, new Color(1f, 0.25f, 0.25f));
+                }
+            }
+            else
+            {
+                bossGruntsRemaining = WorldDifficultyConfig.Current.bossGruntQuota;
+                bossChasersRemaining = WorldDifficultyConfig.Current.bossChaserQuota;
+                bossWalkersRemaining = WorldDifficultyConfig.Current.bossWalkerQuota;
+                bossFarmersRemaining = WorldDifficultyConfig.Current.bossFarmerQuota;
+                bossChargersRemaining = WorldDifficultyConfig.Current.bossChargerQuota;
+
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.ShowToast("BOSS WAVE", "THE LAST HARVEST", 3.5f, new Color(1f, 0.25f, 0.25f));
+                }
             }
 
             AudioManager.Instance?.PlayBossMusic(1.5f);
 
             if (bossIntroCoroutine != null) StopCoroutine(bossIntroCoroutine);
-            bossIntroCoroutine = StartCoroutine(BossIntroRoutine(1.2f));
+            bossIntroCoroutine = StartCoroutine(BossIntroRoutine(1.2f, bossEnc));
         }
 
-        private IEnumerator BossIntroRoutine(float duration)
+        private IEnumerator BossIntroRoutine(float duration, BossEncounterConfig bossEnc = null)
         {
             yield return new WaitForSeconds(duration);
             isBossIntro = false;
@@ -290,7 +334,7 @@ namespace CursedHarvest
             if (!bossSpawned)
             {
                 bossSpawned = true;
-                activeBossObj = SpawnBoss();
+                activeBossObj = SpawnBoss(bossEnc);
                 if (activeBossObj != null)
                 {
                     activeBossHealth = activeBossObj.GetComponent<EnemyHealth>();
@@ -302,8 +346,8 @@ namespace CursedHarvest
 
         private void SpawnMilestoneEnemy(int wave)
         {
-            // Wave 10 is the Boss Wave exception: NO automatic extra elites!
-            if (wave == 10) return;
+            // Milestone exception: NO automatic extra elites on any configured boss wave!
+            if (ActiveWorldConfig.IsBossWave(wave)) return;
 
             if (wave % 10 == 0)
             {
@@ -401,13 +445,35 @@ namespace CursedHarvest
         private void HandleBossWaveCleared()
         {
             isBossWave = false;
-            if (UIManager.Instance != null)
+            WorldConfig activeConfig = ActiveWorldConfig;
+            BossEncounterConfig currentBossEnc = activeConfig.GetBossEncounter(currentWave);
+            bool isFinal = currentBossEnc != null ? currentBossEnc.isFinalBoss : (currentWave >= activeConfig.totalWaves);
+
+            if (isFinal)
             {
-                UIManager.Instance.ShowVictoryModal();
+                // Final Boss defeated! Complete world!
+                if (GameSession.Instance != null)
+                {
+                    GameSession.Instance.CompleteWorld(activeConfig.worldId);
+                }
+
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.ShowVictoryModal();
+                }
+                else
+                {
+                    EnterEndlessMode();
+                    StartIntermission();
+                }
             }
             else
             {
-                EnterEndlessMode();
+                // Mid-Boss defeated!
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.ShowToast("MID-BOSS DEFEATED", "The horde gathers again...", 3.5f, new Color(1f, 0.75f, 0.2f));
+                }
                 StartIntermission();
             }
         }

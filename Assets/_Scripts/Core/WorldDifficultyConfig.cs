@@ -83,6 +83,42 @@ namespace CursedHarvest
             return new WorldDifficultyConfig();
         }
 
+        public static WorldDifficultyConfig FromWorldConfig(WorldConfig wc)
+        {
+            if (wc == null) return CreateWorld1Default();
+            var cfg = new WorldDifficultyConfig();
+            cfg.worldId = wc.worldId;
+            cfg.worldName = wc.displayName;
+            cfg.waveCounts = wc.waveEnemyCounts;
+            if (wc.bossEncounters != null && wc.bossEncounters.Length > 0)
+            {
+                var be = wc.bossEncounters[0];
+                cfg.bossAddCount = be.bossAddCount;
+                cfg.bossGruntQuota = be.bossGruntQuota;
+                cfg.bossChaserQuota = be.bossChaserQuota;
+                cfg.bossWalkerQuota = be.bossWalkerQuota;
+                cfg.bossFarmerQuota = be.bossFarmerQuota;
+                cfg.bossChargerQuota = be.bossChargerQuota;
+                cfg.bossMaxConcurrentAdds = be.bossMaxConcurrentAdds;
+                cfg.bossAddSpawnInterval = be.bossAddSpawnInterval;
+            }
+            cfg.enemyDamageMultiplier = wc.enemyDamageMultiplier;
+            cfg.bossDamageMultiplier = wc.bossDamageMultiplier;
+            cfg.hitInvulnerability = wc.hitInvulnerabilityDuration;
+            cfg.dashBaseCooldown = wc.dashCooldown;
+            cfg.chargerSpeedMultiplier = wc.enemySpeedMultiplier;
+            cfg.commonHealthDropChance = wc.healthDropChance;
+            cfg.eliteHealthDropChance = wc.eliteHealthDropChance;
+            cfg.luckyLastCommonHealthDropChance = wc.luckyLastHealthDropChance;
+            cfg.luckyLastEliteHealthDropChance = wc.luckyLastEliteHealthDropChance;
+            cfg.normalHealAmount = wc.normalHealAmount;
+            cfg.luckyLastHealAmount = wc.luckyLastHealAmount;
+            cfg.luckyLastMinimumHP = wc.luckyLastMinimumHP;
+            cfg.supplyDropWaves = wc.supplyDropWaves;
+            cfg.preBossWave = wc.preBossWave;
+            return cfg;
+        }
+
         public static void ResetToWorld1Default()
         {
             _current = CreateWorld1Default();

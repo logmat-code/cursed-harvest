@@ -1325,11 +1325,39 @@ namespace CursedHarvest.Editor
             waveRemText.fontStyle = FontStyle.Bold;
             waveRemText.rectTransform.anchoredPosition = new Vector2(0, -11);
 
-            // Top-Right: Cursed Seeds Badge (compact icon + count)
-            GameObject topRight = CreateUIObject("TopRightHUD", canvasObj.transform, new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1), new Vector2(70, 26), new Vector2(-24, -18));
-            CreateImage(topRight, "StatsBg", new Color(0.06f, 0.07f, 0.10f, 0.80f));
-            Text seedText = CreateText(topRight, "SeedText", "✦ 0", 15, TextAnchor.MiddleCenter, new Color(0.35f, 0.95f, 0.55f), defaultFont);
+            // Top-Right: Dedicated Container inside SafeArea (anchoredPosition -28, -24, size 180x90)
+            GameObject topRight = CreateUIObject("TopRightHUD", canvasObj.transform, new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1), new Vector2(180, 90), new Vector2(-28, -24));
+
+            // Isolated HUD Pause Button (46x46 at top-right corner, local 0, 0)
+            GameObject pauseBtnObj = CreateButton(topRight.transform, "HudPauseButton", "||", new Color(0.12f, 0.14f, 0.18f, 0.90f), defaultFont);
+            RectTransform rtPauseBtn = pauseBtnObj.GetComponent<RectTransform>();
+            rtPauseBtn.anchorMin = new Vector2(1, 1);
+            rtPauseBtn.anchorMax = new Vector2(1, 1);
+            rtPauseBtn.pivot = new Vector2(1, 1);
+            rtPauseBtn.sizeDelta = new Vector2(46, 46);
+            rtPauseBtn.anchoredPosition = Vector2.zero;
+            Text txtPause = pauseBtnObj.GetComponentInChildren<Text>();
+            if (txtPause != null)
+            {
+                txtPause.fontSize = 22;
+                txtPause.fontStyle = FontStyle.Bold;
+                txtPause.color = new Color(0.95f, 0.85f, 0.40f);
+            }
+            Button hudPauseBtn = pauseBtnObj.GetComponent<Button>();
+
+            // Cursed Seeds Badge: 84x32 pill to the left of pause button (local -54, -7)
+            GameObject seedBadge = CreateUIObject("SeedBadge", topRight.transform, new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1), new Vector2(84, 32), new Vector2(-54, -7));
+            CreateImage(seedBadge, "StatsBg", new Color(0.06f, 0.07f, 0.10f, 0.85f));
+            Text seedText = CreateText(seedBadge, "SeedText", "✦ 0", 15, TextAnchor.MiddleCenter, new Color(0.35f, 0.95f, 0.55f), defaultFont);
             seedText.fontStyle = FontStyle.Bold;
+
+            // Status Effects Container: 180x32 below buttons at local (0, -52), right aligned
+            GameObject statusEffects = CreateUIObject("StatusEffectsContainer", topRight.transform, new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1), new Vector2(180, 32), new Vector2(0, -52));
+            HorizontalLayoutGroup hlgStatus = statusEffects.AddComponent<HorizontalLayoutGroup>();
+            hlgStatus.childAlignment = TextAnchor.MiddleRight;
+            hlgStatus.spacing = 6;
+            hlgStatus.childControlWidth = false;
+            hlgStatus.childControlHeight = false;
 
             // Hidden kill counter element so UIManager reference is satisfied without cluttering top HUD
             GameObject hiddenKill = CreateUIObject("HiddenKill", canvasObj.transform, Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero);
@@ -1555,6 +1583,10 @@ namespace CursedHarvest.Editor
             soUim.FindProperty("levelText").objectReferenceValue = lvlText;
             soUim.FindProperty("killCountText").objectReferenceValue = killText;
             soUim.FindProperty("seedCountText").objectReferenceValue = seedText;
+            soUim.FindProperty("hudPauseButton").objectReferenceValue = hudPauseBtn;
+            soUim.FindProperty("topRightHUDContainer").objectReferenceValue = topRight.GetComponent<RectTransform>();
+            soUim.FindProperty("seedBadgeRoot").objectReferenceValue = seedBadge.GetComponent<RectTransform>();
+            soUim.FindProperty("statusEffectsContainer").objectReferenceValue = statusEffects.GetComponent<RectTransform>();
 
             soUim.FindProperty("levelUpModal").objectReferenceValue = lvlModal;
             SerializedProperty propCards = soUim.FindProperty("upgradeCards");
