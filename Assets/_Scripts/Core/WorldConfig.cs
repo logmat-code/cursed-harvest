@@ -252,7 +252,7 @@ namespace CursedHarvest
                     {
                         waveNumber = 10,
                         isFinalBoss = true,
-                        bossName = "THE ASHEN REAPER [BOSS B]",
+                        bossName = "THE ASHEN REAPER",
                         bossTitle = "Scourge of the Scorched Grove",
                         bossAddCount = 20,
                         bossGruntQuota = 6,
@@ -263,11 +263,12 @@ namespace CursedHarvest
                         bossMaxConcurrentAdds = 8,
                         bossAddSpawnInterval = 1.9f,
                         bossScale = 1.05f,
-                        bossHealthMultiplier = 1.15f
+                        bossHealthMultiplier = 1.15f,
+                        bossPrefabPath = "Assets/_Prefabs/Boss_TheAshenReaper.prefab"
                     }
                 },
                 themeColor = new Color(0.85f, 0.45f, 0.15f),
-                environmentIdentifier = "Env_World2_Orchard_Pending",
+                environmentIdentifier = "Env_World2_Orchard",
                 musicIdentifier = "Music_World2_Ashen"
             };
         }

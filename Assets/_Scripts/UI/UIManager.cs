@@ -833,13 +833,22 @@ namespace CursedHarvest
 
                 if (victoryTitleText != null)
                 {
-                    victoryTitleText.text = activeConfig.worldId == 1 ? "YOU GOT LUCKY." : "WORLD COMPLETE!";
+                    if (activeConfig.worldId == 1)
+                        victoryTitleText.text = "YOU GOT LUCKY.";
+                    else if (activeConfig.worldId == 2)
+                        victoryTitleText.text = "THE ASHEN ORCHARDS CLEANSED";
+                    else
+                        victoryTitleText.text = "WORLD COMPLETE!";
                 }
                 if (victorySubtitleText != null)
                 {
                     if (activeConfig.worldId == 1)
                     {
                         victorySubtitleText.text = "THE LAST HARVEST HAS FALLEN!\n\nWORLD 1 COMPLETE!\nCONTINUE TO ONE LAST NIGHT?";
+                    }
+                    else if (activeConfig.worldId == 2)
+                    {
+                        victorySubtitleText.text = "THE ASHEN REAPER HAS FALLEN!\n\nWORLD 2 COMPLETE!\nWORLD 3 — THE BLACKENED MIRE UNLOCKED.";
                     }
                     else
                     {

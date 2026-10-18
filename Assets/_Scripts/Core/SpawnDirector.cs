@@ -29,6 +29,7 @@ namespace CursedHarvest
         [SerializeField] private GameObject scarecrowPrefab;
         [SerializeField] private GameObject brutePrefab;
         [SerializeField] private GameObject bossPrefab;
+        [SerializeField] private GameObject ashenReaperBossPrefab;
         [SerializeField] private GameObject healthPickupPrefab;
 
         [Header("Spawn Boundaries")]
@@ -153,6 +154,8 @@ namespace CursedHarvest
         }
 
         public void SetBossPrefab(GameObject prefab) => bossPrefab = prefab;
+        public void SetAshenReaperBossPrefab(GameObject prefab) => ashenReaperBossPrefab = prefab;
+        public GameObject AshenReaperBossPrefab => ashenReaperBossPrefab;
         public void SetElitePrefabs(GameObject scarecrow, GameObject brute)
         {
             scarecrowPrefab = scarecrow;
@@ -221,13 +224,36 @@ namespace CursedHarvest
 
         public GameObject SpawnBoss(BossEncounterConfig bossEnc = null)
         {
-            if (bossPrefab == null) return null;
+            GameObject prefabToSpawn = bossPrefab;
+            if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 2)
+            {
+                if (ashenReaperBossPrefab != null)
+                {
+                    prefabToSpawn = ashenReaperBossPrefab;
+                }
+#if UNITY_EDITOR
+                else
+                {
+                    GameObject loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_TheAshenReaper.prefab");
+                    if (loaded != null) prefabToSpawn = loaded;
+                }
+#endif
+            }
+            else if (bossEnc != null && !string.IsNullOrEmpty(bossEnc.bossPrefabPath))
+            {
+#if UNITY_EDITOR
+                GameObject encPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(bossEnc.bossPrefabPath);
+                if (encPrefab != null) prefabToSpawn = encPrefab;
+#endif
+            }
+
+            if (prefabToSpawn == null) return null;
             Vector3 spawnPos = playerTransform != null ? playerTransform.position + Vector3.forward * 16f : new Vector3(0f, 0.5f, 16f);
             spawnPos.x = Mathf.Clamp(spawnPos.x, -arenaHalfBounds + 4f, arenaHalfBounds - 4f);
             spawnPos.z = Mathf.Clamp(spawnPos.z, -arenaHalfBounds + 4f, arenaHalfBounds - 4f);
             spawnPos.y = 0.5f;
 
-            GameObject bossObj = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+            GameObject bossObj = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
             if (bossEnc != null)
             {
                 if (bossEnc.bossScale != 1.0f) bossObj.transform.localScale = Vector3.one * bossEnc.bossScale;
@@ -665,6 +691,11 @@ namespace CursedHarvest
                     ApplyStatScaling(enemy);
                 }
 
+                if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 2)
+                {
+                    ApplyAshenVisualVariant(enemyObj);
+                }
+
                 spawnedThisWave++;
             }
 
@@ -746,8 +777,34 @@ namespace CursedHarvest
             return selectedPool;
         }
 
+        private static MaterialPropertyBlock _ashenPropBlock;
+        private static readonly Color AshenSootColor = new Color(0.48f, 0.45f, 0.43f);
+
+        private void ApplyAshenVisualVariant(GameObject enemyObj)
+        {
+            if (enemyObj == null) return;
+            if (_ashenPropBlock == null) _ashenPropBlock = new MaterialPropertyBlock();
+
+            Renderer[] renderers = enemyObj.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] is MeshRenderer || renderers[i] is SkinnedMeshRenderer)
+                {
+                    renderers[i].GetPropertyBlock(_ashenPropBlock);
+                    _ashenPropBlock.SetColor("_BaseColor", AshenSootColor);
+                    _ashenPropBlock.SetColor("_Color", AshenSootColor);
+                    renderers[i].SetPropertyBlock(_ashenPropBlock);
+                }
+            }
+        }
+
         private ObjectPool SelectPoolForCurrentWave()
         {
+            if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 2)
+            {
+                return SelectPoolForWorld2();
+            }
+
             if (isEndlessMode || currentWave > 10)
             {
                 ObjectPool[] all = new ObjectPool[] { gruntPool, chaserPool, plaguePool, chargerPool, farmerPool };
@@ -796,6 +853,60 @@ namespace CursedHarvest
                 if (chargerPool != null && roll < 0.40f) return chargerPool;
                 if (plaguePool != null && roll < 0.60f) return plaguePool;
                 if (chaserPool != null && roll < 0.80f) return chaserPool;
+                return gruntPool;
+            }
+        }
+
+        private ObjectPool SelectPoolForWorld2()
+        {
+            if (isEndlessMode || currentWave > 10)
+            {
+                ObjectPool[] all = new ObjectPool[] { gruntPool, chaserPool, plaguePool, chargerPool, farmerPool };
+                List<ObjectPool> valid = new List<ObjectPool>();
+                for (int i = 0; i < all.Length; i++) if (all[i] != null) valid.Add(all[i]);
+                return valid.Count > 0 ? valid[UnityEngine.Random.Range(0, valid.Count)] : gruntPool;
+            }
+
+            if (currentWave <= 1)
+            {
+                if (chaserPool != null && UnityEngine.Random.value < 0.35f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave == 2)
+            {
+                if (chaserPool != null && UnityEngine.Random.value < 0.50f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave == 3)
+            {
+                float roll = UnityEngine.Random.value;
+                if (farmerPool != null && roll < 0.25f) return farmerPool;
+                if (chaserPool != null && roll < 0.65f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave == 4)
+            {
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.25f) return chargerPool;
+                if (farmerPool != null && roll < 0.55f) return farmerPool;
+                if (chaserPool != null && roll < 0.85f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave == 5)
+            {
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.30f) return chargerPool;
+                if (farmerPool != null && roll < 0.60f) return farmerPool;
+                if (chaserPool != null && roll < 0.85f) return chaserPool;
+                return gruntPool;
+            }
+            else // Waves 6-9
+            {
+                float roll = UnityEngine.Random.value;
+                if (farmerPool != null && roll < 0.35f) return farmerPool;
+                if (chargerPool != null && roll < 0.65f) return chargerPool;
+                if (chaserPool != null && roll < 0.85f) return chaserPool;
+                if (plaguePool != null && roll < 0.95f) return plaguePool;
                 return gruntPool;
             }
         }
