@@ -30,6 +30,7 @@ namespace CursedHarvest
         [SerializeField] private GameObject brutePrefab;
         [SerializeField] private GameObject bossPrefab;
         [SerializeField] private GameObject ashenReaperBossPrefab;
+        [SerializeField] private GameObject mireMotherBossPrefab;
         [SerializeField] private GameObject healthPickupPrefab;
 
         [Header("Spawn Boundaries")]
@@ -156,6 +157,8 @@ namespace CursedHarvest
         public void SetBossPrefab(GameObject prefab) => bossPrefab = prefab;
         public void SetAshenReaperBossPrefab(GameObject prefab) => ashenReaperBossPrefab = prefab;
         public GameObject AshenReaperBossPrefab => ashenReaperBossPrefab;
+        public void SetMireMotherBossPrefab(GameObject prefab) => mireMotherBossPrefab = prefab;
+        public GameObject MireMotherBossPrefab => mireMotherBossPrefab;
         public void SetElitePrefabs(GameObject scarecrow, GameObject brute)
         {
             scarecrowPrefab = scarecrow;
@@ -235,6 +238,20 @@ namespace CursedHarvest
                 else
                 {
                     GameObject loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_TheAshenReaper.prefab");
+                    if (loaded != null) prefabToSpawn = loaded;
+                }
+#endif
+            }
+            else if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 3)
+            {
+                if (mireMotherBossPrefab != null)
+                {
+                    prefabToSpawn = mireMotherBossPrefab;
+                }
+#if UNITY_EDITOR
+                else
+                {
+                    GameObject loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_TheMireMother.prefab");
                     if (loaded != null) prefabToSpawn = loaded;
                 }
 #endif
@@ -695,6 +712,10 @@ namespace CursedHarvest
                 {
                     ApplyAshenVisualVariant(enemyObj);
                 }
+                else if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 3)
+                {
+                    ApplyMireVisualVariant(enemyObj);
+                }
 
                 spawnedThisWave++;
             }
@@ -798,11 +819,36 @@ namespace CursedHarvest
             }
         }
 
+        private static MaterialPropertyBlock _mirePropBlock;
+        private static readonly Color MireSootColor = new Color(0.32f, 0.44f, 0.35f);
+
+        private void ApplyMireVisualVariant(GameObject enemyObj)
+        {
+            if (enemyObj == null) return;
+            if (_mirePropBlock == null) _mirePropBlock = new MaterialPropertyBlock();
+
+            Renderer[] renderers = enemyObj.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] is MeshRenderer || renderers[i] is SkinnedMeshRenderer)
+                {
+                    renderers[i].GetPropertyBlock(_mirePropBlock);
+                    _mirePropBlock.SetColor("_BaseColor", MireSootColor);
+                    _mirePropBlock.SetColor("_Color", MireSootColor);
+                    renderers[i].SetPropertyBlock(_mirePropBlock);
+                }
+            }
+        }
+
         private ObjectPool SelectPoolForCurrentWave()
         {
             if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 2)
             {
                 return SelectPoolForWorld2();
+            }
+            if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 3)
+            {
+                return SelectPoolForWorld3();
             }
 
             if (isEndlessMode || currentWave > 10)
@@ -907,6 +953,55 @@ namespace CursedHarvest
                 if (chargerPool != null && roll < 0.65f) return chargerPool;
                 if (chaserPool != null && roll < 0.85f) return chaserPool;
                 if (plaguePool != null && roll < 0.95f) return plaguePool;
+                return gruntPool;
+            }
+        }
+
+        private ObjectPool SelectPoolForWorld3()
+        {
+            if (isEndlessMode || currentWave > 10)
+            {
+                ObjectPool[] all = new ObjectPool[] { gruntPool, chaserPool, plaguePool, chargerPool, farmerPool };
+                List<ObjectPool> valid = new List<ObjectPool>();
+                for (int i = 0; i < all.Length; i++) if (all[i] != null) valid.Add(all[i]);
+                return valid.Count > 0 ? valid[UnityEngine.Random.Range(0, valid.Count)] : plaguePool;
+            }
+
+            if (currentWave <= 1)
+            {
+                if (plaguePool != null && UnityEngine.Random.value < 0.40f) return plaguePool;
+                return gruntPool;
+            }
+            else if (currentWave == 2)
+            {
+                float roll = UnityEngine.Random.value;
+                if (plaguePool != null && roll < 0.45f) return plaguePool;
+                if (chaserPool != null && roll < 0.75f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave == 3)
+            {
+                float roll = UnityEngine.Random.value;
+                if (plaguePool != null && roll < 0.40f) return plaguePool;
+                if (chargerPool != null && roll < 0.65f) return chargerPool;
+                if (chaserPool != null && roll < 0.85f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave == 4)
+            {
+                float roll = UnityEngine.Random.value;
+                if (plaguePool != null && roll < 0.35f) return plaguePool;
+                if (chargerPool != null && roll < 0.65f) return chargerPool;
+                if (farmerPool != null && roll < 0.85f) return farmerPool;
+                return chaserPool != null ? chaserPool : gruntPool;
+            }
+            else // Waves 5-9
+            {
+                float roll = UnityEngine.Random.value;
+                if (plaguePool != null && roll < 0.35f) return plaguePool;
+                if (chargerPool != null && roll < 0.60f) return chargerPool;
+                if (farmerPool != null && roll < 0.80f) return farmerPool;
+                if (chaserPool != null && roll < 0.95f) return chaserPool;
                 return gruntPool;
             }
         }

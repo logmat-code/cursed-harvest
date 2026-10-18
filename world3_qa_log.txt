@@ -1,0 +1,42 @@
+=================================================================
+[WORLD 3 QA SUITE] Starting World 3 — The Blackened Mire QA...
+=================================================================
+[SETUP] Executing World3ArenaBuilder.BuildWorld3()...
+
+--- RUNNING WORLD 3 VERIFICATION TESTS ---
+[TEST 1/6] Verifying World 3 Environment & Landmarks Integrity...
+[TEST 1/6] PASSED: World 3 Environment, 5 landmarks, continuous ground, water planes, and spore particles verified.
+[TEST 2/6] Verifying The Mire Mother Boss Prefab & AI Component...
+[TEST 2/6] PASSED: The Mire Mother boss prefab verified (2250 HP, 2.6 m/s, Miasma lob, Root Burst, Plague Wave shockwave).
+[TEST 3/6] Verifying Wave 10 Boss Encounter Routing for World 3...
+[TEST 3/6] PASSED: World 3 Wave 10 correctly routes to THE MIRE MOTHER with 24 adds and SpawnDirector wired.
+[TEST 4/6] Verifying Meta Progression, Harvest Essence Economy & Stat Application...
+[TEST 4/6] Upgraded Vitality from rank 0 to 1. Remaining essence: 450
+[TEST 4/6] PASSED: Meta progression economy, 8 upgrade branches, costs, and stat formulas verified.
+[TEST 5/6] Verifying World 1 & World 2 Regression (Pristine Freeze)...
+[TEST 5/6] PASSED: Worlds 1 and 2 remain 100% frozen with flawless multi-world switching.
+[TEST 6/6] Verifying UI Polish & Debug Controls Cleanup...
+[TEST 6/6] PASSED: All runtime debug buttons removed from canvas, TopRightHUD polished, HarvestPlot prompt elevated.
+
+[QA RESULTS] Tests Passed: 6/6
+
+--- CAPTURING WORLD 3 & META PROGRESSION SCREENSHOTS ---
+[SCREENSHOT] World3_ArenaOverview.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_ArenaOverview.png
+[SCREENSHOT] World3_SunkenGraveMarsh.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_SunkenGraveMarsh.png
+[SCREENSHOT] World3_RottenFisherShack.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_RottenFisherShack.png
+[SCREENSHOT] World3_DiseasedRootGrove.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_DiseasedRootGrove.png
+[SCREENSHOT] World3_AbandonedPlagueCamp.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_AbandonedPlagueCamp.png
+[SCREENSHOT] World3_MireRitualBasin.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_MireRitualBasin.png
+[SCREENSHOT] World3_BossIntro.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_BossIntro.png
+[SCREENSHOT] World3_BossCombat_Miasma.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_BossCombat_Miasma.png
+[SCREENSHOT] World3_BossCombat_RootBurst.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_BossCombat_RootBurst.png
+[SCREENSHOT] World3_BossCombat_PlagueWave.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_BossCombat_PlagueWave.png
+[SCREENSHOT] Gameplay_HUD_TopRight_Polished.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/Gameplay_HUD_TopRight_Polished.png
+[SCREENSHOT] Harvest_Ritual_Ring_Polished.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/Harvest_Ritual_Ring_Polished.png
+[SCREENSHOT] RunRewards_Summary_Modal.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/RunRewards_Summary_Modal.png
+[SCREENSHOT] World3_WorldSelect.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_WorldSelect.png
+[SCREENSHOT] MetaUpgrades_Screen.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/MetaUpgrades_Screen.png
+[SCREENSHOTS] All 15 required World 3 & Meta Progression screenshots captured successfully!
+=================================================================
+[WORLD 3 QA SUITE] Execution Complete!
+=================================================================

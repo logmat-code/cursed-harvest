@@ -44,12 +44,21 @@ namespace CursedHarvest
         [Header("World Cards UI")]
         [SerializeField] private List<WorldCardUIElements> worldCards = new List<WorldCardUIElements>();
 
-        [Header("Debug Controls")]
-        [SerializeField] private Button debugUnlockAllButton;
-        [SerializeField] private Button debugResetProgressButton;
-
         [Header("Upgrades UI")]
         [SerializeField] private Button upgradesBackButton;
+        [SerializeField] private Text essenceBalanceText;
+        [SerializeField] private List<MetaUpgradeCardUIElements> upgradeBranchCards = new List<MetaUpgradeCardUIElements>();
+
+        [Serializable]
+        public class MetaUpgradeCardUIElements
+        {
+            public MetaUpgradeBranch branch;
+            public Text titleText;
+            public Text rankText;
+            public Text descText;
+            public Button upgradeButton;
+            public Text buttonText;
+        }
 
         [Header("Credits UI")]
         [SerializeField] private Button creditsBackButton;
@@ -132,17 +141,31 @@ namespace CursedHarvest
         private void OnEnable()
         {
             GameSession.OnWorldProgressionChanged += HandleProgressionChanged;
+            MetaProgressionManager.OnEssenceChanged += HandleEssenceChanged;
+            MetaProgressionManager.OnUpgradePurchased += HandleUpgradePurchased;
         }
 
         private void OnDisable()
         {
             GameSession.OnWorldProgressionChanged -= HandleProgressionChanged;
+            MetaProgressionManager.OnEssenceChanged -= HandleEssenceChanged;
+            MetaProgressionManager.OnUpgradePurchased -= HandleUpgradePurchased;
         }
 
         private void HandleProgressionChanged(int highestUnlocked)
         {
             RefreshWorldSelectionCards();
             UpdateWorldDetailsPanel(currentlySelectedWorldId);
+        }
+
+        private void HandleEssenceChanged(int essence)
+        {
+            RefreshUpgradesUI();
+        }
+
+        private void HandleUpgradePurchased(MetaUpgradeBranch branch, int rank)
+        {
+            RefreshUpgradesUI();
         }
 
         private void EnsureFont()
@@ -188,7 +211,24 @@ namespace CursedHarvest
         public void OpenUpgrades()
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            EnsureUpgradesScreenGrid();
+            RefreshUpgradesUI();
             ShowScreen(MainMenuScreen.Upgrades);
+        }
+
+        public void EnsureUpgradesScreenGrid()
+        {
+            EnsureFont();
+            if (upgradesScreenRoot == null) return;
+            if (upgradeBranchCards == null || upgradeBranchCards.Count < 8)
+            {
+                BuildUpgradesScreenContent(upgradesScreenRoot.transform);
+                if (upgradesBackButton != null)
+                {
+                    upgradesBackButton.onClick.RemoveAllListeners();
+                    upgradesBackButton.onClick.AddListener(OpenHome);
+                }
+            }
         }
 
         public void OpenCredits()
@@ -452,14 +492,6 @@ namespace CursedHarvest
 
             if (worldSelectBackButton != null) { worldSelectBackButton.onClick.RemoveAllListeners(); worldSelectBackButton.onClick.AddListener(OpenHome); }
             if (startRunButton != null) { startRunButton.onClick.RemoveAllListeners(); startRunButton.onClick.AddListener(StartSelectedWorld); }
-
-#if UNITY_EDITOR
-            if (debugUnlockAllButton != null) { debugUnlockAllButton.onClick.RemoveAllListeners(); debugUnlockAllButton.onClick.AddListener(DebugUnlockAll); }
-            if (debugResetProgressButton != null) { debugResetProgressButton.onClick.RemoveAllListeners(); debugResetProgressButton.onClick.AddListener(DebugResetProgress); }
-#else
-            if (debugUnlockAllButton != null) debugUnlockAllButton.gameObject.SetActive(false);
-            if (debugResetProgressButton != null) debugResetProgressButton.gameObject.SetActive(false);
-#endif
 
             if (upgradesBackButton != null) { upgradesBackButton.onClick.RemoveAllListeners(); upgradesBackButton.onClick.AddListener(OpenHome); }
             if (creditsBackButton != null) { creditsBackButton.onClick.RemoveAllListeners(); creditsBackButton.onClick.AddListener(OpenHome); }
@@ -873,30 +905,29 @@ namespace CursedHarvest
             startRunButton = CreateMenuButton(parent, "StartRunButton", "ENTER WORLD TRIAL", new Vector2(280, -420), new Vector2(360, 56), new Color(0.85f, 0.55f, 0.15f));
             startRunButtonText = startRunButton.GetComponentInChildren<Text>();
 
-#if UNITY_EDITOR
-            // Small Debug Controls in bottom corner (Editor-Only)
-            debugUnlockAllButton = CreateMenuButton(parent, "DebugUnlockAll", "[DEBUG] UNLOCK ALL 5", new Vector2(720, -500), new Vector2(200, 32), new Color(0.2f, 0.4f, 0.2f));
-            Text tD1 = debugUnlockAllButton.GetComponentInChildren<Text>();
-            if (tD1 != null) tD1.fontSize = 12;
-
-            debugResetProgressButton = CreateMenuButton(parent, "DebugResetProgress", "[DEBUG] RESET TO W1", new Vector2(500, -500), new Vector2(200, 32), new Color(0.4f, 0.2f, 0.2f));
-            Text tD2 = debugResetProgressButton.GetComponentInChildren<Text>();
-            if (tD2 != null) tD2.fontSize = 12;
-#endif
         }
 
         private void BuildUpgradesScreenContent(Transform parent)
         {
+            upgradeBranchCards.Clear();
+            for (int i = parent.childCount - 1; i >= 0; i--)
+            {
+                if (Application.isPlaying)
+                    Destroy(parent.GetChild(i).gameObject);
+                else
+                    DestroyImmediate(parent.GetChild(i).gameObject);
+            }
+
             // Title
             GameObject titleObj = new GameObject("UpgradesTitle");
             titleObj.transform.SetParent(parent, false);
             RectTransform rtTitle = titleObj.AddComponent<RectTransform>();
-            rtTitle.anchorMin = new Vector2(0.5f, 0.90f);
-            rtTitle.anchorMax = new Vector2(0.5f, 0.90f);
-            rtTitle.sizeDelta = new Vector2(900, 60);
+            rtTitle.anchorMin = new Vector2(0.5f, 0.92f);
+            rtTitle.anchorMax = new Vector2(0.5f, 0.92f);
+            rtTitle.sizeDelta = new Vector2(900, 50);
             Text tTitle = titleObj.AddComponent<Text>();
             tTitle.font = cachedFont;
-            tTitle.fontSize = 38;
+            tTitle.fontSize = 36;
             tTitle.fontStyle = FontStyle.Bold;
             tTitle.alignment = TextAnchor.MiddleCenter;
             tTitle.text = "ANCIENT RELICS & OCCULT UPGRADES";
@@ -906,88 +937,195 @@ namespace CursedHarvest
             GameObject subObj = new GameObject("UpgradesSubtitle");
             subObj.transform.SetParent(parent, false);
             RectTransform rtSub = subObj.AddComponent<RectTransform>();
-            rtSub.anchorMin = new Vector2(0.5f, 0.83f);
-            rtSub.anchorMax = new Vector2(0.5f, 0.83f);
-            rtSub.sizeDelta = new Vector2(900, 35);
+            rtSub.anchorMin = new Vector2(0.5f, 0.86f);
+            rtSub.anchorMax = new Vector2(0.5f, 0.86f);
+            rtSub.sizeDelta = new Vector2(900, 30);
             Text tSub = subObj.AddComponent<Text>();
             tSub.font = cachedFont;
-            tSub.fontSize = 20;
+            tSub.fontSize = 18;
             tSub.alignment = TextAnchor.MiddleCenter;
-            tSub.text = "Permanent boons consecrated from blighted seeds across the five realms";
+            tSub.text = "Permanent boons consecrated from blighted essence across the five realms";
             tSub.color = new Color(0.8f, 0.75f, 0.7f);
 
-            // 4 Placeholder Relic Cards Grid
-            string[] relicNames = new string[] { "Heart of the Soil", "Quicksilver Quiver", "Witchbane Talisman", "Reaper's Fortune" };
-            string[] relicDescs = new string[] {
-                "+20 Maximum Health\n+15% Health Drop Frequency",
-                "+12% Crossbow Fire Rate\n+20% Bolt Velocity",
-                "+25% Area of Effect\n+30% Knockback Resistance",
-                "+3.0s Lucky Last Duration\n+10% Seed Harvest Yield"
-            };
+            // Essence Balance Badge (Top-Center)
+            GameObject essBadgeObj = new GameObject("EssenceBalanceBadge");
+            essBadgeObj.transform.SetParent(parent, false);
+            RectTransform rtEss = essBadgeObj.AddComponent<RectTransform>();
+            rtEss.anchorMin = new Vector2(0.5f, 0.78f);
+            rtEss.anchorMax = new Vector2(0.5f, 0.78f);
+            rtEss.sizeDelta = new Vector2(460, 44);
+            Image essBg = essBadgeObj.AddComponent<Image>();
+            essBg.color = new Color(0.08f, 0.07f, 0.10f, 0.95f);
 
-            float gridWidth = 1100f;
-            float cWidth = 500f;
-            float cHeight = 150f;
+            GameObject essTxtObj = new GameObject("EssenceText");
+            essTxtObj.transform.SetParent(essBadgeObj.transform, false);
+            RectTransform rtEssTxt = essTxtObj.AddComponent<RectTransform>();
+            rtEssTxt.anchorMin = Vector2.zero;
+            rtEssTxt.anchorMax = Vector2.one;
+            rtEssTxt.sizeDelta = Vector2.zero;
+            essenceBalanceText = essTxtObj.AddComponent<Text>();
+            essenceBalanceText.font = cachedFont;
+            essenceBalanceText.fontSize = 22;
+            essenceBalanceText.fontStyle = FontStyle.Bold;
+            essenceBalanceText.alignment = TextAnchor.MiddleCenter;
+            essenceBalanceText.text = "✦ HARVEST ESSENCE: 0";
+            essenceBalanceText.color = new Color(1.0f, 0.85f, 0.25f);
 
-            for (int i = 0; i < 4; i++)
+            // 8 Upgrades 4x2 Grid
+            MetaUpgradeBranch[] branches = (MetaUpgradeBranch[])Enum.GetValues(typeof(MetaUpgradeBranch));
+            float cardWidth = 350f;
+            float cardHeight = 175f;
+            float[] xOffsets = new float[] { -540f, -180f, 180f, 540f };
+
+            for (int i = 0; i < branches.Length; i++)
             {
-                float x = (i % 2 == 0) ? -280f : 280f;
-                float y = (i < 2) ? 90f : -90f;
+                MetaUpgradeBranch branch = branches[i];
+                MetaUpgradeDef def = MetaProgressionManager.Instance.GetDef(branch);
+                int col = i % 4;
+                int row = i / 4;
+                float x = xOffsets[col];
+                float y = (row == 0) ? 75f : -120f;
 
-                GameObject cObj = new GameObject($"RelicCard_{i}");
+                GameObject cObj = new GameObject($"UpgradeCard_{branch}");
                 cObj.transform.SetParent(parent, false);
                 RectTransform rt = cObj.AddComponent<RectTransform>();
                 rt.anchorMin = new Vector2(0.5f, 0.50f);
                 rt.anchorMax = new Vector2(0.5f, 0.50f);
-                rt.sizeDelta = new Vector2(cWidth, cHeight);
+                rt.sizeDelta = new Vector2(cardWidth, cardHeight);
                 rt.anchoredPosition = new Vector2(x, y);
 
                 Image bg = cObj.AddComponent<Image>();
-                bg.color = new Color(0.12f, 0.10f, 0.12f, 0.90f);
+                bg.color = new Color(0.11f, 0.10f, 0.13f, 0.95f);
 
-                // Relic Name
-                GameObject nObj = new GameObject("Name");
+                // Card Title
+                GameObject nObj = new GameObject("Title");
                 nObj.transform.SetParent(cObj.transform, false);
                 RectTransform rtN = nObj.AddComponent<RectTransform>();
-                rtN.anchorMin = new Vector2(0.06f, 0.65f);
-                rtN.anchorMax = new Vector2(0.94f, 0.92f);
+                rtN.anchorMin = new Vector2(0.05f, 0.72f);
+                rtN.anchorMax = new Vector2(0.95f, 0.96f);
                 rtN.offsetMin = rtN.offsetMax = Vector2.zero;
                 Text tN = nObj.AddComponent<Text>();
                 tN.font = cachedFont;
-                tN.fontSize = 20;
+                tN.fontSize = 18;
                 tN.fontStyle = FontStyle.Bold;
-                tN.text = relicNames[i];
-                tN.color = new Color(0.95f, 0.8f, 0.35f);
+                tN.text = $"{def.iconGlyph}  {def.displayName.ToUpper()}";
+                tN.color = new Color(0.98f, 0.82f, 0.35f);
+                tN.alignment = TextAnchor.MiddleCenter;
 
-                // Relic stats
-                GameObject sObj = new GameObject("Stats");
-                sObj.transform.SetParent(cObj.transform, false);
-                RectTransform rtS = sObj.AddComponent<RectTransform>();
-                rtS.anchorMin = new Vector2(0.06f, 0.25f);
-                rtS.anchorMax = new Vector2(0.94f, 0.65f);
-                rtS.offsetMin = rtS.offsetMax = Vector2.zero;
-                Text tS = sObj.AddComponent<Text>();
-                tS.font = cachedFont;
-                tS.fontSize = 15;
-                tS.text = relicDescs[i];
-                tS.color = new Color(0.8f, 0.8f, 0.8f);
+                // Rank indicator
+                GameObject rObj = new GameObject("Rank");
+                rObj.transform.SetParent(cObj.transform, false);
+                RectTransform rtR = rObj.AddComponent<RectTransform>();
+                rtR.anchorMin = new Vector2(0.05f, 0.52f);
+                rtR.anchorMax = new Vector2(0.95f, 0.72f);
+                rtR.offsetMin = rtR.offsetMax = Vector2.zero;
+                Text tR = rObj.AddComponent<Text>();
+                tR.font = cachedFont;
+                tR.fontSize = 13;
+                tR.fontStyle = FontStyle.Bold;
+                tR.color = new Color(0.40f, 0.95f, 0.55f);
+                tR.alignment = TextAnchor.MiddleCenter;
 
-                // Consecration status
-                GameObject statObj = new GameObject("Status");
-                statObj.transform.SetParent(cObj.transform, false);
-                RectTransform rtStat = statObj.AddComponent<RectTransform>();
-                rtStat.anchorMin = new Vector2(0.06f, 0.05f);
-                rtStat.anchorMax = new Vector2(0.94f, 0.25f);
-                rtStat.offsetMin = rtStat.offsetMax = Vector2.zero;
-                Text tStat = statObj.AddComponent<Text>();
-                tStat.font = cachedFont;
-                tStat.fontSize = 13;
-                tStat.text = "UNDER CONSECRATION (COMING SOON)";
-                tStat.color = new Color(0.7f, 0.6f, 0.3f);
+                // Description
+                GameObject dObj = new GameObject("Desc");
+                dObj.transform.SetParent(cObj.transform, false);
+                RectTransform rtD = dObj.AddComponent<RectTransform>();
+                rtD.anchorMin = new Vector2(0.05f, 0.28f);
+                rtD.anchorMax = new Vector2(0.95f, 0.52f);
+                rtD.offsetMin = rtD.offsetMax = Vector2.zero;
+                Text tD = dObj.AddComponent<Text>();
+                tD.font = cachedFont;
+                tD.fontSize = 12;
+                tD.color = new Color(0.85f, 0.85f, 0.85f);
+                tD.alignment = TextAnchor.MiddleCenter;
+
+                // Upgrade Button
+                Button uBtn = CreateMenuButton(cObj.transform, "UpgradeButton", "CONSECRATE", new Vector2(0, -56), new Vector2(250, 36), new Color(0.75f, 0.48f, 0.15f));
+                Text btnText = uBtn.GetComponentInChildren<Text>();
+                if (btnText != null) btnText.fontSize = 13;
+
+                uBtn.onClick.RemoveAllListeners();
+                MetaUpgradeBranch capturedBranch = branch;
+                uBtn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+                    MetaProgressionManager.Instance.TryUpgradeBranch(capturedBranch);
+                    RefreshUpgradesUI();
+                });
+
+                MetaUpgradeCardUIElements elem = new MetaUpgradeCardUIElements
+                {
+                    branch = branch,
+                    titleText = tN,
+                    rankText = tR,
+                    descText = tD,
+                    upgradeButton = uBtn,
+                    buttonText = btnText
+                };
+                upgradeBranchCards.Add(elem);
             }
 
             // Back button
             upgradesBackButton = CreateMenuButton(parent, "UpgradesBackButton", "← RETURN TO HOME", new Vector2(0, -420), new Vector2(280, 52), new Color(0.25f, 0.25f, 0.25f));
+            RefreshUpgradesUI();
+        }
+
+        public void RefreshUpgradesUI()
+        {
+            if (MetaProgressionManager.Instance == null) return;
+
+            if (essenceBalanceText != null)
+            {
+                essenceBalanceText.text = $"✦ HARVEST ESSENCE: {MetaProgressionManager.Instance.HarvestEssence}";
+            }
+
+            for (int i = 0; i < upgradeBranchCards.Count; i++)
+            {
+                var card = upgradeBranchCards[i];
+                if (card == null) continue;
+
+                MetaUpgradeDef def = MetaProgressionManager.Instance.GetDef(card.branch);
+                int rank = MetaProgressionManager.Instance.GetRank(card.branch);
+
+                // Build level box indicator [■ ■ ■ □ □]
+                string boxes = "";
+                for (int b = 0; b < 5; b++)
+                {
+                    boxes += (b < rank) ? "■ " : "□ ";
+                }
+                if (card.rankText != null)
+                {
+                    card.rankText.text = $"LEVEL: [{boxes.Trim()}] {rank}/5";
+                }
+
+                if (card.descText != null)
+                {
+                    if (rank == 0)
+                        card.descText.text = "Next: " + def.GetDescriptionForRank(1);
+                    else if (rank < 5)
+                        card.descText.text = def.GetDescriptionForRank(rank) + $"\nNext: {def.GetDescriptionForRank(rank + 1)}";
+                    else
+                        card.descText.text = def.GetDescriptionForRank(rank) + " [MAX CONSECRATED]";
+                }
+
+                if (card.upgradeButton != null && card.buttonText != null)
+                {
+                    if (rank >= 5)
+                    {
+                        card.upgradeButton.interactable = false;
+                        card.buttonText.text = "MAX CONSECRATED";
+                        card.buttonText.color = new Color(0.6f, 0.6f, 0.6f);
+                    }
+                    else
+                    {
+                        int cost = def.GetCost(rank);
+                        bool canAfford = MetaProgressionManager.Instance.HarvestEssence >= cost;
+                        card.upgradeButton.interactable = canAfford;
+                        card.buttonText.text = $"CONSECRATE ({cost} ✦)";
+                        card.buttonText.color = canAfford ? new Color(1f, 0.95f, 0.4f) : new Color(0.8f, 0.4f, 0.4f);
+                    }
+                }
+            }
         }
 
         private void BuildCreditsScreenContent(Transform parent)

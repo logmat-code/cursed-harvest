@@ -820,7 +820,13 @@ namespace CursedHarvest
                     int score = kills * 100 + (int)time * 10 + lvl * 250;
                     WorldConfig activeConfig = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
                     int wave = FindFirstObjectByType<SpawnDirector>() != null ? FindFirstObjectByType<SpawnDirector>().CurrentWave : 1;
-                    gameOverStatsText.text = $"{activeConfig.displayName}\nSURVIVED UNTIL WAVE {wave}\nTIME: {mins:00}:{secs:00} | KILLS: {kills} | LEVEL: {lvl}\n\nSCORE: {score}";
+
+                    int essenceEarned = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEssenceEarned : 0;
+                    int totalEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.HarvestEssence : 0;
+                    int enemiesSlain = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEnemiesSlain : kills;
+                    int harvests = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunHarvestsCompleted : 0;
+
+                    gameOverStatsText.text = $"{activeConfig.displayName}\nSURVIVED UNTIL WAVE {wave}\nTIME: {mins:00}:{secs:00} | KILLS: {enemiesSlain} | LEVEL: {lvl}\nHARVESTS CONSECRATED: {harvests}\n\n✦ HARVEST ESSENCE EARNED: +{essenceEarned} ✦\nTOTAL BALANCE: {totalEssence} ✦\n\nSCORE: {score}";
                 }
             }
         }
@@ -837,23 +843,30 @@ namespace CursedHarvest
                         victoryTitleText.text = "YOU GOT LUCKY.";
                     else if (activeConfig.worldId == 2)
                         victoryTitleText.text = "THE ASHEN ORCHARDS CLEANSED";
+                    else if (activeConfig.worldId == 3)
+                        victoryTitleText.text = "THE BLACKENED MIRE PURGED";
                     else
                         victoryTitleText.text = "WORLD COMPLETE!";
                 }
+
+                int essenceEarned = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEssenceEarned : 0;
+                int totalEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.HarvestEssence : 0;
+                int enemiesSlain = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEnemiesSlain : 0;
+                int harvests = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunHarvestsCompleted : 0;
+
                 if (victorySubtitleText != null)
                 {
+                    string worldStory = "";
                     if (activeConfig.worldId == 1)
-                    {
-                        victorySubtitleText.text = "THE LAST HARVEST HAS FALLEN!\n\nWORLD 1 COMPLETE!\nCONTINUE TO ONE LAST NIGHT?";
-                    }
+                        worldStory = "THE LAST HARVEST HAS FALLEN!\nWORLD 1 COMPLETE!";
                     else if (activeConfig.worldId == 2)
-                    {
-                        victorySubtitleText.text = "THE ASHEN REAPER HAS FALLEN!\n\nWORLD 2 COMPLETE!\nWORLD 3 — THE BLACKENED MIRE UNLOCKED.";
-                    }
+                        worldStory = "THE ASHEN REAPER HAS FALLEN!\nWORLD 2 COMPLETE!\nWORLD 3 — THE BLACKENED MIRE UNLOCKED.";
+                    else if (activeConfig.worldId == 3)
+                        worldStory = "THE MIRE MOTHER HAS PERISHED!\nWORLD 3 COMPLETE!\nWORLD 4 — THE BLOODWOOD TIMBER UNLOCKED.";
                     else
-                    {
-                        victorySubtitleText.text = $"{activeConfig.displayName} PURGED!\n\nTHE HARVEST RECEDES FROM THIS REALM.";
-                    }
+                        worldStory = $"{activeConfig.displayName} PURGED!\nTHE HARVEST RECEDES FROM THIS REALM.";
+
+                    victorySubtitleText.text = $"{worldStory}\n\n--- RUN REWARDS ---\nEnemies Slain: {enemiesSlain} | Harvests: {harvests}\n✦ Essence Consecrated: +{essenceEarned} ✦\nTotal Essence Balance: {totalEssence} ✦";
                 }
                 if (continueEndlessButton != null)
                 {
@@ -966,7 +979,11 @@ namespace CursedHarvest
                 }
             }
 
-            // 1a. Isolated HUD Pause Button (46x46 at top-right corner, local (0, 0))
+            // Ensure NO large opaque background box on the container
+            Image trImg = trObj.GetComponent<Image>();
+            if (trImg != null) trImg.color = Color.clear;
+
+            // 1a. Isolated HUD Pause Button (44x44 circular/pill button at top-right corner, local (0, 0))
             if (hudPauseButton == null)
             {
                 Transform existingBtn = trObj.transform.Find("HudPauseButton") ?? transform.Find("HudPauseButton");
@@ -977,7 +994,7 @@ namespace CursedHarvest
                     rtBtn.anchorMin = new Vector2(1, 1);
                     rtBtn.anchorMax = new Vector2(1, 1);
                     rtBtn.pivot = new Vector2(1, 1);
-                    rtBtn.sizeDelta = new Vector2(46, 46);
+                    rtBtn.sizeDelta = new Vector2(44, 44);
                     rtBtn.anchoredPosition = Vector2.zero;
                     hudPauseButton = existingBtn.GetComponent<Button>();
                 }
@@ -985,9 +1002,9 @@ namespace CursedHarvest
                 {
                     GameObject pBtnObj = CreateSimpleButton(trObj.transform, "HudPauseButton", "||",
                         new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1),
-                        new Vector2(46, 46), Vector2.zero,
-                        new Color(0.12f, 0.14f, 0.18f, 0.90f),
-                        new Color(0.95f, 0.85f, 0.40f), 22, defaultFont);
+                        new Vector2(44, 44), Vector2.zero,
+                        new Color(0.08f, 0.09f, 0.12f, 0.65f),
+                        new Color(0.95f, 0.85f, 0.40f), 20, defaultFont);
                     hudPauseButton = pBtnObj.GetComponent<Button>();
                 }
             }
@@ -998,26 +1015,33 @@ namespace CursedHarvest
                 rtBtn.anchorMin = new Vector2(1, 1);
                 rtBtn.anchorMax = new Vector2(1, 1);
                 rtBtn.pivot = new Vector2(1, 1);
-                rtBtn.sizeDelta = new Vector2(46, 46);
+                rtBtn.sizeDelta = new Vector2(44, 44);
                 rtBtn.anchoredPosition = Vector2.zero;
             }
 
-            // 1b. Cursed Seeds Badge (84x32 pill to the left of Pause Button: local (-54, -7))
+            if (hudPauseButton != null)
+            {
+                Image btnImg = hudPauseButton.GetComponent<Image>();
+                if (btnImg != null) btnImg.color = new Color(0.08f, 0.09f, 0.12f, 0.65f);
+                Text btnTxt = hudPauseButton.GetComponentInChildren<Text>();
+                if (btnTxt != null) btnTxt.color = new Color(0.95f, 0.85f, 0.40f);
+            }
+
+            // 1b. Cursed Seeds Badge (86x34 rounded pill to the left of Pause Button: local (-52, -5))
             Transform sbTrans = trObj.transform.Find("SeedBadge");
             if (sbTrans == null)
             {
-                // Check if old seed badge was directly under Canvas or under old StatsBg
                 GameObject sbObj = new GameObject("SeedBadge");
                 sbObj.transform.SetParent(trObj.transform, false);
                 seedBadgeRoot = sbObj.AddComponent<RectTransform>();
                 seedBadgeRoot.anchorMin = new Vector2(1, 1);
                 seedBadgeRoot.anchorMax = new Vector2(1, 1);
                 seedBadgeRoot.pivot = new Vector2(1, 1);
-                seedBadgeRoot.sizeDelta = new Vector2(84, 32);
-                seedBadgeRoot.anchoredPosition = new Vector2(-54, -7);
+                seedBadgeRoot.sizeDelta = new Vector2(86, 34);
+                seedBadgeRoot.anchoredPosition = new Vector2(-52, -5);
 
                 Image sbImg = sbObj.AddComponent<Image>();
-                sbImg.color = new Color(0.06f, 0.07f, 0.10f, 0.85f);
+                sbImg.color = new Color(0.08f, 0.09f, 0.12f, 0.65f);
 
                 if (seedCountText == null)
                 {
@@ -1034,7 +1058,7 @@ namespace CursedHarvest
                     t.fontStyle = FontStyle.Bold;
                     t.alignment = TextAnchor.MiddleCenter;
                     t.text = "✦ 0";
-                    t.color = new Color(0.35f, 0.95f, 0.55f);
+                    t.color = new Color(0.95f, 0.85f, 0.35f);
                     seedCountText = t;
                 }
                 else
@@ -1053,8 +1077,11 @@ namespace CursedHarvest
                 seedBadgeRoot.anchorMin = new Vector2(1, 1);
                 seedBadgeRoot.anchorMax = new Vector2(1, 1);
                 seedBadgeRoot.pivot = new Vector2(1, 1);
-                seedBadgeRoot.sizeDelta = new Vector2(84, 32);
-                seedBadgeRoot.anchoredPosition = new Vector2(-54, -7);
+                seedBadgeRoot.sizeDelta = new Vector2(86, 34);
+                seedBadgeRoot.anchoredPosition = new Vector2(-52, -5);
+
+                Image sbImg = sbTrans.GetComponent<Image>();
+                if (sbImg != null) sbImg.color = new Color(0.08f, 0.09f, 0.12f, 0.65f);
             }
 
             // 1c. Status Effects Container (180x32 below buttons at local (0, -52), right aligned)

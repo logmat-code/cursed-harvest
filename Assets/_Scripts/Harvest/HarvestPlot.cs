@@ -63,7 +63,8 @@ namespace CursedHarvest
 
         public PlotState State => currentState;
         public float BaseLuckyChance => baseLuckyChance;
-        public float GrowProgress => growDuration > 0f ? Mathf.Clamp01(growTimer / growDuration) : 0f;
+        public float EffectiveGrowDuration => (MetaProgressionManager.Instance != null) ? growDuration / MetaProgressionManager.Instance.GetHarvestSpeedMultiplier() : growDuration;
+        public float GrowProgress => EffectiveGrowDuration > 0f ? Mathf.Clamp01(growTimer / EffectiveGrowDuration) : 0f;
         public bool IsHarvestPaused => isHarvestPaused;
         public float HarvestGraceTimer => harvestGraceTimer;
         public float InteractionRadius => interactionRadius;
@@ -157,22 +158,18 @@ namespace CursedHarvest
             boundaryLine.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             boundaryLine.receiveShadows = false;
 
-            // Add 4 subtle small weathered rune markers at Cardinal points (N, S, E, W)
-            Vector3[] cardinalOffsets = new Vector3[]
+            // Add 8 weathered occult rune stones around the boundary (N, NE, E, SE, S, SW, W, NW)
+            for (int i = 0; i < 8; i++)
             {
-                new Vector3(0f, 0.04f, radius),
-                new Vector3(radius, 0.04f, 0f),
-                new Vector3(0f, 0.04f, -radius),
-                new Vector3(-radius, 0.04f, 0f)
-            };
-            for (int i = 0; i < cardinalOffsets.Length; i++)
-            {
+                float a = i * (Mathf.PI * 2f / 8f);
+                Vector3 runePos = new Vector3(Mathf.Cos(a) * radius, 0.04f, Mathf.Sin(a) * radius);
+
                 GameObject runeMarker = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 runeMarker.name = $"RuneMarker_{i}";
                 runeMarker.transform.SetParent(boundaryVisualRoot.transform, false);
-                runeMarker.transform.localPosition = cardinalOffsets[i];
-                runeMarker.transform.localScale = new Vector3(0.18f, 0.08f, 0.18f);
-                runeMarker.transform.localRotation = Quaternion.Euler(0f, i * 90f + 45f, 0f);
+                runeMarker.transform.localPosition = runePos;
+                runeMarker.transform.localScale = (i % 2 == 0) ? new Vector3(0.24f, 0.12f, 0.24f) : new Vector3(0.16f, 0.08f, 0.16f);
+                runeMarker.transform.localRotation = Quaternion.Euler(UnityEngine.Random.Range(-5f, 5f), i * 45f + 22.5f, UnityEngine.Random.Range(-5f, 5f));
 
                 Collider col = runeMarker.GetComponent<Collider>();
                 if (col != null) DestroyImmediate(col);
@@ -189,7 +186,7 @@ namespace CursedHarvest
         {
             GameObject promptObj = new GameObject("HarvestPromptText");
             promptObj.transform.SetParent(transform, false);
-            promptObj.transform.localPosition = new Vector3(0f, 2.3f, 0f);
+            promptObj.transform.localPosition = new Vector3(0f, 3.0f, 0f);
 
             promptTextMesh = promptObj.AddComponent<TextMesh>();
             promptTextMesh.fontSize = 28;
@@ -530,7 +527,8 @@ namespace CursedHarvest
                 }
             }
 
-            float progress = Mathf.Clamp01(growTimer / growDuration);
+            float effectiveDuration = EffectiveGrowDuration;
+            float progress = Mathf.Clamp01(growTimer / effectiveDuration);
 
             // Scale pumpkin with pulsing anticipation
             if (growingPumpkin != null)
@@ -554,7 +552,7 @@ namespace CursedHarvest
                 }
             }
 
-            if (growTimer >= growDuration)
+            if (growTimer >= effectiveDuration)
             {
                 ResolveHarvest();
             }

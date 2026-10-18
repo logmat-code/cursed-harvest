@@ -33,6 +33,7 @@ namespace CursedHarvest
         public bool IsActive => isLuckyLastActive;
         public float RemainingTime => activeTimer;
         public float Duration => duration;
+        public void SetDuration(float newDuration) => duration = Mathf.Max(1.0f, newDuration);
 
         public static bool IsAnyActive { get; private set; }
 

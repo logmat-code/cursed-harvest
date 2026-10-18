@@ -50,6 +50,14 @@ namespace CursedHarvest
             }
         }
 
+        private void Start()
+        {
+            if (MetaProgressionManager.Instance != null)
+            {
+                MetaProgressionManager.Instance.ApplyPermanentUpgrades(gameObject);
+            }
+        }
+
         public void SetSpeedMultiplier(float multiplier)
         {
             speedMultiplier = Mathf.Max(0.1f, multiplier);

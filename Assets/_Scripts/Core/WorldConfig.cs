@@ -310,22 +310,23 @@ namespace CursedHarvest
                     {
                         waveNumber = 10,
                         isFinalBoss = true,
-                        bossName = "THE MIRE MOTHER [BOSS C]",
+                        bossName = "THE MIRE MOTHER",
                         bossTitle = "Queen of Pestilence",
-                        bossAddCount = 22,
+                        bossAddCount = 24,
                         bossGruntQuota = 6,
                         bossChaserQuota = 5,
                         bossWalkerQuota = 5,
-                        bossFarmerQuota = 3,
-                        bossChargerQuota = 3,
+                        bossFarmerQuota = 4,
+                        bossChargerQuota = 4,
                         bossMaxConcurrentAdds = 9,
                         bossAddSpawnInterval = 1.8f,
-                        bossScale = 1.10f,
-                        bossHealthMultiplier = 1.30f
+                        bossScale = 1.35f,
+                        bossHealthMultiplier = 1.30f,
+                        bossPrefabPath = "Assets/_Prefabs/Boss_TheMireMother.prefab"
                     }
                 },
-                themeColor = new Color(0.35f, 0.75f, 0.25f),
-                environmentIdentifier = "Env_World3_Mire_Pending",
+                themeColor = new Color(0.20f, 0.75f, 0.45f),
+                environmentIdentifier = "Env_World3_Mire",
                 musicIdentifier = "Music_World3_Mire"
             };
         }
