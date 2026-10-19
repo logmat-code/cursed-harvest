@@ -444,7 +444,7 @@ namespace CursedHarvest
                     {
                         waveNumber = 10,
                         isFinalBoss = false, // Mid-Boss: does not complete the world!
-                        bossName = "ECLIPSE HERALD [MID-BOSS E1]",
+                        bossName = "ECLIPSE HERALD",
                         bossTitle = "Shadow of the Dying Sun",
                         bossAddCount = 22,
                         bossGruntQuota = 6,
@@ -455,13 +455,14 @@ namespace CursedHarvest
                         bossMaxConcurrentAdds = 9,
                         bossAddSpawnInterval = 1.8f,
                         bossScale = 1.15f,
-                        bossHealthMultiplier = 1.35f
+                        bossHealthMultiplier = 1.35f,
+                        bossPrefabPath = "Assets/_Prefabs/Boss_EclipseHerald.prefab"
                     },
                     new BossEncounterConfig
                     {
                         waveNumber = 20,
                         isFinalBoss = true, // Final Boss of World 5: completes the entire journey!
-                        bossName = "THE PRIMEVAL HORROR [BOSS E2]",
+                        bossName = "THE PRIMEVAL HORROR",
                         bossTitle = "Ancient Entity of Perpetual Night",
                         bossAddCount = 26,
                         bossGruntQuota = 6,
@@ -472,11 +473,12 @@ namespace CursedHarvest
                         bossMaxConcurrentAdds = 10,
                         bossAddSpawnInterval = 1.6f,
                         bossScale = 1.30f,
-                        bossHealthMultiplier = 1.60f
+                        bossHealthMultiplier = 1.60f,
+                        bossPrefabPath = "Assets/_Prefabs/Boss_PrimevalHorror.prefab"
                     }
                 },
                 themeColor = new Color(0.65f, 0.25f, 0.85f),
-                environmentIdentifier = "Env_World5_Eclipse_Pending",
+                environmentIdentifier = "Env_World5_Eclipse",
                 musicIdentifier = "Music_World5_Eclipse"
             };
         }

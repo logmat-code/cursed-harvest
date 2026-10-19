@@ -33,6 +33,8 @@ namespace CursedHarvest
         [SerializeField] private GameObject mireMotherBossPrefab;
         [SerializeField] private GameObject timberGoliathBossPrefab;
         [SerializeField] private GameObject bloodwoodSovereignBossPrefab;
+        [SerializeField] private GameObject eclipseHeraldBossPrefab;
+        [SerializeField] private GameObject primevalHorrorBossPrefab;
         [SerializeField] private GameObject healthPickupPrefab;
 
         [Header("Spawn Boundaries")]
@@ -282,6 +284,38 @@ namespace CursedHarvest
                     else
                     {
                         GameObject loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_BloodwoodSovereign.prefab");
+                        if (loaded != null) prefabToSpawn = loaded;
+                    }
+#endif
+                }
+                else if (bossEnc != null && !string.IsNullOrEmpty(bossEnc.bossPrefabPath))
+                {
+#if UNITY_EDITOR
+                    GameObject encPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(bossEnc.bossPrefabPath);
+                    if (encPrefab != null) prefabToSpawn = encPrefab;
+#endif
+                }
+            }
+            else if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 5)
+            {
+                if (bossEnc != null && bossEnc.waveNumber == 10)
+                {
+                    if (eclipseHeraldBossPrefab != null) prefabToSpawn = eclipseHeraldBossPrefab;
+#if UNITY_EDITOR
+                    else
+                    {
+                        GameObject loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_EclipseHerald.prefab");
+                        if (loaded != null) prefabToSpawn = loaded;
+                    }
+#endif
+                }
+                else if (bossEnc != null && bossEnc.waveNumber == 20)
+                {
+                    if (primevalHorrorBossPrefab != null) prefabToSpawn = primevalHorrorBossPrefab;
+#if UNITY_EDITOR
+                    else
+                    {
+                        GameObject loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_PrimevalHorror.prefab");
                         if (loaded != null) prefabToSpawn = loaded;
                     }
 #endif
@@ -758,6 +792,10 @@ namespace CursedHarvest
                 {
                     ApplyTimberVisualVariant(enemyObj);
                 }
+                else if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 5)
+                {
+                    ApplyEclipseVisualVariant(enemyObj);
+                }
 
                 spawnedThisWave++;
             }
@@ -903,6 +941,27 @@ namespace CursedHarvest
             }
         }
 
+        private static MaterialPropertyBlock _eclipsePropBlock;
+        private static readonly Color EclipseSootColor = new Color(0.24f, 0.16f, 0.32f);
+
+        private void ApplyEclipseVisualVariant(GameObject enemyObj)
+        {
+            if (enemyObj == null) return;
+            if (_eclipsePropBlock == null) _eclipsePropBlock = new MaterialPropertyBlock();
+
+            Renderer[] renderers = enemyObj.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] is MeshRenderer || renderers[i] is SkinnedMeshRenderer)
+                {
+                    renderers[i].GetPropertyBlock(_eclipsePropBlock);
+                    _eclipsePropBlock.SetColor("_BaseColor", EclipseSootColor);
+                    _eclipsePropBlock.SetColor("_Color", EclipseSootColor);
+                    renderers[i].SetPropertyBlock(_eclipsePropBlock);
+                }
+            }
+        }
+
         private ObjectPool SelectPoolForCurrentWave()
         {
             if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 2)
@@ -916,6 +975,10 @@ namespace CursedHarvest
             if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 4)
             {
                 return SelectPoolForWorld4();
+            }
+            if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 5)
+            {
+                return SelectPoolForWorld5();
             }
 
             if (isEndlessMode || currentWave > 10)
@@ -1131,6 +1194,68 @@ namespace CursedHarvest
                 if (chargerPool != null && roll < 0.30f) return chargerPool;
                 if (farmerPool != null && roll < 0.60f) return farmerPool;
                 if (plaguePool != null && roll < 0.80f) return plaguePool;
+                return chaserPool != null ? chaserPool : gruntPool;
+            }
+        }
+
+        private ObjectPool SelectPoolForWorld5()
+        {
+            if (isEndlessMode || currentWave > 20)
+            {
+                ObjectPool[] all = new ObjectPool[] { gruntPool, chaserPool, plaguePool, chargerPool, farmerPool };
+                List<ObjectPool> valid = new List<ObjectPool>();
+                for (int i = 0; i < all.Length; i++) if (all[i] != null) valid.Add(all[i]);
+                return valid.Count > 0 ? valid[UnityEngine.Random.Range(0, valid.Count)] : gruntPool;
+            }
+
+            if (currentWave <= 3)
+            {
+                // Waves 1-3: Fast shadow stalkers and grunts
+                if (chaserPool != null && UnityEngine.Random.value < 0.50f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave <= 6)
+            {
+                // Waves 4-6: Walkers emerge with Chasers and Grunts
+                float roll = UnityEngine.Random.value;
+                if (plaguePool != null && roll < 0.35f) return plaguePool;
+                if (chaserPool != null && roll < 0.70f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave <= 9)
+            {
+                // Waves 7-9: Heavy chargers and throwing cultists before Mid-Boss
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.35f) return chargerPool;
+                if (farmerPool != null && roll < 0.65f) return farmerPool;
+                if (chaserPool != null && roll < 0.85f) return chaserPool;
+                return plaguePool != null ? plaguePool : gruntPool;
+            }
+            else if (currentWave <= 14)
+            {
+                // Waves 11-14: Post-Mid-Boss grueling escalation
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.30f) return chargerPool;
+                if (farmerPool != null && roll < 0.60f) return farmerPool;
+                if (plaguePool != null && roll < 0.80f) return plaguePool;
+                return chaserPool != null ? chaserPool : gruntPool;
+            }
+            else if (currentWave <= 18)
+            {
+                // Waves 15-18: High intensity nightmare horde
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.35f) return chargerPool;
+                if (farmerPool != null && roll < 0.65f) return farmerPool;
+                if (plaguePool != null && roll < 0.85f) return plaguePool;
+                return chaserPool != null ? chaserPool : gruntPool;
+            }
+            else
+            {
+                // Wave 19: Pre-Final Boss apocalypse swarm
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.40f) return chargerPool;
+                if (farmerPool != null && roll < 0.70f) return farmerPool;
+                if (plaguePool != null && roll < 0.90f) return plaguePool;
                 return chaserPool != null ? chaserPool : gruntPool;
             }
         }
