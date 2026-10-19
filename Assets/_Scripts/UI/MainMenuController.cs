@@ -92,9 +92,22 @@ namespace CursedHarvest
 
             Time.timeScale = 1f;
 
+            EnsureAudioSetup();
             EnsureFont();
             EnsureMainMenuUI();
             WireEventListeners();
+        }
+
+        private void EnsureAudioSetup()
+        {
+            if (FindFirstObjectByType<AudioListener>() == null)
+            {
+                Camera cam = Camera.main;
+                if (cam != null)
+                {
+                    cam.gameObject.AddComponent<AudioListener>();
+                }
+            }
         }
 
         private void Start()
@@ -173,7 +186,7 @@ namespace CursedHarvest
         {
             if (cachedFont == null)
             {
-                cachedFont = Font.CreateDynamicFontFromOSFont("Arial", 20);
+                cachedFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 if (cachedFont == null)
                 {
                     cachedFont = Resources.GetBuiltinResource<Font>("Arial.ttf");

@@ -1256,7 +1256,8 @@ namespace CursedHarvest.Editor
                 esObj.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
             }
 
-            Font defaultFont = Font.CreateDynamicFontFromOSFont("Arial", 20);
+            Font defaultFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (defaultFont == null) defaultFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
 
             // Top-Left: Health & Lucky Last (Compact folk horror plate)
             GameObject topLeft = CreateUIObject("TopLeftHUD", canvasObj.transform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1), new Vector2(240, 48), new Vector2(24, -20));

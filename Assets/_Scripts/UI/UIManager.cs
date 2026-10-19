@@ -282,7 +282,7 @@ namespace CursedHarvest
             rtTitle.offsetMax = new Vector2(-15, -4);
             toastTitleText = titleObj.AddComponent<Text>();
             Font safeFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (safeFont == null) safeFont = Font.CreateDynamicFontFromOSFont("Arial", 22);
+            if (safeFont == null) safeFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
             toastTitleText.font = safeFont;
             toastTitleText.fontSize = 22;
             toastTitleText.fontStyle = FontStyle.Bold;
@@ -961,7 +961,8 @@ namespace CursedHarvest
         // ==================== DYNAMIC HUD & MODAL FALLBACKS ====================
         public void EnsureHUDAndModals()
         {
-            Font defaultFont = Font.CreateDynamicFontFromOSFont("Arial", 20);
+            Font defaultFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (defaultFont == null) defaultFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
 
             // 1. Top-Right HUD Dedicated Container (SafeArea Margin: -28, -24)
             Transform trTrans = transform.Find("TopRightHUD");
