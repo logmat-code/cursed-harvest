@@ -564,9 +564,9 @@ namespace CursedHarvest.Editor
             ritualLightObj.transform.position = basinCenter + new Vector3(0f, 1.2f, 3.0f);
             Light rLight = ritualLightObj.AddComponent<Light>();
             rLight.type = LightType.Point;
-            rLight.color = new Color(0.32f, 0.75f, 0.28f); // Sickly muted amber/green
-            rLight.range = 8.5f;
-            rLight.intensity = 1.9f;
+            rLight.color = new Color(0.42f, 0.58f, 0.35f); // Atmospheric muted cold-olive/amber
+            rLight.range = 8.0f;
+            rLight.intensity = 1.3f;
 
             // Occult dressing around the megalith ring
             for (int i = 0; i < 4; i++)
@@ -611,15 +611,15 @@ namespace CursedHarvest.Editor
 
             ParticleSystem ps = sporeObj.AddComponent<ParticleSystem>();
             ParticleSystem.MainModule main = ps.main;
-            main.startLifetime = 5.0f;
-            main.startSpeed = 0.4f;
-            main.startSize = 0.14f;
-            main.startColor = new Color(0.35f, 0.85f, 0.45f, 0.45f);
-            main.maxParticles = 140;
+            main.startLifetime = 4.5f;
+            main.startSpeed = 0.22f;
+            main.startSize = 0.08f;
+            main.startColor = new Color(0.28f, 0.45f, 0.32f, 0.30f); // Subtle muted lichen spore
+            main.maxParticles = 60;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
 
             ParticleSystem.EmissionModule emission = ps.emission;
-            emission.rateOverTime = 25f;
+            emission.rateOverTime = 12f;
 
             ParticleSystem.ShapeModule shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Box;

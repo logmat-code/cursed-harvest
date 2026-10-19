@@ -168,10 +168,40 @@ namespace CursedHarvest.Editor
                 canvas.planeDistance = Mathf.Max(0.2f, cam.nearClipPlane + 0.1f);
             }
 
+            LineRenderer[] lines = Object.FindObjectsByType<LineRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            List<LineRenderer> disabledLines = new List<LineRenderer>();
+            foreach (var l in lines)
+            {
+                if (l != null && l.enabled)
+                {
+                    l.enabled = false;
+                    disabledLines.Add(l);
+                }
+            }
+
+            TrailRenderer[] trails = Object.FindObjectsByType<TrailRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            List<TrailRenderer> disabledTrails = new List<TrailRenderer>();
+            foreach (var t in trails)
+            {
+                if (t != null && t.enabled)
+                {
+                    t.enabled = false;
+                    disabledTrails.Add(t);
+                }
+            }
+
             RenderTexture rt = new RenderTexture(width, height, 24);
             RenderTexture prevRt = cam.targetTexture;
             cam.targetTexture = rt;
-            cam.Render();
+            try
+            {
+                cam.Render();
+            }
+            finally
+            {
+                foreach (var l in disabledLines) if (l != null) l.enabled = true;
+                foreach (var t in disabledTrails) if (t != null) t.enabled = true;
+            }
 
             RenderTexture.active = rt;
             Texture2D tex = new Texture2D(width, height, TextureFormat.RGB24, false);

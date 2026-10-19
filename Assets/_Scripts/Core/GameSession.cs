@@ -126,12 +126,17 @@ namespace CursedHarvest
 
         // ==================== RUN NAVIGATION ====================
 
-        public void StartRun(int worldId)
+        public void SetSelectedWorld(int worldId)
         {
             selectedWorldId = Mathf.Clamp(worldId, 1, 5);
             WorldConfig config = WorldConfig.GetConfig(selectedWorldId);
             WorldDifficultyConfig.Current = WorldDifficultyConfig.FromWorldConfig(config);
+        }
 
+        public void StartRun(int worldId)
+        {
+            SetSelectedWorld(worldId);
+            WorldConfig config = CurrentWorldConfig;
             Debug.Log($"[GameSession] Starting Run for World {selectedWorldId}: '{config.displayName}' ({config.difficultyTier})...");
             Time.timeScale = 1f;
 

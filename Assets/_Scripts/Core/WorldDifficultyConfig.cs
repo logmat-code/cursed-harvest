@@ -187,7 +187,9 @@ namespace CursedHarvest
 
         public float GetEffectiveHealAmount(bool isLuckyLastActive)
         {
-            return isLuckyLastActive ? luckyLastHealAmount : normalHealAmount;
+            float baseHeal = isLuckyLastActive ? luckyLastHealAmount : normalHealAmount;
+            float survivalMult = (MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetSurvivalHealMultiplier() : 1f;
+            return baseHeal * survivalMult;
         }
     }
 }

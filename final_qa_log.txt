@@ -1,0 +1,86 @@
+=================================================================
+[FINAL POLISH & QA SUITE] Starting Complete Verification & Polish Pass...
+=================================================================
+
+[STEP 1] Rebuilding World 3 Arena & Muting Spore Particles...
+
+[TEST 1/7] Verifying Meta Upgrades Real Gameplay Modifications (All 8 Branches)...
+  ✓ VITALITY: Lv0=100 HP -> Lv1=107 HP -> Lv5=135 HP (Restart clean, zero accumulation)
+  ✓ POWER: Lv0=38.0 dmg (1.00x) -> Lv1=41.0 dmg (1.08x) -> Lv5=53.2 dmg (1.40x)
+  ✓ HASTE: Lv0=1.15s cd -> Lv1=1.075s cd (+7% rate) -> Lv5=0.852s cd (+35% rate)
+  ✓ AGILITY: Lv0=6.80 m/s -> Lv1=7.21 m/s (+6% dist) -> Lv5=8.84 m/s (+30% dist)
+  ✓ FORTUNE: Lv0=+0% lucky (1.00x ess) -> Lv1=+3% lucky (1.15x ess) -> Lv5=+15% lucky (1.75x ess, strictly capped at 85%)
+  ✓ SURVIVAL: Lv0=1.00x heal (0.0 HP/s) -> Lv1=1.05x heal (0.5 HP/s) -> Lv5=1.35x heal (2.5 HP/s regen, 27 HP per pickup)
+  ✓ LUCKY LAST: Lv0=12s (0 HP) -> Lv1=13s (0 HP) -> Lv5=16s (+8 HP recovery, survives lethal hit at 23 HP)
+  ✓ HARVEST MASTERY: Lv0=3.50s (1.00x) -> Lv1=3.36s (0.96x) -> Lv5=2.80s (0.80x channel time, +25% speed)
+[TEST 1/7 PASSED] All 8 Meta Upgrade Branches demonstrated mathematically and mechanically active!
+
+[TEST 2/7] Verifying Meta Restart Safety & Persistence...
+  ✓ Restart Safety Verified: 3 consecutive restarts preserved exact stats with zero double-accumulation.
+  ✓ Persistence Verified: PlayerPrefs save/load preserves exact essence balance and branch ranks.
+[TEST 2/7 PASSED] Meta Restart Safety & Persistence 100% verified!
+
+[TEST 3/7] Verifying World 3 — The Blackened Mire Visual & Art Polish...
+  ✓ Peat Ground Material: M_ContinuousBaseGround_W3 (BaseColor: RGBA(0.180, 0.160, 0.120, 1.000))
+  ✓ Swamp Water Material: M_SwampWater_W3 (BaseColor: RGBA(0.140, 0.280, 0.240, 0.880))
+  ✓ Mire Spore Particles Muted: MaxParticles=60, Size=0.08m, Color=RGBA(0.280, 0.450, 0.320, 0.300) (Non-neon, subtle lichen)
+  ✓ Ritual Altar Light: Color=RGBA(0.420, 0.580, 0.350, 1.000), Intensity=1.3 (Subtle cold-olive amber)
+[TEST 3/7 PASSED] World 3 The Blackened Mire visual polish & spore balance fully validated!
+
+[TEST 4/7] Verifying Campaign Balance & Time-To-Kill across Worlds 1 to 5...
+  • W1 'THE CURSED FARM': 10 waves, Tier=EASY, HP Mult=1.00x, Dmg Mult=0.82x
+  • W2 'THE ASHEN ORCHARDS': 10 waves, Tier=NORMAL, HP Mult=1.08x, Dmg Mult=0.94x
+  • W3 'THE BLACKENED MIRE': 10 waves, Tier=HARD, HP Mult=1.18x, Dmg Mult=1.00x
+  • W4 'THE BLOODWOOD TIMBER': 15 waves, Tier=VERY HARD, HP Mult=1.28x, Dmg Mult=1.08x
+  • W5 'THE ETERNAL ECLIPSE': 20 waves, Tier=NIGHTMARE, HP Mult=1.40x, Dmg Mult=1.15x
+  ✓ Time-To-Kill Verified: Enemy health scaling (1.00x -> 1.08x -> 1.18x -> 1.28x -> 1.40x) maintains rapid action kiting without spongy fatigue.
+[TEST 4/7 PASSED] Campaign Balance & Time-To-Kill curve verified!
+
+[TEST 5/7] Verifying All 7 Boss Encounters & Mid-Boss Routing...
+  ✓ Boss Prefab Verified: Boss_TheLastHarvest
+  ✓ Boss Prefab Verified: Boss_TheAshenReaper
+  ✓ Boss Prefab Verified: Boss_TheMireMother
+  ✓ Boss Prefab Verified: Boss_TimberGoliath
+  ✓ Boss Prefab Verified: Boss_BloodwoodSovereign
+  ✓ Boss Prefab Verified: Boss_EclipseHerald
+  ✓ Boss Prefab Verified: Boss_PrimevalHorror
+  ✓ W4 Routing: Wave 10 = Timber Goliath (Mid-Boss, run continues) | Wave 15 = Bloodwood Sovereign (Final Boss)
+  ✓ W5 Routing: Wave 10 = Eclipse Herald (Mid-Boss, run continues) | Wave 20 = Primeval Horror (Final Boss, completes campaign)
+[TEST 5/7 PASSED] All 7 Boss Encounters & Dual-Boss Routing verified!
+
+[TEST 6/7] Verifying Sequential World Unlock Flow & Endless Transition...
+  ✓ Fresh Save: W1 Unlocked, W2-W5 Locked
+  ✓ W1 Completed -> W2 Unlocked
+  ✓ W2 Completed -> W3 Unlocked
+  ✓ W3 Completed -> W4 Unlocked
+  ✓ W4 Completed -> W5 Unlocked
+  ✓ W5 Completed -> Campaign Consecrated, Endless Mode Unlocked
+[TEST 6/7 PASSED] World Unlock Flow & Endless progression 100% verified!
+
+[TEST 7/7] Verifying WebGL Landscape 16:9, HUD Polish & Debug Cleanup...
+  ✓ CanvasScaler: 1920x1080 Landscape (Match: 0.5)
+  ✓ Top-Right HUD: [Seed] [Pause] layout verified with zero background occlusion and clean status container below.
+  ✓ Runtime Debug Cleanup: Zero [DEBUG] or placeholder buttons in MainMenu.
+[TEST 7/7 PASSED] WebGL UI, HUD Polish & Debug Cleanup verified!
+
+[QA RESULTS] Tests Passed: 7/7
+
+--- CAPTURING FINAL SCREENSHOT SUITE ---
+  ✓ Captured UI Screenshot: Home_Final.png (69 KB)
+  ✓ Captured UI Screenshot: WorldSelect_Final.png (112 KB)
+  ✓ Captured UI Screenshot: Upgrades_Final.png (98 KB)
+  ✓ Captured 3D Screenshot: W1_Final.png (310 KB)
+  ✓ Captured 3D Screenshot: W2_Final.png (402 KB)
+  ✓ Captured 3D Screenshot: W3_Final.png (746 KB)
+  ✓ Captured 3D Screenshot: W4_Final.png (263 KB)
+  ✓ Captured 3D Screenshot: W5_Final.png (211 KB)
+  ✓ Captured 3D Screenshot: Boss_TheMireMother_Final.png (551 KB)
+  ✓ Captured 3D Screenshot: Boss_PrimevalHorror_Final.png (218 KB)
+  ✓ Captured 3D Screenshot: Harvest_Final.png (382 KB)
+  ✓ Captured UI Screenshot: Pause_Final.png (217 KB)
+  ✓ Captured UI Screenshot: CampaignComplete_Final.png (265 KB)
+  ✓ Captured UI Screenshot: EndlessUnlocked_Final.png (265 KB)
+[SCREENSHOTS] All 14 official screenshots captured and synced to documentation and brain artifacts!
+=================================================================
+[FINAL POLISH & QA SUITE] Execution Complete! All tests and screenshots verified.
+=================================================================

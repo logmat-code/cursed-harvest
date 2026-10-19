@@ -79,6 +79,7 @@ namespace CursedHarvest
 
         private int currentlySelectedWorldId = 1;
         private Font cachedFont;
+        private float lastUpgradeClickTime = -1f;
 
         private void Awake()
         {
@@ -1048,6 +1049,8 @@ namespace CursedHarvest
                 MetaUpgradeBranch capturedBranch = branch;
                 uBtn.onClick.AddListener(() =>
                 {
+                    if (Time.unscaledTime - lastUpgradeClickTime < 0.25f) return;
+                    lastUpgradeClickTime = Time.unscaledTime;
                     AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
                     MetaProgressionManager.Instance.TryUpgradeBranch(capturedBranch);
                     RefreshUpgradesUI();
@@ -1158,12 +1161,12 @@ namespace CursedHarvest
             tBody.lineSpacing = 1.3f;
             tBody.alignment = TextAnchor.MiddleCenter;
             tBody.text = 
-                "CURSED HARVEST\nA Folk Horror Roguelite Survival Experience\n\n" +
-                "Core Gameplay & Systems: Antigravity Agentic Pair Programming\n" +
-                "Art Assets & Modular Environments: Synty Studios / POLYGON Series\n" +
-                "Horror Masks & Props: POLYGON Halloween Horror Collection\n" +
-                "Audio & Folk Atmosphere: Folk Acoustic & Ambient Synthesis\n\n" +
-                "Special thanks to the brave souls who brave the Blighted Soil.\n" +
+                "CURSED HARVEST: LUCKY LAST\nA Folk Horror Survivor Roguelike\n\n" +
+                "Developed for the Synty Spooky Jam Oct 2026 — Theme: \"LUCKY LAST\"\n\n" +
+                "3D Art & Modular Environments: Synty Studios (POLYGON Series)\n" +
+                "Audio & Music Architecture: 100% Procedural C# PCM Synthesis (Zero External Copyright Audio)\n" +
+                "Core Gameplay Engineering: Antigravity Agentic Pair Programming\n\n" +
+                "Target Platform: WebGL Landscape 16:9\n" +
                 "May the Harvest treat you with mercy.";
             tBody.color = new Color(0.85f, 0.82f, 0.78f);
 

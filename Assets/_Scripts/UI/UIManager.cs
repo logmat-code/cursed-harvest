@@ -119,6 +119,7 @@ namespace CursedHarvest
 
         public bool IsGamePaused => isPaused;
         public GameObject PauseModal => pauseModal;
+        public GameObject VictoryModal => victoryModal;
         public Button HudPauseButton => hudPauseButton;
         public Button ResumeButton => resumeButton;
         public RectTransform TopRightHUDContainer => topRightHUDContainer;
@@ -845,6 +846,10 @@ namespace CursedHarvest
                         victoryTitleText.text = "THE ASHEN ORCHARDS CLEANSED";
                     else if (activeConfig.worldId == 3)
                         victoryTitleText.text = "THE BLACKENED MIRE PURGED";
+                    else if (activeConfig.worldId == 4)
+                        victoryTitleText.text = "THE BLOODWOOD TIMBER PURGED";
+                    else if (activeConfig.worldId == 5)
+                        victoryTitleText.text = "THE ECLIPSE IS BROKEN!";
                     else
                         victoryTitleText.text = "WORLD COMPLETE!";
                 }
@@ -858,11 +863,15 @@ namespace CursedHarvest
                 {
                     string worldStory = "";
                     if (activeConfig.worldId == 1)
-                        worldStory = "THE LAST HARVEST HAS FALLEN!\nWORLD 1 COMPLETE!";
+                        worldStory = "THE LAST HARVEST HAS FALLEN!\nWORLD 1 COMPLETE!\nWORLD 2 — THE ASHEN ORCHARDS UNLOCKED.";
                     else if (activeConfig.worldId == 2)
                         worldStory = "THE ASHEN REAPER HAS FALLEN!\nWORLD 2 COMPLETE!\nWORLD 3 — THE BLACKENED MIRE UNLOCKED.";
                     else if (activeConfig.worldId == 3)
                         worldStory = "THE MIRE MOTHER HAS PERISHED!\nWORLD 3 COMPLETE!\nWORLD 4 — THE BLOODWOOD TIMBER UNLOCKED.";
+                    else if (activeConfig.worldId == 4)
+                        worldStory = "THE BLOODWOOD SOVEREIGN HAS FALLEN!\nWORLD 4 COMPLETE!\nWORLD 5 — THE ETERNAL ECLIPSE UNLOCKED.";
+                    else if (activeConfig.worldId == 5)
+                        worldStory = "THE PRIMEVAL HORROR IS VANQUISHED!\n\n★ CAMPAIGN COMPLETE ★\n★ ENDLESS MODE UNLOCKED ★\n\nThe ancient blight recedes, but the night remains hungry.";
                     else
                         worldStory = $"{activeConfig.displayName} PURGED!\nTHE HARVEST RECEDES FROM THIS REALM.";
 
@@ -878,7 +887,7 @@ namespace CursedHarvest
                         else if (activeConfig.worldId < 5)
                             btnTxt.text = $"ENTER WORLD {activeConfig.worldId + 1} [ENTER]";
                         else
-                            btnTxt.text = "ALL WORLDS PURGED! [ENTER]";
+                            btnTxt.text = "ENTER ENDLESS HORDE [ENTER]";
                     }
                 }
                 if (victoryWorldSelectButton != null)
@@ -897,7 +906,7 @@ namespace CursedHarvest
             Time.timeScale = 1f;
 
             WorldConfig activeConfig = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
-            if (activeConfig.worldId == 1)
+            if (activeConfig.worldId == 1 || activeConfig.worldId == 5)
             {
                 SpawnDirector sd = FindFirstObjectByType<SpawnDirector>();
                 if (sd != null)
@@ -905,14 +914,18 @@ namespace CursedHarvest
                     sd.EnterEndlessMode();
                     sd.StartIntermissionAfterBoss();
                 }
+                else if (GameSession.Instance != null)
+                {
+                    GameSession.Instance.ReturnToWorldSelect();
+                }
             }
             else
             {
-                if (activeConfig.worldId < 5)
+                if (activeConfig.worldId < 5 && GameSession.Instance != null)
                 {
                     GameSession.Instance.StartRun(activeConfig.worldId + 1);
                 }
-                else
+                else if (GameSession.Instance != null)
                 {
                     GameSession.Instance.ReturnToWorldSelect();
                 }

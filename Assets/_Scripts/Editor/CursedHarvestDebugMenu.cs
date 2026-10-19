@@ -126,44 +126,123 @@ namespace CursedHarvest.Editor
             }
         }
 
+        [MenuItem("Cursed Harvest/Debug/Print Effective Stats")]
         [MenuItem("Cursed Harvest/Debug/Meta Progression/Print Effective Player Stats")]
-        public static void PrintEffectivePlayerStats()
+        public static void PrintEffectiveStats()
         {
             int worldId = GameSession.Instance != null ? GameSession.Instance.SelectedWorldId : 1;
             WorldConfig wc = WorldConfig.GetConfig(worldId);
             string worldName = wc != null ? wc.displayName : $"World {worldId}";
+            string tier = wc != null ? wc.difficultyTier : "NORMAL";
 
             GameObject player = GameObject.FindWithTag("Player");
             PlayerHealth ph = player != null ? player.GetComponent<PlayerHealth>() : null;
             PlayerController pc = player != null ? player.GetComponent<PlayerController>() : null;
             WeaponManager wm = player != null ? player.GetComponent<WeaponManager>() : null;
             LuckyLastSystem lls = player != null ? player.GetComponent<LuckyLastSystem>() : null;
+            UpgradeManager um = player != null ? player.GetComponent<UpgradeManager>() : null;
             HarvestPlot hp = Object.FindFirstObjectByType<HarvestPlot>();
 
+            // 1. Max HP
             float baseHp = ph != null ? ph.BaseMaxHealth : 100f;
-            float metaHp = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetVitalityBonus() : 0f;
-            float finalMaxHp = ph != null ? ph.MaxHealth : (baseHp + metaHp);
+            float worldHpMod = 0f;
+            float metaVit = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetVitalityBonus() : 0f;
+            float runHp = (um != null) ? (ph != null ? ph.MaxHealth - baseHp - metaVit : 0f) : 0f;
+            float tempHp = 0f;
+            float finalMaxHp = ph != null ? ph.MaxHealth : (baseHp + metaVit + runHp);
 
-            float baseDmg = 1.0f;
+            // 2. Damage Multiplier
+            float baseDmg = 1.00f;
+            float worldDmg = 1.00f;
             float metaPower = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetPowerMultiplier() : 1f;
-            float finalDmg = wm != null ? wm.GlobalDamageMultiplier : metaPower;
+            float runDmg = wm != null ? wm.RunDamageMultiplier : 1f;
+            float tempDmg = 0f;
+            float finalDmg = wm != null ? wm.GlobalDamageMultiplier : (metaPower * runDmg + tempDmg);
 
-            float speed = pc != null ? pc.MoveSpeed : 6.8f * (MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetAgilityMultiplier() : 1f);
-            float haste = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetHasteMultiplier() : 1f;
-            float luckyLastDur = lls != null ? lls.TotalDuration : 12f + (MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetLuckyLastDurationBonus() : 0f);
-            float luckyLastRecoveryHP = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetLuckyLastRecoveryHPBonus() : 0f;
-            float harvestTime = hp != null ? hp.EffectiveGrowDuration : 3.5f * (MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetHarvestChannelMultiplier() : 1f);
-            float harvestSpeedMult = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetHarvestSpeedMultiplier() : 1f;
+            // 3. Attack Speed / Cooldown
+            float baseAtkSpd = 1.00f;
+            float worldAtkSpd = 1.00f;
+            float metaHaste = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetHasteMultiplier() : 1f;
+            float runCdMult = wm != null ? wm.RunCooldownMultiplier : 1f;
+            float tempCdMult = 1.00f;
+            float finalCdMult = wm != null ? wm.GlobalCooldownMultiplier : (runCdMult / metaHaste);
+            float finalAtkSpd = finalCdMult > 0.01f ? (1f / finalCdMult) : 1f;
 
-            Debug.Log($"==================== EFFECTIVE PLAYER STATS ====================\n" +
-                      $"World: {worldId} - {worldName}\n" +
-                      $"Base HP: {baseHp:F1} | Meta HP Bonus: +{metaHp:F1} | Final Max HP: {finalMaxHp:F1}\n" +
-                      $"Base Damage Mult: {baseDmg:F2}x | Meta Power Mult: {metaPower:F2}x | Final Damage Mult: {finalDmg:F2}x\n" +
-                      $"Movement Speed: {speed:F2} m/s (Agility Mult: {(MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetAgilityMultiplier() : 1f):F2}x)\n" +
-                      $"Haste Attack Speed Mult: {haste:F2}x (Cooldown Factor: {(1f/haste):F2}x)\n" +
-                      $"Lucky Last Duration: {luckyLastDur:F1}s | Extra Recovery HP: +{luckyLastRecoveryHP:F0} HP\n" +
-                      $"Harvest Channel Duration: {harvestTime:F2}s ({harvestSpeedMult:F2}x speed)\n" +
-                      $"===============================================================");
+            // 4. Move Speed
+            float baseSpeed = 6.80f;
+            float worldSpeed = 1.00f;
+            float metaAgi = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetAgilityMultiplier() : 1f;
+            float runSpeedMult = pc != null ? pc.SpeedMultiplier : 1f;
+            float tempSpeedBonus = 0f;
+            float finalSpeed = pc != null ? pc.MoveSpeed : (baseSpeed * metaAgi * runSpeedMult);
+
+            // 5. Fortune
+            float baseLucky = 0.70f;
+            float worldLucky = 0f;
+            float metaFortune = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetFortuneBonus() : 0f;
+            float runLucky = um != null ? um.BetterHarvestBonus : 0f;
+            float tempLucky = (ph != null && ph.HealthPercent <= 0.25f) ? (0.25f - ph.HealthPercent) * 0.60f : 0f;
+            float finalLucky = hp != null ? hp.CalculateLuckyChance() : Mathf.Clamp(baseLucky + metaFortune + runLucky + tempLucky, 0.10f, 0.85f);
+            float metaEssenceMult = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetFortuneEssenceMultiplier() : 1f;
+
+            // 6. Health Restore Multiplier
+            float baseHeal = 20.0f;
+            float worldHeal = WorldDifficultyConfig.Current != null ? (LuckyLastSystem.IsAnyActive ? WorldDifficultyConfig.Current.luckyLastHealAmount : WorldDifficultyConfig.Current.normalHealAmount) : 20f;
+            float metaSurvivalMult = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetSurvivalHealMultiplier() : 1f;
+            float metaRegen = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetSurvivalRegenRate() : 0f;
+            float runHeal = 1.00f;
+            float tempHeal = 1.00f;
+            float finalHeal = WorldDifficultyConfig.Current != null ? WorldDifficultyConfig.Current.GetEffectiveHealAmount(LuckyLastSystem.IsAnyActive) : (worldHeal * metaSurvivalMult);
+
+            // 7. Lucky Last Duration
+            float baseLuckyDur = 12.0f;
+            float worldLuckyDur = 0f;
+            float metaLuckyDur = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetLuckyLastDurationBonus() : 0f;
+            float runLuckyDur = 0f;
+            float tempLuckyDur = 0f;
+            float finalLuckyDur = lls != null ? lls.TotalDuration : (baseLuckyDur + metaLuckyDur);
+
+            // 8. Lucky Last Recovery HP
+            float baseRecoveryHp = 1f;
+            float worldRecoveryHp = WorldDifficultyConfig.Current != null ? WorldDifficultyConfig.Current.luckyLastMinimumHP : 15f;
+            float metaRecoveryHp = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetLuckyLastRecoveryHPBonus() : 0f;
+            float runRecoveryHp = 0f;
+            float tempRecoveryHp = 0f;
+            float finalRecoveryHp = worldRecoveryHp + metaRecoveryHp;
+
+            // 9. Harvest Channel Multiplier
+            float baseChannelTime = 3.50f;
+            float worldChannelMult = 1.00f;
+            float metaChannelMult = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetHarvestChannelMultiplier() : 1f;
+            float runChannelMult = 1.00f;
+            float tempChannelMult = 1.00f;
+            float finalChannelTime = hp != null ? hp.EffectiveGrowDuration : (baseChannelTime * metaChannelMult);
+
+            string report = 
+                "====================================================================================================\n" +
+                $"[EFFECTIVE STATS AUDIT] WORLD: {worldId} — {worldName} ({tier})\n" +
+                "====================================================================================================\n" +
+                $"1. Max HP:\n" +
+                $"   Base={baseHp:F1} | World=+{worldHpMod:F1} | Meta=+{metaVit:F1} | Run=+{runHp:F1} | Temporary=+{tempHp:F1} -> FINAL={finalMaxHp:F1} HP\n" +
+                $"2. Damage Multiplier:\n" +
+                $"   Base={baseDmg:F2}x | World={worldDmg:F2}x | Meta={metaPower:F2}x | Run={runDmg:F2}x | Temporary=+{tempDmg:F2} -> FINAL={finalDmg:F2}x\n" +
+                $"3. Attack Speed:\n" +
+                $"   Base={baseAtkSpd:F2}x | World={worldAtkSpd:F2}x | Meta={metaHaste:F2}x | Run={runCdMult:F2}x | Temporary={tempCdMult:F2}x -> FINAL={finalAtkSpd:F2}x (CD Factor: {finalCdMult:F2}x)\n" +
+                $"4. Move Speed:\n" +
+                $"   Base={baseSpeed:F2} m/s | World={worldSpeed:F2}x | Meta={metaAgi:F2}x | Run={runSpeedMult:F2}x | Temporary=+{tempSpeedBonus:F2} -> FINAL={finalSpeed:F2} m/s\n" +
+                $"5. Fortune:\n" +
+                $"   Base={baseLucky:P0} | World=+{worldLucky:P0} | Meta=+{metaFortune:P0} | Run=+{runLucky:P0} | Temporary=+{tempLucky:P0} -> FINAL={finalLucky:P1} (Cap 85%) [Essence: {metaEssenceMult:F2}x]\n" +
+                $"6. Health Restore Multiplier:\n" +
+                $"   Base={baseHeal:F1} HP | World={worldHeal:F1} HP | Meta={metaSurvivalMult:F2}x (+{metaRegen:F1} HP/s) | Run={runHeal:F2}x | Temporary={tempHeal:F2}x -> FINAL={finalHeal:F1} HP\n" +
+                $"7. Lucky Last Duration:\n" +
+                $"   Base={baseLuckyDur:F1}s | World=+{worldLuckyDur:F1}s | Meta=+{metaLuckyDur:F1}s | Run=+{runLuckyDur:F1}s | Temporary=+{tempLuckyDur:F1}s -> FINAL={finalLuckyDur:F1}s\n" +
+                $"8. Lucky Last Recovery HP:\n" +
+                $"   Base={baseRecoveryHp:F0} HP | World={worldRecoveryHp:F0} HP | Meta=+{metaRecoveryHp:F0} HP | Run=+{runRecoveryHp:F0} HP | Temporary=+{tempRecoveryHp:F0} HP -> FINAL={finalRecoveryHp:F0} HP\n" +
+                $"9. Harvest Channel Multiplier:\n" +
+                $"   Base={baseChannelTime:F2}s | World={worldChannelMult:F2}x | Meta={metaChannelMult:F2}x | Run={runChannelMult:F2}x | Temporary={tempChannelMult:F2}x -> FINAL={finalChannelTime:F2}s (Speed: {(1f/metaChannelMult):F2}x)\n" +
+                "====================================================================================================";
+
+            Debug.Log(report);
         }
 
         [MenuItem("Cursed Harvest/Debug/Complete Current Wave")]
