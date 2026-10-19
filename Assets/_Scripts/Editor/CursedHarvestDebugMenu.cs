@@ -51,7 +51,9 @@ namespace CursedHarvest.Editor
             }
         }
 
-        [MenuItem("Cursed Harvest/Debug/Add 1,000 Harvest Essence")]
+        // ==================== META PROGRESSION DEBUG TOOLS ====================
+
+        [MenuItem("Cursed Harvest/Debug/Meta Progression/Add 1000 Essence")]
         public static void Add1000Essence()
         {
             if (MetaProgressionManager.Instance != null)
@@ -73,29 +75,7 @@ namespace CursedHarvest.Editor
             }
         }
 
-        [MenuItem("Cursed Harvest/Debug/Add 10,000 Harvest Essence")]
-        public static void Add10000Essence()
-        {
-            if (MetaProgressionManager.Instance != null)
-            {
-                MetaProgressionManager.Instance.AddEssence(10000, false);
-                Debug.Log($"[CursedHarvestDebugMenu] Added 10,000 Harvest Essence. Total: {MetaProgressionManager.Instance.HarvestEssence}");
-            }
-            else
-            {
-                int cur = PlayerPrefs.GetInt("CH_HarvestEssence", 0);
-                PlayerPrefs.SetInt("CH_HarvestEssence", cur + 10000);
-                PlayerPrefs.Save();
-                Debug.Log($"[CursedHarvestDebugMenu] Added 10,000 Harvest Essence to PlayerPrefs. Total: {cur + 10000}");
-            }
-
-            if (MainMenuController.Instance != null)
-            {
-                MainMenuController.Instance.RefreshUpgradesUI();
-            }
-        }
-
-        [MenuItem("Cursed Harvest/Debug/Reset All Meta Upgrades and Essence")]
+        [MenuItem("Cursed Harvest/Debug/Meta Progression/Reset Meta Upgrades")]
         public static void ResetMetaUpgrades()
         {
             if (MetaProgressionManager.Instance != null)
@@ -108,6 +88,7 @@ namespace CursedHarvest.Editor
                 PlayerPrefs.SetInt("CH_HarvestEssence", 0);
                 foreach (MetaUpgradeBranch branch in System.Enum.GetValues(typeof(MetaUpgradeBranch)))
                 {
+                    PlayerPrefs.SetInt($"CH_Meta_{branch}", 0);
                     PlayerPrefs.SetInt($"CH_MetaUpgrade_{branch}", 0);
                 }
                 PlayerPrefs.Save();
@@ -118,6 +99,71 @@ namespace CursedHarvest.Editor
             {
                 MainMenuController.Instance.RefreshUpgradesUI();
             }
+        }
+
+        [MenuItem("Cursed Harvest/Debug/Meta Progression/Set All Meta Lv5")]
+        public static void SetAllMetaLv5()
+        {
+            if (MetaProgressionManager.Instance != null)
+            {
+                MetaProgressionManager.Instance.SetAllMaxRank();
+                Debug.Log("[CursedHarvestDebugMenu] All 8 Meta Upgrades set to Level 5 (MAX)!");
+            }
+            else
+            {
+                foreach (MetaUpgradeBranch branch in System.Enum.GetValues(typeof(MetaUpgradeBranch)))
+                {
+                    PlayerPrefs.SetInt($"CH_Meta_{branch}", 5);
+                    PlayerPrefs.SetInt($"CH_MetaUpgrade_{branch}", 5);
+                }
+                PlayerPrefs.Save();
+                Debug.Log("[CursedHarvestDebugMenu] Set All Meta Upgrades to Level 5 in PlayerPrefs.");
+            }
+
+            if (MainMenuController.Instance != null)
+            {
+                MainMenuController.Instance.RefreshUpgradesUI();
+            }
+        }
+
+        [MenuItem("Cursed Harvest/Debug/Meta Progression/Print Effective Player Stats")]
+        public static void PrintEffectivePlayerStats()
+        {
+            int worldId = GameSession.Instance != null ? GameSession.Instance.SelectedWorldId : 1;
+            WorldConfig wc = WorldConfig.GetConfig(worldId);
+            string worldName = wc != null ? wc.displayName : $"World {worldId}";
+
+            GameObject player = GameObject.FindWithTag("Player");
+            PlayerHealth ph = player != null ? player.GetComponent<PlayerHealth>() : null;
+            PlayerController pc = player != null ? player.GetComponent<PlayerController>() : null;
+            WeaponManager wm = player != null ? player.GetComponent<WeaponManager>() : null;
+            LuckyLastSystem lls = player != null ? player.GetComponent<LuckyLastSystem>() : null;
+            HarvestPlot hp = Object.FindFirstObjectByType<HarvestPlot>();
+
+            float baseHp = ph != null ? ph.BaseMaxHealth : 100f;
+            float metaHp = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetVitalityBonus() : 0f;
+            float finalMaxHp = ph != null ? ph.MaxHealth : (baseHp + metaHp);
+
+            float baseDmg = 1.0f;
+            float metaPower = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetPowerMultiplier() : 1f;
+            float finalDmg = wm != null ? wm.GlobalDamageMultiplier : metaPower;
+
+            float speed = pc != null ? pc.MoveSpeed : 6.8f * (MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetAgilityMultiplier() : 1f);
+            float haste = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetHasteMultiplier() : 1f;
+            float luckyLastDur = lls != null ? lls.TotalDuration : 12f + (MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetLuckyLastDurationBonus() : 0f);
+            float luckyLastRecoveryHP = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetLuckyLastRecoveryHPBonus() : 0f;
+            float harvestTime = hp != null ? hp.EffectiveGrowDuration : 3.5f * (MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetHarvestChannelMultiplier() : 1f);
+            float harvestSpeedMult = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetHarvestSpeedMultiplier() : 1f;
+
+            Debug.Log($"==================== EFFECTIVE PLAYER STATS ====================\n" +
+                      $"World: {worldId} - {worldName}\n" +
+                      $"Base HP: {baseHp:F1} | Meta HP Bonus: +{metaHp:F1} | Final Max HP: {finalMaxHp:F1}\n" +
+                      $"Base Damage Mult: {baseDmg:F2}x | Meta Power Mult: {metaPower:F2}x | Final Damage Mult: {finalDmg:F2}x\n" +
+                      $"Movement Speed: {speed:F2} m/s (Agility Mult: {(MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.GetAgilityMultiplier() : 1f):F2}x)\n" +
+                      $"Haste Attack Speed Mult: {haste:F2}x (Cooldown Factor: {(1f/haste):F2}x)\n" +
+                      $"Lucky Last Duration: {luckyLastDur:F1}s | Extra Recovery HP: +{luckyLastRecoveryHP:F0} HP\n" +
+                      $"Harvest Channel Duration: {harvestTime:F2}s ({harvestSpeedMult:F2}x speed)\n" +
+                      $"===============================================================");
         }
 
         [MenuItem("Cursed Harvest/Debug/Complete Current Wave")]

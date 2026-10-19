@@ -5,9 +5,11 @@ namespace CursedHarvest
 {
     public class WeaponManager : MonoBehaviour
     {
-        [Header("Global Multipliers")]
-        [SerializeField] private float globalDamageMultiplier = 1f;
-        [SerializeField] private float globalCooldownMultiplier = 1f;
+        [Header("Run Multipliers")]
+        [SerializeField] private float runDamageMultiplier = 1f;
+        [SerializeField] private float runCooldownMultiplier = 1f;
+        [SerializeField] private float temporaryDamageBonus = 0f;
+        [SerializeField] private float temporaryCooldownMultiplier = 1f;
         [SerializeField] private float globalRangeMultiplier = 1f;
         [SerializeField] private float globalProjectileSpeedMultiplier = 1f;
         [SerializeField] private int globalBonusProjectiles = 0;
@@ -15,8 +17,26 @@ namespace CursedHarvest
 
         private readonly List<BaseWeapon> activeWeapons = new List<BaseWeapon>();
 
-        public float GlobalDamageMultiplier => globalDamageMultiplier;
-        public float GlobalCooldownMultiplier => globalCooldownMultiplier;
+        public float GlobalDamageMultiplier
+        {
+            get
+            {
+                float metaPower = (MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetPowerMultiplier() : 1f;
+                return (metaPower * runDamageMultiplier) + temporaryDamageBonus;
+            }
+        }
+
+        public float GlobalCooldownMultiplier
+        {
+            get
+            {
+                float metaHaste = (MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetHasteMultiplier() : 1f;
+                return Mathf.Max(0.05f, (runCooldownMultiplier * temporaryCooldownMultiplier) / metaHaste);
+            }
+        }
+
+        public float RunDamageMultiplier => runDamageMultiplier;
+        public float RunCooldownMultiplier => runCooldownMultiplier;
         public float GlobalRangeMultiplier => globalRangeMultiplier;
         public float GlobalProjectileSpeedMultiplier => globalProjectileSpeedMultiplier;
         public int GlobalBonusProjectiles => globalBonusProjectiles;
@@ -48,8 +68,10 @@ namespace CursedHarvest
             }
         }
 
-        public void SetDamageMultiplier(float mult) => globalDamageMultiplier = Mathf.Max(0.1f, mult);
-        public void SetCooldownMultiplier(float mult) => globalCooldownMultiplier = Mathf.Max(0.2f, mult);
+        public void SetDamageMultiplier(float mult) => runDamageMultiplier = Mathf.Max(0.1f, mult);
+        public void SetTemporaryDamageBonus(float bonus) => temporaryDamageBonus = bonus;
+        public void SetCooldownMultiplier(float mult) => runCooldownMultiplier = Mathf.Max(0.1f, mult);
+        public void SetTemporaryCooldownMultiplier(float mult) => temporaryCooldownMultiplier = Mathf.Max(0.1f, mult);
         public void SetRangeMultiplier(float mult) => globalRangeMultiplier = Mathf.Max(0.2f, mult);
         public void SetProjectileSpeedMultiplier(float mult) => globalProjectileSpeedMultiplier = Mathf.Max(0.2f, mult);
         public void AddBonusProjectiles(int count) => globalBonusProjectiles += count;
@@ -57,8 +79,10 @@ namespace CursedHarvest
 
         public void ResetStats()
         {
-            globalDamageMultiplier = 1f;
-            globalCooldownMultiplier = 1f;
+            runDamageMultiplier = 1f;
+            runCooldownMultiplier = 1f;
+            temporaryDamageBonus = 0f;
+            temporaryCooldownMultiplier = 1f;
             globalRangeMultiplier = 1f;
             globalProjectileSpeedMultiplier = 1f;
             globalBonusProjectiles = 0;

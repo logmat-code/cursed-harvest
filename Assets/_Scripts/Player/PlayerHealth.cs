@@ -7,6 +7,7 @@ namespace CursedHarvest
     public class PlayerHealth : MonoBehaviour, IDamageable
     {
         [Header("Health Settings")]
+        [SerializeField] private float baseMaxHealth = 100f;
         [SerializeField] private float maxHealth = 100f;
         [SerializeField] private float invulnerabilityDuration = 0.60f;
 
@@ -21,6 +22,7 @@ namespace CursedHarvest
         private MaterialPropertyBlock propBlock;
         private Coroutine flashCoroutine;
 
+        public float BaseMaxHealth => baseMaxHealth;
         public float MaxHealth => maxHealth;
         public float CurrentHealth => currentHealth;
         public float HealthPercent => Mathf.Clamp01(currentHealth / maxHealth);
@@ -49,18 +51,41 @@ namespace CursedHarvest
 
         private void Awake()
         {
+            if (baseMaxHealth <= 0f) baseMaxHealth = maxHealth > 0f ? maxHealth : 100f;
             invulnerabilityDuration = WorldDifficultyConfig.Current.hitInvulnerability;
             propBlock = new MaterialPropertyBlock();
             if (renderersToFlash == null || renderersToFlash.Length == 0)
             {
                 renderersToFlash = GetComponentsInChildren<Renderer>();
             }
-            ResetHealth();
+            ApplyMetaVitality();
+        }
+
+        private void Start()
+        {
+            ApplyMetaVitality();
+        }
+
+        public void ApplyMetaVitality()
+        {
+            if (baseMaxHealth <= 0f) baseMaxHealth = 100f;
+            float metaVit = (MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetVitalityBonus() : 0f;
+            float targetMax = baseMaxHealth + metaVit;
+            if (Mathf.Abs(maxHealth - targetMax) > 0.001f || currentHealth > targetMax)
+            {
+                SetMaxHealth(targetMax, healDifference: true);
+            }
+            if (currentHealth <= 0f && !isDead)
+            {
+                currentHealth = maxHealth;
+                OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            }
         }
 
         public void ResetHealth()
         {
             isDead = false;
+            ApplyMetaVitality();
             currentHealth = maxHealth;
             lastDamageTime = -10f;
             OnHealthChanged?.Invoke(currentHealth, maxHealth);

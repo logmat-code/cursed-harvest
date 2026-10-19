@@ -33,6 +33,7 @@ namespace CursedHarvest
         public bool IsActive => isLuckyLastActive;
         public float RemainingTime => activeTimer;
         public float Duration => duration;
+        public float TotalDuration => duration + ((MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetLuckyLastDurationBonus() : 0f);
         public void SetDuration(float newDuration) => duration = Mathf.Max(1.0f, newDuration);
 
         public static bool IsAnyActive { get; private set; }
@@ -78,6 +79,15 @@ namespace CursedHarvest
             if (activeAuraInstance != null)
             {
                 activeAuraInstance.SetActive(false);
+            }
+            if (Weapons != null)
+            {
+                Weapons.SetTemporaryDamageBonus(0f);
+                Weapons.SetTemporaryCooldownMultiplier(1f);
+            }
+            if (Controller != null)
+            {
+                Controller.SetTemporarySpeedBonus(0f);
             }
             if (Health != null)
             {
@@ -129,25 +139,28 @@ namespace CursedHarvest
         {
             isLuckyLastActive = true;
             IsAnyActive = true;
-            activeTimer = duration;
+            float metaDur = (MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetLuckyLastDurationBonus() : 0f;
+            float totalDuration = duration + metaDur;
+            activeTimer = totalDuration;
 
-            // World 1 assist: Restore immediately up to minimum 15 HP (max(current, 15))
+            // World 1 assist + Meta recovery HP
             if (Health != null)
             {
-                float minHp = WorldDifficultyConfig.Current.luckyLastMinimumHP;
+                float extraRecoveryHP = (MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetLuckyLastRecoveryHPBonus() : 0f;
+                float minHp = WorldDifficultyConfig.Current.luckyLastMinimumHP + extraRecoveryHP;
                 Health.SetCurrentHealth(Mathf.Max(postHitHp, minHp));
             }
 
-            // Apply buffs
+            // Apply buffs cleanly via temporary setters
             if (Weapons != null)
             {
-                Weapons.SetDamageMultiplier(Weapons.GlobalDamageMultiplier + damageBonus);
-                Weapons.SetCooldownMultiplier(Weapons.GlobalCooldownMultiplier * cooldownReduction);
+                Weapons.SetTemporaryDamageBonus(damageBonus);
+                Weapons.SetTemporaryCooldownMultiplier(cooldownReduction);
             }
 
             if (Controller != null)
             {
-                Controller.SetSpeedMultiplier(Controller.MoveSpeed / 6.8f + speedBonus);
+                Controller.SetTemporarySpeedBonus(speedBonus);
             }
 
             // Screen shake & UI
@@ -167,7 +180,7 @@ namespace CursedHarvest
                 activeAuraInstance.SetActive(true);
             }
 
-            OnLuckyLastActivated?.Invoke(duration);
+            OnLuckyLastActivated?.Invoke(totalDuration);
             StartCoroutine(LuckyLastRoutine());
         }
 
@@ -184,16 +197,16 @@ namespace CursedHarvest
             IsAnyActive = false;
             activeTimer = 0f;
 
-            // Revert buffs
-            if (weaponManager != null)
+            // Revert buffs cleanly
+            if (Weapons != null)
             {
-                weaponManager.SetDamageMultiplier(Mathf.Max(1f, weaponManager.GlobalDamageMultiplier - damageBonus));
-                weaponManager.SetCooldownMultiplier(weaponManager.GlobalCooldownMultiplier / cooldownReduction);
+                Weapons.SetTemporaryDamageBonus(0f);
+                Weapons.SetTemporaryCooldownMultiplier(1f);
             }
 
-            if (playerController != null)
+            if (Controller != null)
             {
-                playerController.SetSpeedMultiplier(Mathf.Max(1f, playerController.MoveSpeed / 6.8f - speedBonus));
+                Controller.SetTemporarySpeedBonus(0f);
             }
 
             if (activeAuraInstance != null)

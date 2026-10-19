@@ -38,7 +38,7 @@ namespace CursedHarvest
             switch (branch)
             {
                 case MetaUpgradeBranch.Vitality:
-                    return $"+{rank * 10} Maximum Health";
+                    return $"+{rank * 7} Maximum Health";
                 case MetaUpgradeBranch.Power:
                     return $"+{rank * 8}% All Weapon Damage";
                 case MetaUpgradeBranch.Haste:
@@ -46,13 +46,16 @@ namespace CursedHarvest
                 case MetaUpgradeBranch.Agility:
                     return $"+{rank * 6}% Movement Speed";
                 case MetaUpgradeBranch.Fortune:
-                    return $"+{rank * 15}% Essence Gain & Drop Luck";
+                    return $"+{rank * 15}% Essence & +{rank * 3}% Lucky Harvest";
                 case MetaUpgradeBranch.Survival:
-                    return $"+{(rank * 0.5f):F1} HP/sec Passive Regeneration";
+                    float healPct = rank switch { 1 => 5f, 2 => 10f, 3 => 17f, 4 => 25f, 5 => 35f, _ => 0f };
+                    return $"+{healPct:0}% Heal & +{(rank * 0.5f):F1} HP/s Regen";
                 case MetaUpgradeBranch.LuckyLast:
-                    return $"+{(rank * 1.5f):F1}s Lucky Last Invulnerability";
+                    float dur = rank switch { 1 => 1f, 2 => 1f, 3 => 2f, 4 => 2f, 5 => 4f, _ => 0f };
+                    float extraHp = rank switch { 2 => 3f, 3 => 3f, 4 => 8f, 5 => 8f, _ => 0f };
+                    return extraHp > 0 ? $"+{dur:0}s Duration & +{extraHp:0} Recovery HP" : $"+{dur:0}s Lucky Last Duration";
                 case MetaUpgradeBranch.HarvestMastery:
-                    return $"+{rank * 10}% Faster Harvest Channeling";
+                    return $"-{rank * 4}% Channel Time ({(1f - rank * 0.04f):0.00}x duration)";
                 default:
                     return "";
             }
@@ -75,6 +78,10 @@ namespace CursedHarvest
                         _instance = go.AddComponent<MetaProgressionManager>();
                         if (Application.isPlaying) DontDestroyOnLoad(go);
                     }
+                }
+                if (_instance != null)
+                {
+                    _instance.EnsureInitialized();
                 }
                 return _instance;
             }
@@ -139,14 +146,14 @@ namespace CursedHarvest
         private void InitializeDefinitions()
         {
             branchDefs.Clear();
-            AddDef(MetaUpgradeBranch.Vitality, "Vitality", "+10 Max Health per rank", "♥");
-            AddDef(MetaUpgradeBranch.Power, "Power", "+8% Weapon Damage per rank", "⚔");
-            AddDef(MetaUpgradeBranch.Haste, "Haste", "+7% Attack Speed per rank", "⚡");
-            AddDef(MetaUpgradeBranch.Agility, "Agility", "+6% Movement Speed per rank", "👟");
-            AddDef(MetaUpgradeBranch.Fortune, "Fortune", "+15% Essence Gain & Drop Luck", "✦");
-            AddDef(MetaUpgradeBranch.Survival, "Survival", "+0.5 HP/s Passive Health Regen", "✚");
-            AddDef(MetaUpgradeBranch.LuckyLast, "Lucky Last", "+1.5s Lucky Last Duration", "★");
-            AddDef(MetaUpgradeBranch.HarvestMastery, "Harvest", "+10% Harvest Channel Speed", "🌾");
+            AddDef(MetaUpgradeBranch.Vitality, "Vitality", "+7 Max Health per rank (+35 max)", "♥");
+            AddDef(MetaUpgradeBranch.Power, "Power", "+8% Weapon Damage per rank (+40% max)", "⚔");
+            AddDef(MetaUpgradeBranch.Haste, "Haste", "+7% Attack Speed per rank (+35% max)", "⚡");
+            AddDef(MetaUpgradeBranch.Agility, "Agility", "+6% Movement Speed per rank (+30% max)", "👟");
+            AddDef(MetaUpgradeBranch.Fortune, "Fortune", "+15% Essence & +3% Lucky Harvest per rank", "✦");
+            AddDef(MetaUpgradeBranch.Survival, "Survival", "+5..35% Heal & +0.5 HP/s Regen per rank", "✚");
+            AddDef(MetaUpgradeBranch.LuckyLast, "Lucky Last", "+1..4s Duration & +3..8 Recovery HP", "★");
+            AddDef(MetaUpgradeBranch.HarvestMastery, "Harvest", "-4% Channel Time per rank (0.80x max)", "🌾");
         }
 
         private void AddDef(MetaUpgradeBranch branch, string name, string descFormat, string glyph)
@@ -162,14 +169,27 @@ namespace CursedHarvest
             };
         }
 
+        public void EnsureInitialized()
+        {
+            if (branchDefs == null || branchDefs.Count == 0)
+            {
+                InitializeDefinitions();
+            }
+            if (branchRanks == null || branchRanks.Count == 0)
+            {
+                LoadProgression();
+            }
+        }
+
         public MetaUpgradeDef GetDef(MetaUpgradeBranch branch)
         {
-            if (branchDefs.Count == 0) InitializeDefinitions();
+            EnsureInitialized();
             return branchDefs.TryGetValue(branch, out var def) ? def : null;
         }
 
         public int GetRank(MetaUpgradeBranch branch)
         {
+            EnsureInitialized();
             return branchRanks.TryGetValue(branch, out int rank) ? rank : 0;
         }
 
@@ -181,7 +201,8 @@ namespace CursedHarvest
             branchRanks.Clear();
             foreach (MetaUpgradeBranch branch in Enum.GetValues(typeof(MetaUpgradeBranch)))
             {
-                int r = PlayerPrefs.GetInt($"CH_MetaUpgrade_{branch}", 0);
+                int r = PlayerPrefs.GetInt($"CH_Meta_{branch}", -1);
+                if (r < 0) r = PlayerPrefs.GetInt($"CH_MetaUpgrade_{branch}", 0);
                 branchRanks[branch] = Mathf.Clamp(r, 0, 5);
             }
         }
@@ -192,9 +213,24 @@ namespace CursedHarvest
             PlayerPrefs.SetInt(PrefsEssenceKey, harvestEssence);
             foreach (var kvp in branchRanks)
             {
-                PlayerPrefs.SetInt($"CH_MetaUpgrade_{kvp.Key}", kvp.Value);
+                int clamped = Mathf.Clamp(kvp.Value, 0, 5);
+                PlayerPrefs.SetInt($"CH_Meta_{kvp.Key}", clamped);
+                PlayerPrefs.SetInt($"CH_MetaUpgrade_{kvp.Key}", clamped);
             }
             PlayerPrefs.Save();
+        }
+
+        public void SetAllMaxRank()
+        {
+            foreach (MetaUpgradeBranch branch in Enum.GetValues(typeof(MetaUpgradeBranch)))
+            {
+                branchRanks[branch] = 5;
+            }
+            SaveProgression();
+            foreach (MetaUpgradeBranch branch in Enum.GetValues(typeof(MetaUpgradeBranch)))
+            {
+                OnUpgradePurchased?.Invoke(branch, 5);
+            }
         }
 
         public void ResetAllProgression()
@@ -329,82 +365,141 @@ namespace CursedHarvest
             AddEssence(clearBonus, true);
         }
 
+        // ==================== UNIFIED META STAT API ====================
+
+        public float GetVitalityBonus()
+        {
+            return GetRank(MetaUpgradeBranch.Vitality) * 7f; // Lv1..5: +7, +14, +21, +28, +35 Max HP
+        }
+
+        public float GetPowerMultiplier()
+        {
+            return 1f + (GetRank(MetaUpgradeBranch.Power) * 0.08f); // Lv1..5: 1.08x, 1.16x, 1.24x, 1.32x, 1.40x All Damage
+        }
+
+        public float GetHasteMultiplier()
+        {
+            return 1f + (GetRank(MetaUpgradeBranch.Haste) * 0.07f); // Lv1..5: 1.07x, 1.14x, 1.21x, 1.28x, 1.35x Fire Rate
+        }
+
+        public float GetAgilityMultiplier()
+        {
+            return 1f + (GetRank(MetaUpgradeBranch.Agility) * 0.06f); // Lv1..5: 1.06x, 1.12x, 1.18x, 1.24x, 1.30x Move Speed
+        }
+
+        public float GetFortuneBonus()
+        {
+            return GetRank(MetaUpgradeBranch.Fortune) * 0.03f; // Lv1..5: +3%, +6%, +9%, +12%, +15% Lucky Harvest gamble boost
+        }
+
+        public float GetFortuneEssenceMultiplier()
+        {
+            return 1f + (GetRank(MetaUpgradeBranch.Fortune) * 0.15f); // Lv1..5: +15%..+75% Essence gain
+        }
+
+        public float GetSurvivalHealMultiplier()
+        {
+            int r = GetRank(MetaUpgradeBranch.Survival);
+            return r switch
+            {
+                1 => 1.05f,
+                2 => 1.10f,
+                3 => 1.17f,
+                4 => 1.25f,
+                5 => 1.35f,
+                _ => 1.00f
+            };
+        }
+
+        public float GetSurvivalRegenRate()
+        {
+            return GetRank(MetaUpgradeBranch.Survival) * 0.5f; // Lv1..5: 0.5, 1.0, 1.5, 2.0, 2.5 HP/s Passive Regen
+        }
+
+        public float GetSurvivalBonus()
+        {
+            return GetSurvivalHealMultiplier() - 1f;
+        }
+
+        public float GetLuckyLastDurationBonus()
+        {
+            int r = GetRank(MetaUpgradeBranch.LuckyLast);
+            return r switch
+            {
+                1 => 1.0f,
+                2 => 1.0f,
+                3 => 2.0f,
+                4 => 2.0f,
+                5 => 4.0f,
+                _ => 0f
+            }; // Base 12s -> 13s, 13s, 14s, 14s, 16s
+        }
+
+        public float GetLuckyLastRecoveryHPBonus()
+        {
+            int r = GetRank(MetaUpgradeBranch.LuckyLast);
+            return r switch
+            {
+                2 => 3f,
+                3 => 3f,
+                4 => 8f,
+                5 => 8f,
+                _ => 0f
+            }; // Starting recovery HP bonus (+3 HP at Lv2-3, +8 HP at Lv4-5)
+        }
+
+        public float GetLuckyLastBonus()
+        {
+            return GetLuckyLastDurationBonus();
+        }
+
+        public float GetHarvestChannelMultiplier()
+        {
+            int r = GetRank(MetaUpgradeBranch.HarvestMastery);
+            return Mathf.Clamp(1.0f - (r * 0.04f), 0.80f, 1.00f); // Lv0..5: 1.00, 0.96, 0.92, 0.88, 0.84, 0.80
+        }
+
+        public float GetHarvestBonus()
+        {
+            return 1.0f - GetHarvestChannelMultiplier();
+        }
+
+        public float GetHarvestSpeedMultiplier()
+        {
+            float mult = GetHarvestChannelMultiplier();
+            return mult > 0.01f ? (1f / mult) : 1f;
+        }
+
         // ==================== STAT BONUSES APPLICATION ====================
 
         public void ApplyPermanentUpgrades(GameObject player)
         {
             if (player == null) return;
 
-            // 1. Vitality: Base Max Health (+10 HP per rank)
-            int vitRank = GetRank(MetaUpgradeBranch.Vitality);
-            if (vitRank > 0)
+            // 1. Vitality: Apply directly to PlayerHealth component
+            PlayerHealth ph = player.GetComponent<PlayerHealth>();
+            if (ph != null)
             {
-                PlayerHealth ph = player.GetComponent<PlayerHealth>();
-                if (ph != null)
-                {
-                    ph.SetMaxHealth(100f + (vitRank * 10f), true);
-                }
+                ph.ApplyMetaVitality();
             }
 
-            // 2. Agility: Movement Speed (+6% per rank)
-            int agiRank = GetRank(MetaUpgradeBranch.Agility);
-            if (agiRank > 0)
-            {
-                PlayerController pc = player.GetComponent<PlayerController>();
-                if (pc != null)
-                {
-                    float speedMult = 1f + (agiRank * 0.06f);
-                    pc.SetSpeedMultiplier(speedMult);
-                }
-            }
-
-            // 3. Power & Haste: Damage & Attack Speed (+8% dmg, +7% atk speed per rank)
-            int powRank = GetRank(MetaUpgradeBranch.Power);
-            int hasteRank = GetRank(MetaUpgradeBranch.Haste);
-            if (powRank > 0 || hasteRank > 0)
-            {
-                WeaponManager wm = player.GetComponent<WeaponManager>();
-                if (wm != null)
-                {
-                    if (powRank > 0)
-                    {
-                        wm.SetDamageMultiplier(1f + (powRank * 0.08f));
-                    }
-                    if (hasteRank > 0)
-                    {
-                        float cdMult = 1f / (1f + (hasteRank * 0.07f));
-                        wm.SetCooldownMultiplier(cdMult);
-                    }
-                }
-            }
-
-            // 4. Survival: Passive Health Regeneration (+0.5 HP/sec per rank)
+            // 2. Survival: Attach/configure PlayerRegenComponent
             int surRank = GetRank(MetaUpgradeBranch.Survival);
+            PlayerRegenComponent regen = player.GetComponent<PlayerRegenComponent>();
             if (surRank > 0)
             {
-                PlayerRegenComponent regen = player.GetComponent<PlayerRegenComponent>();
                 if (regen == null) regen = player.AddComponent<PlayerRegenComponent>();
-                regen.SetRegenRate(surRank * 0.5f);
+                regen.SetRegenRate(GetSurvivalRegenRate());
             }
-
-            // 5. Lucky Last: Extended duration (+1.5s per rank)
-            int llRank = GetRank(MetaUpgradeBranch.LuckyLast);
-            if (llRank > 0)
+            else if (regen != null)
             {
-                LuckyLastSystem lls = player.GetComponent<LuckyLastSystem>();
-                if (lls != null)
-                {
-                    lls.SetDuration(12.0f + (llRank * 1.5f));
-                }
+                regen.SetRegenRate(0f);
             }
 
-            // 6. Harvest Mastery: Applied via static getter in HarvestPlot
-        }
-
-        public float GetHarvestSpeedMultiplier()
-        {
-            int rank = GetRank(MetaUpgradeBranch.HarvestMastery);
-            return 1f + (rank * 0.10f);
+            // Note: Power, Haste, Agility, Fortune, Lucky Last, and Harvest Mastery
+            // are dynamically queried by their authoritative systems (PlayerController,
+            // WeaponManager, LuckyLastSystem, HarvestPlot, HealthRestorePickup) via the unified Meta Stat API,
+            // strictly following: BASE STAT -> WORLD CONFIG -> META UPGRADE -> RUN UPGRADE -> TEMPORARY BUFF.
         }
     }
 

@@ -208,11 +208,9 @@ namespace CursedHarvest
 
         public float GetEffectiveHealAmount()
         {
-            if (LuckyLastSystem.IsAnyActive)
-            {
-                return WorldDifficultyConfig.Current.luckyLastHealAmount;
-            }
-            return healAmount;
+            float baseHeal = LuckyLastSystem.IsAnyActive ? WorldDifficultyConfig.Current.luckyLastHealAmount : healAmount;
+            float survivalMult = (MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetSurvivalHealMultiplier() : 1f;
+            return baseHeal * survivalMult;
         }
 
         private void TryCollect(bool isVacuum = false)

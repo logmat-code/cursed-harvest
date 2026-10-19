@@ -1105,7 +1105,7 @@ namespace CursedHarvest
                     else if (rank < 5)
                         card.descText.text = def.GetDescriptionForRank(rank) + $"\nNext: {def.GetDescriptionForRank(rank + 1)}";
                     else
-                        card.descText.text = def.GetDescriptionForRank(rank) + " [MAX CONSECRATED]";
+                        card.descText.text = def.GetDescriptionForRank(rank) + " [MAX LEVEL]";
                 }
 
                 if (card.upgradeButton != null && card.buttonText != null)
@@ -1113,7 +1113,7 @@ namespace CursedHarvest
                     if (rank >= 5)
                     {
                         card.upgradeButton.interactable = false;
-                        card.buttonText.text = "MAX CONSECRATED";
+                        card.buttonText.text = "MAX LEVEL";
                         card.buttonText.color = new Color(0.6f, 0.6f, 0.6f);
                     }
                     else

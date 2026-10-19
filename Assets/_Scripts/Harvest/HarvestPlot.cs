@@ -63,7 +63,7 @@ namespace CursedHarvest
 
         public PlotState State => currentState;
         public float BaseLuckyChance => baseLuckyChance;
-        public float EffectiveGrowDuration => (MetaProgressionManager.Instance != null) ? growDuration / MetaProgressionManager.Instance.GetHarvestSpeedMultiplier() : growDuration;
+        public float EffectiveGrowDuration => (MetaProgressionManager.Instance != null) ? growDuration * MetaProgressionManager.Instance.GetHarvestChannelMultiplier() : growDuration;
         public float GrowProgress => EffectiveGrowDuration > 0f ? Mathf.Clamp01(growTimer / EffectiveGrowDuration) : 0f;
         public bool IsHarvestPaused => isHarvestPaused;
         public float HarvestGraceTimer => harvestGraceTimer;
@@ -332,7 +332,7 @@ namespace CursedHarvest
                     promptTextMesh.color = new Color(1f, 0.85f, 0.25f);
                     break;
                 case PlotState.Growing:
-                    float progress = Mathf.Clamp01(growTimer / growDuration);
+                    float progress = Mathf.Clamp01(growTimer / EffectiveGrowDuration);
                     string bar = GenerateProgressBar(progress, 8);
                     if (isHarvestPaused)
                     {
@@ -592,13 +592,18 @@ namespace CursedHarvest
                 luckyChance += upgradeManager.BetterHarvestBonus;
             }
 
+            if (MetaProgressionManager.Instance != null)
+            {
+                luckyChance += MetaProgressionManager.Instance.GetFortuneBonus();
+            }
+
             if (playerHealth != null && playerHealth.HealthPercent <= 0.25f)
             {
                 float desperationBonus = (0.25f - playerHealth.HealthPercent) * 0.60f;
                 luckyChance += desperationBonus;
             }
 
-            return Mathf.Clamp(luckyChance, 0.10f, 0.95f);
+            return Mathf.Clamp(luckyChance, 0.10f, 0.85f);
         }
 
         public HarvestResult ResolveHarvest(float forcedRoll = -1f)

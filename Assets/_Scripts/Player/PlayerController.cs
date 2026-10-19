@@ -22,14 +22,23 @@ namespace CursedHarvest
 
         private Vector3 moveInput;
         private float verticalVelocity;
-        private float speedMultiplier = 1f;
+        private float runSpeedMultiplier = 1f;
+        private float temporarySpeedBonus = 0f;
         private float walkCycleTimer;
         private Vector3 visualOriginalPos;
         private Quaternion visualOriginalRot;
         private float aimLockTimer;
 
         public Vector3 MoveInputVector => moveInput;
-        public float MoveSpeed => baseMoveSpeed * speedMultiplier;
+        public float MoveSpeed
+        {
+            get
+            {
+                float metaAgi = (MetaProgressionManager.Instance != null) ? MetaProgressionManager.Instance.GetAgilityMultiplier() : 1f;
+                return (baseMoveSpeed * metaAgi * runSpeedMultiplier) + (temporarySpeedBonus * baseMoveSpeed);
+            }
+        }
+        public float SpeedMultiplier => runSpeedMultiplier;
         public bool IsMoving => moveInput.sqrMagnitude > 0.01f;
 
         private void Awake()
@@ -60,7 +69,12 @@ namespace CursedHarvest
 
         public void SetSpeedMultiplier(float multiplier)
         {
-            speedMultiplier = Mathf.Max(0.1f, multiplier);
+            runSpeedMultiplier = Mathf.Max(0.1f, multiplier);
+        }
+
+        public void SetTemporarySpeedBonus(float bonus)
+        {
+            temporarySpeedBonus = bonus;
         }
 
         public void ApplyCustomMovement(Vector3 delta)
