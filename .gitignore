@@ -44,4 +44,5 @@ Assets/POLYGON*_SourceFiles*
 *.log
 wave_verify_log.txt
 world2_qa_log.txt
+icon_render_log.txt
 *.marker
