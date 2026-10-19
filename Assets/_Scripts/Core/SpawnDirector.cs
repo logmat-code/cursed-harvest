@@ -31,6 +31,8 @@ namespace CursedHarvest
         [SerializeField] private GameObject bossPrefab;
         [SerializeField] private GameObject ashenReaperBossPrefab;
         [SerializeField] private GameObject mireMotherBossPrefab;
+        [SerializeField] private GameObject timberGoliathBossPrefab;
+        [SerializeField] private GameObject bloodwoodSovereignBossPrefab;
         [SerializeField] private GameObject healthPickupPrefab;
 
         [Header("Spawn Boundaries")]
@@ -159,6 +161,10 @@ namespace CursedHarvest
         public GameObject AshenReaperBossPrefab => ashenReaperBossPrefab;
         public void SetMireMotherBossPrefab(GameObject prefab) => mireMotherBossPrefab = prefab;
         public GameObject MireMotherBossPrefab => mireMotherBossPrefab;
+        public void SetTimberGoliathBossPrefab(GameObject prefab) => timberGoliathBossPrefab = prefab;
+        public GameObject TimberGoliathBossPrefab => timberGoliathBossPrefab;
+        public void SetBloodwoodSovereignBossPrefab(GameObject prefab) => bloodwoodSovereignBossPrefab = prefab;
+        public GameObject BloodwoodSovereignBossPrefab => bloodwoodSovereignBossPrefab;
         public void SetElitePrefabs(GameObject scarecrow, GameObject brute)
         {
             scarecrowPrefab = scarecrow;
@@ -255,6 +261,38 @@ namespace CursedHarvest
                     if (loaded != null) prefabToSpawn = loaded;
                 }
 #endif
+            }
+            else if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 4)
+            {
+                if (bossEnc != null && bossEnc.waveNumber == 10)
+                {
+                    if (timberGoliathBossPrefab != null) prefabToSpawn = timberGoliathBossPrefab;
+#if UNITY_EDITOR
+                    else
+                    {
+                        GameObject loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_TimberGoliath.prefab");
+                        if (loaded != null) prefabToSpawn = loaded;
+                    }
+#endif
+                }
+                else if (bossEnc != null && bossEnc.waveNumber == 15)
+                {
+                    if (bloodwoodSovereignBossPrefab != null) prefabToSpawn = bloodwoodSovereignBossPrefab;
+#if UNITY_EDITOR
+                    else
+                    {
+                        GameObject loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_BloodwoodSovereign.prefab");
+                        if (loaded != null) prefabToSpawn = loaded;
+                    }
+#endif
+                }
+                else if (bossEnc != null && !string.IsNullOrEmpty(bossEnc.bossPrefabPath))
+                {
+#if UNITY_EDITOR
+                    GameObject encPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(bossEnc.bossPrefabPath);
+                    if (encPrefab != null) prefabToSpawn = encPrefab;
+#endif
+                }
             }
             else if (bossEnc != null && !string.IsNullOrEmpty(bossEnc.bossPrefabPath))
             {
@@ -716,6 +754,10 @@ namespace CursedHarvest
                 {
                     ApplyMireVisualVariant(enemyObj);
                 }
+                else if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 4)
+                {
+                    ApplyTimberVisualVariant(enemyObj);
+                }
 
                 spawnedThisWave++;
             }
@@ -840,6 +882,27 @@ namespace CursedHarvest
             }
         }
 
+        private static MaterialPropertyBlock _timberPropBlock;
+        private static readonly Color TimberSootColor = new Color(0.42f, 0.28f, 0.22f);
+
+        private void ApplyTimberVisualVariant(GameObject enemyObj)
+        {
+            if (enemyObj == null) return;
+            if (_timberPropBlock == null) _timberPropBlock = new MaterialPropertyBlock();
+
+            Renderer[] renderers = enemyObj.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] is MeshRenderer || renderers[i] is SkinnedMeshRenderer)
+                {
+                    renderers[i].GetPropertyBlock(_timberPropBlock);
+                    _timberPropBlock.SetColor("_BaseColor", TimberSootColor);
+                    _timberPropBlock.SetColor("_Color", TimberSootColor);
+                    renderers[i].SetPropertyBlock(_timberPropBlock);
+                }
+            }
+        }
+
         private ObjectPool SelectPoolForCurrentWave()
         {
             if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 2)
@@ -849,6 +912,10 @@ namespace CursedHarvest
             if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 3)
             {
                 return SelectPoolForWorld3();
+            }
+            if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 4)
+            {
+                return SelectPoolForWorld4();
             }
 
             if (isEndlessMode || currentWave > 10)
@@ -1003,6 +1070,68 @@ namespace CursedHarvest
                 if (farmerPool != null && roll < 0.80f) return farmerPool;
                 if (chaserPool != null && roll < 0.95f) return chaserPool;
                 return gruntPool;
+            }
+        }
+
+        private ObjectPool SelectPoolForWorld4()
+        {
+            if (isEndlessMode || currentWave > 15)
+            {
+                ObjectPool[] all = new ObjectPool[] { gruntPool, chaserPool, plaguePool, chargerPool, farmerPool };
+                List<ObjectPool> valid = new List<ObjectPool>();
+                for (int i = 0; i < all.Length; i++) if (all[i] != null) valid.Add(all[i]);
+                return valid.Count > 0 ? valid[UnityEngine.Random.Range(0, valid.Count)] : gruntPool;
+            }
+
+            if (currentWave <= 2)
+            {
+                // Waves 1-2: Grunts and fast Chasers
+                if (chaserPool != null && UnityEngine.Random.value < 0.45f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave <= 4)
+            {
+                // Waves 3-4: Chargers arrive early with Chasers
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.30f) return chargerPool;
+                if (chaserPool != null && roll < 0.65f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave <= 7)
+            {
+                // Waves 5-7: Farmers (axe throwers) and Chargers dominate
+                float roll = UnityEngine.Random.value;
+                if (farmerPool != null && roll < 0.35f) return farmerPool;
+                if (chargerPool != null && roll < 0.65f) return chargerPool;
+                if (chaserPool != null && roll < 0.85f) return chaserPool;
+                return gruntPool;
+            }
+            else if (currentWave <= 9)
+            {
+                // Waves 8-9: Pre-Mid-Boss grueling wave
+                float roll = UnityEngine.Random.value;
+                if (farmerPool != null && roll < 0.30f) return farmerPool;
+                if (chargerPool != null && roll < 0.55f) return chargerPool;
+                if (plaguePool != null && roll < 0.80f) return plaguePool;
+                return chaserPool != null ? chaserPool : gruntPool;
+            }
+            else if (currentWave <= 12)
+            {
+                // Waves 11-12: Post-Mid-Boss high pressure
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.35f) return chargerPool;
+                if (farmerPool != null && roll < 0.65f) return farmerPool;
+                if (chaserPool != null && roll < 0.85f) return chaserPool;
+                return plaguePool != null ? plaguePool : gruntPool;
+            }
+            else
+            {
+                // Waves 13-14: Apex timber horde
+                float roll = UnityEngine.Random.value;
+                if (chargerPool != null && roll < 0.30f) return chargerPool;
+                if (farmerPool != null && roll < 0.60f) return farmerPool;
+                if (plaguePool != null && roll < 0.80f) return plaguePool;
+                return chaserPool != null ? chaserPool : gruntPool;
             }
         }
 

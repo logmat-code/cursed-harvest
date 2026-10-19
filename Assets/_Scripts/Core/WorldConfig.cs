@@ -368,7 +368,7 @@ namespace CursedHarvest
                     {
                         waveNumber = 10,
                         isFinalBoss = false, // Mid-Boss: does not complete the world!
-                        bossName = "TIMBER GOLIATH [MID-BOSS D1]",
+                        bossName = "TIMBER GOLIATH",
                         bossTitle = "Crusher of the Ancient Pines",
                         bossAddCount = 20,
                         bossGruntQuota = 6,
@@ -379,13 +379,14 @@ namespace CursedHarvest
                         bossMaxConcurrentAdds = 8,
                         bossAddSpawnInterval = 1.9f,
                         bossScale = 1.15f,
-                        bossHealthMultiplier = 1.25f
+                        bossHealthMultiplier = 1.25f,
+                        bossPrefabPath = "Assets/_Prefabs/Boss_TimberGoliath.prefab"
                     },
                     new BossEncounterConfig
                     {
                         waveNumber = 15,
                         isFinalBoss = true, // Final Boss of World 4: completes the world!
-                        bossName = "BLOODWOOD SOVEREIGN [BOSS D2]",
+                        bossName = "BLOODWOOD SOVEREIGN",
                         bossTitle = "Monarch of the Bleeding Bark",
                         bossAddCount = 24,
                         bossGruntQuota = 6,
@@ -396,11 +397,12 @@ namespace CursedHarvest
                         bossMaxConcurrentAdds = 9,
                         bossAddSpawnInterval = 1.7f,
                         bossScale = 1.20f,
-                        bossHealthMultiplier = 1.45f
+                        bossHealthMultiplier = 1.45f,
+                        bossPrefabPath = "Assets/_Prefabs/Boss_BloodwoodSovereign.prefab"
                     }
                 },
                 themeColor = new Color(0.85f, 0.25f, 0.25f),
-                environmentIdentifier = "Env_World4_Timber_Pending",
+                environmentIdentifier = "Env_World4_Timber",
                 musicIdentifier = "Music_World4_Bloodwood"
             };
         }

@@ -16,11 +16,13 @@ namespace CursedHarvest
         [SerializeField] private GameObject environmentW1;
         [SerializeField] private GameObject environmentW2;
         [SerializeField] private GameObject environmentW3;
+        [SerializeField] private GameObject environmentW4;
 
         [Header("Lighting & Atmosphere")]
         [SerializeField] private Light directionalMoonlight;
         [SerializeField] private ParticleSystem ashParticleSystem;
         [SerializeField] private ParticleSystem mireParticleSystem;
+        [SerializeField] private ParticleSystem timberParticleSystem;
 
         [Header("World 1 Visual Profile (The Cursed Farm)")]
         [SerializeField] private Color w1FogColor = new Color(0.06f, 0.08f, 0.12f);
@@ -40,13 +42,21 @@ namespace CursedHarvest
         [SerializeField] private Color w3MoonlightColor = new Color(0.48f, 0.58f, 0.52f); // Sickly desaturated green-grey moonlight
         [SerializeField] private float w3MoonlightIntensity = 0.52f;
 
+        [Header("World 4 Visual Profile (The Bloodwood Timber)")]
+        [SerializeField] private Color w4FogColor = new Color(0.16f, 0.08f, 0.08f); // Rich dark bloodwood charcoal
+        [SerializeField] private float w4FogDensity = 0.022f;
+        [SerializeField] private Color w4MoonlightColor = new Color(0.85f, 0.52f, 0.42f); // Blood-amber moonlight
+        [SerializeField] private float w4MoonlightIntensity = 0.58f;
+
         private int activeWorldId = 1;
         public int ActiveWorldId => activeWorldId;
         public GameObject EnvironmentW1 => environmentW1;
         public GameObject EnvironmentW2 => environmentW2;
         public GameObject EnvironmentW3 => environmentW3;
+        public GameObject EnvironmentW4 => environmentW4;
         public ParticleSystem AshParticles => ashParticleSystem;
         public ParticleSystem MireParticles => mireParticleSystem;
+        public ParticleSystem TimberParticles => timberParticleSystem;
 
         private void Awake()
         {
@@ -106,6 +116,17 @@ namespace CursedHarvest
                 }
             }
 
+            if (environmentW4 == null)
+            {
+                Transform w4 = transform.Find("Environment_W4");
+                if (w4 != null) environmentW4 = w4.gameObject;
+                else
+                {
+                    GameObject go = GameObject.Find("Environment_W4");
+                    if (go != null) environmentW4 = go;
+                }
+            }
+
             if (directionalMoonlight == null)
             {
                 Light[] lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
@@ -128,6 +149,11 @@ namespace CursedHarvest
             {
                 mireParticleSystem = environmentW3.GetComponentInChildren<ParticleSystem>(true);
             }
+
+            if (timberParticleSystem == null && environmentW4 != null)
+            {
+                timberParticleSystem = environmentW4.GetComponentInChildren<ParticleSystem>(true);
+            }
         }
 
         public void ApplyEnvironment(int worldId)
@@ -138,12 +164,51 @@ namespace CursedHarvest
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
 
-            if (worldId == 3)
+            if (worldId == 4)
+            {
+                // WORLD 4: THE BLOODWOOD TIMBER
+                if (environmentW1 != null) environmentW1.SetActive(false);
+                if (environmentW2 != null) environmentW2.SetActive(false);
+                if (environmentW3 != null) environmentW3.SetActive(false);
+                if (environmentW4 != null) environmentW4.SetActive(true);
+
+                RenderSettings.fogColor = w4FogColor;
+                RenderSettings.fogDensity = w4FogDensity;
+
+                if (directionalMoonlight != null)
+                {
+                    directionalMoonlight.color = w4MoonlightColor;
+                    directionalMoonlight.intensity = w4MoonlightIntensity;
+                    directionalMoonlight.transform.rotation = Quaternion.Euler(48f, -35f, 0f);
+                }
+
+                if (ashParticleSystem != null)
+                {
+                    ashParticleSystem.Stop();
+                    ashParticleSystem.gameObject.SetActive(false);
+                }
+
+                if (mireParticleSystem != null)
+                {
+                    mireParticleSystem.Stop();
+                    mireParticleSystem.gameObject.SetActive(false);
+                }
+
+                if (timberParticleSystem != null)
+                {
+                    timberParticleSystem.gameObject.SetActive(true);
+                    if (!timberParticleSystem.isPlaying) timberParticleSystem.Play();
+                }
+
+                Debug.Log("[WorldEnvironmentController] Applied WORLD 4 (The Bloodwood Timber) environment profile.");
+            }
+            else if (worldId == 3)
             {
                 // WORLD 3: THE BLACKENED MIRE
                 if (environmentW1 != null) environmentW1.SetActive(false);
                 if (environmentW2 != null) environmentW2.SetActive(false);
                 if (environmentW3 != null) environmentW3.SetActive(true);
+                if (environmentW4 != null) environmentW4.SetActive(false);
 
                 RenderSettings.fogColor = w3FogColor;
                 RenderSettings.fogDensity = w3FogDensity;
@@ -166,6 +231,12 @@ namespace CursedHarvest
                     if (!mireParticleSystem.isPlaying) mireParticleSystem.Play();
                 }
 
+                if (timberParticleSystem != null)
+                {
+                    timberParticleSystem.Stop();
+                    timberParticleSystem.gameObject.SetActive(false);
+                }
+
                 Debug.Log("[WorldEnvironmentController] Applied WORLD 3 (The Blackened Mire) environment profile.");
             }
             else if (worldId == 2)
@@ -174,6 +245,7 @@ namespace CursedHarvest
                 if (environmentW1 != null) environmentW1.SetActive(false);
                 if (environmentW2 != null) environmentW2.SetActive(true);
                 if (environmentW3 != null) environmentW3.SetActive(false);
+                if (environmentW4 != null) environmentW4.SetActive(false);
 
                 RenderSettings.fogColor = w2FogColor;
                 RenderSettings.fogDensity = w2FogDensity;
@@ -196,6 +268,12 @@ namespace CursedHarvest
                     mireParticleSystem.gameObject.SetActive(false);
                 }
 
+                if (timberParticleSystem != null)
+                {
+                    timberParticleSystem.Stop();
+                    timberParticleSystem.gameObject.SetActive(false);
+                }
+
                 Debug.Log("[WorldEnvironmentController] Applied WORLD 2 (The Ashen Orchards) environment profile.");
             }
             else
@@ -204,6 +282,7 @@ namespace CursedHarvest
                 if (environmentW1 != null) environmentW1.SetActive(true);
                 if (environmentW2 != null) environmentW2.SetActive(false);
                 if (environmentW3 != null) environmentW3.SetActive(false);
+                if (environmentW4 != null) environmentW4.SetActive(false);
 
                 RenderSettings.fogColor = w1FogColor;
                 RenderSettings.fogDensity = w1FogDensity;
@@ -226,6 +305,12 @@ namespace CursedHarvest
                     mireParticleSystem.gameObject.SetActive(false);
                 }
 
+                if (timberParticleSystem != null)
+                {
+                    timberParticleSystem.Stop();
+                    timberParticleSystem.gameObject.SetActive(false);
+                }
+
                 Debug.Log("[WorldEnvironmentController] Applied WORLD 1 (The Cursed Farm) environment profile.");
             }
         }
@@ -246,6 +331,18 @@ namespace CursedHarvest
             directionalMoonlight = light;
             ashParticleSystem = ash;
             mireParticleSystem = mire;
+        }
+
+        public void SetEnvironments(GameObject w1, GameObject w2, GameObject w3, GameObject w4, Light light, ParticleSystem ash, ParticleSystem mire = null, ParticleSystem timber = null)
+        {
+            environmentW1 = w1;
+            environmentW2 = w2;
+            environmentW3 = w3;
+            environmentW4 = w4;
+            directionalMoonlight = light;
+            ashParticleSystem = ash;
+            mireParticleSystem = mire;
+            timberParticleSystem = timber;
         }
     }
 }
