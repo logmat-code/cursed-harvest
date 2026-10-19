@@ -21,12 +21,18 @@
 [QA RESULTS] Tests Passed: 6/6
 
 --- CAPTURING WORLD 3 & META PROGRESSION SCREENSHOTS ---
+[SCREENSHOT] World3_After_Rework.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_After_Rework.png
 [SCREENSHOT] World3_ArenaOverview.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_ArenaOverview.png
+[SCREENSHOT] World3_Center.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_Center.png
+[SCREENSHOT] World3_MireRitualBasin.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_MireRitualBasin.png
+[SCREENSHOT] World3_GraveMarsh.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_GraveMarsh.png
 [SCREENSHOT] World3_SunkenGraveMarsh.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_SunkenGraveMarsh.png
+[SCREENSHOT] World3_Shack.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_Shack.png
 [SCREENSHOT] World3_RottenFisherShack.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_RottenFisherShack.png
+[SCREENSHOT] World3_RootGrove.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_RootGrove.png
 [SCREENSHOT] World3_DiseasedRootGrove.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_DiseasedRootGrove.png
 [SCREENSHOT] World3_AbandonedPlagueCamp.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_AbandonedPlagueCamp.png
-[SCREENSHOT] World3_MireRitualBasin.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_MireRitualBasin.png
+[SCREENSHOT] World3_Gameplay_Final.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_Gameplay_Final.png
 [SCREENSHOT] World3_BossIntro.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_BossIntro.png
 [SCREENSHOT] World3_BossCombat_Miasma.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_BossCombat_Miasma.png
 [SCREENSHOT] World3_BossCombat_RootBurst.png saved -> /Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b/World3_BossCombat_RootBurst.png

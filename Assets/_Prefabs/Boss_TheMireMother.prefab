@@ -42,10 +42,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6161622034937621807}
   - component: {fileID: 9174843705160268361}
-  - component: {fileID: 963382273127423939}
-  - component: {fileID: 6856336347528080395}
-  - component: {fileID: 2223962337397463273}
-  - component: {fileID: 1255805046973333723}
+  - component: {fileID: 723330906803520442}
+  - component: {fileID: 7809735951717126920}
+  - component: {fileID: 2572349883542392136}
+  - component: {fileID: 8396861314405274475}
   m_Layer: 7
   m_Name: Boss_TheMireMother
   m_TagString: Enemy
@@ -94,7 +94,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 2.43, z: 0}
---- !u!114 &963382273127423939
+--- !u!114 &723330906803520442
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,7 +118,7 @@ MonoBehaviour:
   renderersToFlash: []
   hitFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   deathEffectPrefab: {fileID: 0}
---- !u!114 &6856336347528080395
+--- !u!114 &7809735951717126920
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,7 +152,7 @@ MonoBehaviour:
   plagueWaveTelegraphDuration: 1
   toxicTelegraphColor: {r: 0.2, g: 0.95, b: 0.35, a: 0.9}
   plagueWaveColor: {r: 0.55, g: 0.95, b: 0.2, a: 0.95}
---- !u!114 &2223962337397463273
+--- !u!114 &2572349883542392136
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -178,7 +178,7 @@ MonoBehaviour:
   breathRate: 2
   breathAmplitude: 0.003
   idleMicroShift: 1
---- !u!114 &1255805046973333723
+--- !u!114 &8396861314405274475
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -99,20 +99,49 @@ namespace CursedHarvest.Editor
         public static Material CreateMireGroundMaterial()
         {
             string path = $"{MaterialsPath}/M_ContinuousBaseGround_W3.mat";
-            Material existing = AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (existing != null) return existing;
+            Material mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+            {
+                Material genericDirt = AssetDatabase.LoadAssetAtPath<Material>("Assets/Synty/PolygonGeneric/Materials/Generic_Dirt.mat");
+                mat = genericDirt != null ? new Material(genericDirt) : new Material(Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard"));
+                mat.name = "M_ContinuousBaseGround_W3";
+                AssetDatabase.CreateAsset(mat, path);
+            }
 
-            Material genericDirt = AssetDatabase.LoadAssetAtPath<Material>("Assets/Synty/PolygonGeneric/Materials/Generic_Dirt.mat");
-            Material mat = genericDirt != null ? new Material(genericDirt) : new Material(Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard"));
-            mat.name = "M_ContinuousBaseGround_W3";
-            mat.SetColor("_BaseColor", new Color(0.14f, 0.17f, 0.13f)); // Stagnant peat mud / bog soil
-            mat.SetColor("_Color", new Color(0.14f, 0.17f, 0.13f));
+            Color peatColor = new Color(0.18f, 0.16f, 0.12f, 1.0f); // Dark rich peat mud / bog soil
+            mat.SetColor("_BaseColor", peatColor);
+            mat.SetColor("_Color", peatColor);
+            if (mat.HasProperty("_Smoothness")) mat.SetFloat("_Smoothness", 0.25f);
             if (mat.HasProperty("_Albedo_Map")) mat.SetTextureScale("_Albedo_Map", new Vector2(16f, 16f));
             if (mat.HasProperty("_Normal_Map")) mat.SetTextureScale("_Normal_Map", new Vector2(16f, 16f));
 
-            AssetDatabase.CreateAsset(mat, path);
+            EditorUtility.SetDirty(mat);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[World3ArenaBuilder] Created {path}");
+            Debug.Log($"[World3ArenaBuilder] Updated {path} with dark peat mud color.");
+            return mat;
+        }
+
+        public static Material CreateSwampWaterMaterial()
+        {
+            string path = $"{MaterialsPath}/M_SwampWater_W3.mat";
+            Material mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+            {
+                Material genericWater = AssetDatabase.LoadAssetAtPath<Material>("Assets/Synty/PolygonGeneric/Materials/Generic_Water.mat");
+                mat = genericWater != null ? new Material(genericWater) : new Material(Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard"));
+                mat.name = "M_SwampWater_W3";
+                AssetDatabase.CreateAsset(mat, path);
+            }
+
+            // Desaturated murky blue-green bog water
+            Color bogWaterColor = new Color(0.14f, 0.28f, 0.24f, 0.88f);
+            mat.SetColor("_BaseColor", bogWaterColor);
+            mat.SetColor("_Color", bogWaterColor);
+            if (mat.HasProperty("_Smoothness")) mat.SetFloat("_Smoothness", 0.85f);
+
+            EditorUtility.SetDirty(mat);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[World3ArenaBuilder] Updated {path} with desaturated blue-green swamp water.");
             return mat;
         }
 
@@ -122,9 +151,7 @@ namespace CursedHarvest.Editor
             GameObject existing = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             if (existing != null)
             {
-                MireMotherBoss existingBoss = existing.GetComponent<MireMotherBoss>();
-                EnemyLocomotion existingLoco = existing.GetComponent<EnemyLocomotion>();
-                if (existingBoss != null && existingLoco != null) return existing;
+                return existing;
             }
 
             GameObject peasantSource = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Characters/SM_Gen_Chr_Peasent_Female_01.prefab");
@@ -208,6 +235,8 @@ namespace CursedHarvest.Editor
                 activeScene = EditorSceneManager.OpenScene(MainGameScenePath, OpenSceneMode.Single);
             }
 
+            Material waterMat = CreateSwampWaterMaterial();
+
             // Find or Create Environment_W3
             GameObject arena = GameObject.Find("Arena");
             GameObject existingW3 = null;
@@ -235,61 +264,34 @@ namespace CursedHarvest.Editor
             }
             envW3.transform.position = Vector3.zero;
 
-            // 1. Ground Continuous Quad (70x70)
-            GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            // ==========================================
+            // 1. BASE GROUND (86m x 86m Continuous Peat Mud Plane)
+            // ==========================================
+            GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "Ground_Continuous_W3";
             ground.transform.SetParent(envW3.transform, false);
-            ground.transform.position = new Vector3(0f, 0.01f, 0f);
-            ground.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            ground.transform.localScale = new Vector3(70f, 70f, 1f);
+            ground.transform.localPosition = new Vector3(0f, -0.01f, 0f);
+            ground.transform.localScale = new Vector3(8.6f, 1f, 8.6f); // 86m x 86m upward-facing plane
 
+            RemoveColliders(ground);
             MeshRenderer gr = ground.GetComponent<MeshRenderer>();
-            if (gr != null && groundMat != null) gr.material = groundMat;
+            if (gr != null && groundMat != null) gr.sharedMaterial = groundMat;
 
-            // 2. Stagnant Water Planes
-            GameObject waterPlanePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Water_Plane_01.prefab");
-            GameObject waterRoot = new GameObject("SwampWaterPlanes");
-            waterRoot.transform.SetParent(envW3.transform, false);
-
-            if (waterPlanePrefab != null)
-            {
-                Vector3[] waterPositions = new Vector3[]
-                {
-                    new Vector3(-15f, 0.06f, -14f), // South-West grave marsh
-                    new Vector3(-17f, 0.06f, 15f),  // North-West fisher shack
-                    new Vector3(2f, 0.06f, 19f),    // North ritual basin
-                    new Vector3(14f, 0.06f, -4f)    // Center-East marsh pool
-                };
-                Vector3[] waterScales = new Vector3[]
-                {
-                    new Vector3(1.4f, 1f, 1.4f),
-                    new Vector3(1.5f, 1f, 1.5f),
-                    new Vector3(1.6f, 1f, 1.6f),
-                    new Vector3(1.3f, 1f, 1.3f)
-                };
-
-                for (int i = 0; i < waterPositions.Length; i++)
-                {
-                    GameObject wp = (GameObject)PrefabUtility.InstantiatePrefab(waterPlanePrefab, waterRoot.transform);
-                    wp.name = $"WaterPlane_0{i + 1}";
-                    wp.transform.position = waterPositions[i];
-                    wp.transform.localScale = waterScales[i];
-                    RemoveColliders(wp);
-                }
-            }
-
-            // 3. Landmarks Container
-            GameObject landmarks = new GameObject("AtmosphericLandmarks_W3");
-            landmarks.transform.SetParent(envW3.transform, false);
-
-            // Load verified Synty assets
+            // Load verified authentic Synty assets
             GameObject deadTree1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Tree_Dead_01.prefab");
             GameObject deadTree2 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Tree_Dead_02.prefab");
             GameObject deadTree3 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Tree_Dead_03.prefab");
+            GameObject stump1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Stump_01.prefab");
+            GameObject stump2 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Stump_02.prefab");
+            GameObject stump3 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Stump_03.prefab");
             GameObject log1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Log_01.prefab");
             GameObject log2 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Log_02.prefab");
 
+            GameObject root1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Root_01.prefab");
+            GameObject root2 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Root_02.prefab");
+
             GameObject rock4 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Rock_04.prefab");
+            GameObject rock5 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Rock_05.prefab");
             GameObject rock6 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Rock_06.prefab");
             GameObject rock7 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Rock_07.prefab");
             GameObject rock8 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Rock_08.prefab");
@@ -304,16 +306,97 @@ namespace CursedHarvest.Editor
             GameObject barrel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Props/SM_Gen_Prop_Barrel_Wood_01.prefab");
             GameObject houseDilapidated = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonStarter/Prefabs/SM_PolygonApocalypse_Bld_House_01.prefab");
 
-            // --- LANDMARK 1: Sunken Grave Marsh (South-West: -15, 0, -14) ---
+            GameObject lilypad1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Lilypads_01.prefab");
+            GameObject lilypad2 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Lilypads_02.prefab");
+            GameObject lilypad3 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Lilypads_03.prefab");
+            GameObject mushroom1 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Mushroom_01.prefab");
+            GameObject mushroom2 = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Mushroom_02.prefab");
+            GameObject unlitPumpkin = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonPumpkins/Prefabs/SM_Prop_Pumpkin_Lanturn_02.prefab");
+
+            GameObject waterPlanePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Synty/PolygonGeneric/Prefabs/Environment/SM_Gen_Env_Water_Plane_01.prefab");
+
+            // ==========================================
+            // 2. STAGNANT SWAMP WATER POOLS & ORGANIC BORDER MASKING
+            // ==========================================
+            GameObject waterRoot = new GameObject("SwampWaterPlanes");
+            waterRoot.transform.SetParent(envW3.transform, false);
+
+            Vector3[] poolCenters = new Vector3[]
+            {
+                new Vector3(-16f, 0.05f, -15f), // South-West grave marsh pool
+                new Vector3(-18f, 0.05f, 16f),  // North-West fisher shack pool
+                new Vector3(0f, 0.05f, 3f),     // Center ritual basin pool
+                new Vector3(18f, 0.05f, 16f),   // North-East root grove pool
+                new Vector3(18f, 0.05f, -15f)   // South-East plague camp pool
+            };
+
+            Vector2[] poolSizes = new Vector2[]
+            {
+                new Vector2(15f, 15f),
+                new Vector2(16f, 16f),
+                new Vector2(13f, 13f),
+                new Vector2(15f, 15f),
+                new Vector2(13f, 13f)
+            };
+
+            GameObject[] rocksList = new GameObject[] { rock4, rock5, rock6, rock7, rock8, rock9, rock10 };
+            GameObject[] rootsList = new GameObject[] { root1, root2, log1, log2 };
+            GameObject[] stumpsList = new GameObject[] { stump1, stump2, stump3 };
+            GameObject[] lilypadsList = new GameObject[] { lilypad1, lilypad2, lilypad3 };
+
+            if (waterPlanePrefab != null)
+            {
+                for (int i = 0; i < poolCenters.Length; i++)
+                {
+                    GameObject wp = (GameObject)PrefabUtility.InstantiatePrefab(waterPlanePrefab, waterRoot.transform);
+                    wp.name = $"SwampWaterPool_0{i + 1}";
+                    wp.transform.position = poolCenters[i];
+                    wp.transform.localScale = new Vector3(poolSizes[i].x / 10f, 1f, poolSizes[i].y / 10f);
+                    RemoveColliders(wp);
+
+                    // Apply desaturated blue-green swamp water material
+                    MeshRenderer mrW = wp.GetComponentInChildren<MeshRenderer>();
+                    if (mrW != null && waterMat != null) mrW.sharedMaterial = waterMat;
+
+                    // Scatter lilypads on surface
+                    for (int l = 0; l < 4; l++)
+                    {
+                        GameObject lpPrefab = lilypadsList[l % lilypadsList.Length];
+                        if (lpPrefab != null)
+                        {
+                            GameObject lp = (GameObject)PrefabUtility.InstantiatePrefab(lpPrefab, wp.transform);
+                            lp.transform.position = poolCenters[i] + new Vector3(
+                                UnityEngine.Random.Range(-poolSizes[i].x * 0.32f, poolSizes[i].x * 0.32f),
+                                0.06f,
+                                UnityEngine.Random.Range(-poolSizes[i].y * 0.32f, poolSizes[i].y * 0.32f));
+                            lp.transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
+                            lp.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.85f, 1.25f);
+                            RemoveColliders(lp);
+                        }
+                    }
+
+                    // CRITICAL: Mask water plane borders with perimeter rocks, mud mounds, roots, and logs
+                    MaskWaterPlaneBorders(waterRoot.transform, poolCenters[i], poolSizes[i], rocksList, rootsList, stumpsList);
+                }
+            }
+
+            // ==========================================
+            // 3. 5 DISTINCT ATMOSPHERIC LANDMARKS
+            // ==========================================
+            GameObject landmarks = new GameObject("AtmosphericLandmarks_W3");
+            landmarks.transform.SetParent(envW3.transform, false);
+
+            // --- LANDMARK 1: Sunken Grave Marsh (South-West: -16, 0, -15) ---
             GameObject graveMarsh = new GameObject("Landmark_1_SunkenGraveMarsh");
             graveMarsh.transform.SetParent(landmarks.transform, false);
-            Vector3 graveCenter = new Vector3(-15f, 0f, -14f);
+            Vector3 graveCenter = new Vector3(-16f, 0f, -15f);
 
-            // Submerged tombstones & planks
+            // Submerged tombstones & tilted planks
             Vector3[] graveOffsets = new Vector3[]
             {
-                new Vector3(-1.8f, 0f, 1.2f), new Vector3(1.5f, 0f, -1.4f), new Vector3(-0.8f, 0f, -2.2f),
-                new Vector3(2.2f, 0f, 1.8f), new Vector3(0f, 0f, 0f), new Vector3(-2.6f, 0f, -0.6f)
+                new Vector3(-2.2f, 0f, 1.5f), new Vector3(1.8f, 0f, -1.8f), new Vector3(-1.0f, 0f, -2.5f),
+                new Vector3(2.5f, 0f, 2.0f), new Vector3(0f, 0f, 0f), new Vector3(-2.8f, 0f, -0.8f),
+                new Vector3(0.8f, 0f, 3.0f), new Vector3(-3.2f, 0f, 1.8f)
             };
             for (int i = 0; i < graveOffsets.Length; i++)
             {
@@ -322,18 +405,18 @@ namespace CursedHarvest.Editor
                 {
                     GameObject item = (GameObject)PrefabUtility.InstantiatePrefab(gProp, graveMarsh.transform);
                     item.transform.position = graveCenter + graveOffsets[i];
-                    item.transform.rotation = Quaternion.Euler(UnityEngine.Random.Range(10f, 30f), (i * 61f) % 360f, UnityEngine.Random.Range(-15f, 15f));
-                    item.transform.localScale = Vector3.one * (0.85f + (i % 3) * 0.15f);
+                    item.transform.rotation = Quaternion.Euler(UnityEngine.Random.Range(15f, 35f), (i * 57f) % 360f, UnityEngine.Random.Range(-15f, 15f));
+                    item.transform.localScale = Vector3.one * (0.9f + (i % 3) * 0.15f);
                     RemoveColliders(item);
                 }
             }
             if (deadTree1 != null)
             {
-                GameObject willow = (GameObject)PrefabUtility.InstantiatePrefab(deadTree1, graveMarsh.transform);
-                willow.transform.position = graveCenter + new Vector3(3f, 0f, -2f);
-                willow.transform.rotation = Quaternion.Euler(0f, 45f, 0f);
-                willow.transform.localScale = Vector3.one * 1.2f;
-                RemoveColliders(willow);
+                GameObject weepingWillow = (GameObject)PrefabUtility.InstantiatePrefab(deadTree1, graveMarsh.transform);
+                weepingWillow.transform.position = graveCenter + new Vector3(3.2f, 0f, -2.5f);
+                weepingWillow.transform.rotation = Quaternion.Euler(5f, 40f, -4f);
+                weepingWillow.transform.localScale = Vector3.one * 1.25f;
+                RemoveColliders(weepingWillow);
             }
 
             // --- LANDMARK 2: Rotten Fisher Shack (North-West: -18, 0, +16) ---
@@ -344,49 +427,49 @@ namespace CursedHarvest.Editor
             if (houseDilapidated != null)
             {
                 GameObject house = (GameObject)PrefabUtility.InstantiatePrefab(houseDilapidated, fisherShack.transform);
-                house.transform.position = shackCenter + new Vector3(-2f, -0.55f, 2f);
-                house.transform.rotation = Quaternion.Euler(3f, 25f, -2f);
-                house.transform.localScale = Vector3.one * 0.75f;
+                house.transform.position = shackCenter + new Vector3(-2.5f, -0.55f, 2.5f);
+                house.transform.rotation = Quaternion.Euler(3f, 28f, -3f);
+                house.transform.localScale = Vector3.one * 0.78f;
                 RemoveColliders(house);
             }
-            // Dock planks extending into water
+            // Decaying dock planks extending into marsh water
             Vector3[] dockOffsets = new Vector3[]
             {
-                new Vector3(1.5f, 0.08f, -0.5f), new Vector3(2.8f, 0.07f, -0.8f), new Vector3(4.0f, 0.06f, -1.0f),
-                new Vector3(1.8f, 0f, -2.0f), new Vector3(3.2f, 0f, -2.2f)
+                new Vector3(1.2f, 0.08f, -0.6f), new Vector3(2.6f, 0.07f, -1.0f), new Vector3(4.0f, 0.06f, -1.4f),
+                new Vector3(5.2f, 0.05f, -1.8f), new Vector3(1.8f, 0f, -2.2f), new Vector3(3.4f, 0f, -2.6f)
             };
             for (int i = 0; i < dockOffsets.Length; i++)
             {
-                GameObject p = (i < 3) ? (plank1 ?? plank2) : barrel;
+                GameObject p = (i < 4) ? (plank1 ?? plank2) : barrel;
                 if (p != null)
                 {
                     GameObject item = (GameObject)PrefabUtility.InstantiatePrefab(p, fisherShack.transform);
                     item.transform.position = shackCenter + dockOffsets[i];
-                    item.transform.rotation = Quaternion.Euler(0f, (i * 45f) % 360f, (i % 2 == 0) ? 5f : -5f);
+                    item.transform.rotation = Quaternion.Euler(0f, (i * 35f) % 360f, (i % 2 == 0) ? 4f : -4f);
                     item.transform.localScale = Vector3.one * 0.95f;
                     RemoveColliders(item);
                 }
             }
 
-            // --- LANDMARK 3: Diseased Root Grove (North-East: +16, 0, +16) ---
+            // --- LANDMARK 3: Diseased Root Grove (North-East: +18, 0, +16) ---
             GameObject rootGrove = new GameObject("Landmark_3_DiseasedRootGrove");
             rootGrove.transform.SetParent(landmarks.transform, false);
-            Vector3 groveCenter = new Vector3(16f, 0f, 16f);
+            Vector3 groveCenter = new Vector3(18f, 0f, 16f);
 
-            Vector3[] treeOffsets = new Vector3[]
+            Vector3[] groveTreeOffsets = new Vector3[]
             {
-                new Vector3(-2.5f, 0f, -1.5f), new Vector3(2.0f, 0f, 2.0f),
-                new Vector3(1.8f, 0f, -2.5f), new Vector3(-1.5f, 0f, 2.8f)
+                new Vector3(-2.8f, 0f, -1.8f), new Vector3(2.2f, 0f, 2.2f),
+                new Vector3(2.0f, 0f, -2.8f), new Vector3(-1.8f, 0f, 3.0f)
             };
-            for (int i = 0; i < treeOffsets.Length; i++)
+            for (int i = 0; i < groveTreeOffsets.Length; i++)
             {
                 GameObject tPrefab = (i % 2 == 0) ? (deadTree2 ?? deadTree3) : (deadTree3 ?? deadTree1);
                 if (tPrefab != null)
                 {
                     GameObject tree = (GameObject)PrefabUtility.InstantiatePrefab(tPrefab, rootGrove.transform);
-                    tree.transform.position = groveCenter + treeOffsets[i];
-                    tree.transform.rotation = Quaternion.Euler(0f, (i * 90f + 25f), 0f);
-                    tree.transform.localScale = Vector3.one * (1.0f + (i % 3) * 0.15f);
+                    tree.transform.position = groveCenter + groveTreeOffsets[i];
+                    tree.transform.rotation = Quaternion.Euler(0f, (i * 85f + 30f), 0f);
+                    tree.transform.localScale = Vector3.one * (1.1f + (i % 3) * 0.15f);
                     RemoveColliders(tree);
                 }
             }
@@ -394,9 +477,29 @@ namespace CursedHarvest.Editor
             {
                 GameObject l1 = (GameObject)PrefabUtility.InstantiatePrefab(log1, rootGrove.transform);
                 l1.transform.position = groveCenter + new Vector3(0f, 0.05f, 0.5f);
-                l1.transform.rotation = Quaternion.Euler(0f, 35f, 0f);
-                l1.transform.localScale = Vector3.one * 1.1f;
+                l1.transform.rotation = Quaternion.Euler(0f, 38f, 0f);
+                l1.transform.localScale = Vector3.one * 1.2f;
                 RemoveColliders(l1);
+            }
+            if (root1 != null)
+            {
+                GameObject r1 = (GameObject)PrefabUtility.InstantiatePrefab(root1, rootGrove.transform);
+                r1.transform.position = groveCenter + new Vector3(-1.2f, 0.02f, 0.8f);
+                r1.transform.rotation = Quaternion.Euler(0f, 110f, 0f);
+                r1.transform.localScale = Vector3.one * 1.35f;
+                RemoveColliders(r1);
+            }
+            // Fungal mushroom clusters
+            for (int m = 0; m < 4; m++)
+            {
+                GameObject mPrefab = (m % 2 == 0) ? (mushroom1 ?? mushroom2) : mushroom2;
+                if (mPrefab != null)
+                {
+                    GameObject mush = (GameObject)PrefabUtility.InstantiatePrefab(mPrefab, rootGrove.transform);
+                    mush.transform.position = groveCenter + new Vector3(0.5f + (m * 0.6f), 0.08f, -0.4f + (m * 0.4f));
+                    mush.transform.localScale = Vector3.one * 1.2f;
+                    RemoveColliders(mush);
+                }
             }
 
             // --- LANDMARK 4: Abandoned Plague Camp (South-East: +18, 0, -15) ---
@@ -406,8 +509,9 @@ namespace CursedHarvest.Editor
 
             Vector3[] campOffsets = new Vector3[]
             {
-                new Vector3(0f, 0f, 0f), new Vector3(1.5f, 0f, 1.2f), new Vector3(-1.6f, 0f, 1.0f),
-                new Vector3(1.2f, 0f, -1.4f), new Vector3(-1.4f, 0f, -1.2f), new Vector3(2.5f, 0f, -0.4f)
+                new Vector3(0f, 0f, 0f), new Vector3(1.6f, 0f, 1.4f), new Vector3(-1.8f, 0f, 1.2f),
+                new Vector3(1.4f, 0f, -1.6f), new Vector3(-1.6f, 0f, -1.4f), new Vector3(2.8f, 0f, -0.5f),
+                new Vector3(-2.6f, 0f, -0.2f)
             };
             for (int i = 0; i < campOffsets.Length; i++)
             {
@@ -416,60 +520,91 @@ namespace CursedHarvest.Editor
                 {
                     GameObject item = (GameObject)PrefabUtility.InstantiatePrefab(cProp, plagueCamp.transform);
                     item.transform.position = campCenter + campOffsets[i];
-                    item.transform.rotation = Quaternion.Euler(0f, (i * 53f) % 360f, (i % 2 == 0) ? 6f : 0f);
-                    item.transform.localScale = Vector3.one * (0.9f + (i % 3) * 0.12f);
+                    item.transform.rotation = Quaternion.Euler(0f, (i * 51f) % 360f, (i % 2 == 0) ? 6f : 0f);
+                    item.transform.localScale = Vector3.one * (0.92f + (i % 3) * 0.12f);
                     RemoveColliders(item);
                 }
             }
 
-            // --- LANDMARK 5: Mire Ritual Basin (North-Center: +2, 0, +20) ---
+            // --- LANDMARK 5: Mire Ritual Basin (Center: 0, 0, 0) ---
             GameObject ritualBasin = new GameObject("Landmark_5_MireRitualBasin");
             ritualBasin.transform.SetParent(landmarks.transform, false);
-            Vector3 basinCenter = new Vector3(2f, 0f, 20f);
+            Vector3 basinCenter = new Vector3(0f, 0f, 0f);
 
-            // Ring of 6 jagged megalith rocks encircling basin
-            for (int i = 0; i < 6; i++)
+            // Ring of 8 jagged megalith rocks encircling basin (radius 4.6m, keeping center clear for spawn)
+            for (int i = 0; i < 8; i++)
             {
-                float a = i * (360f / 6f) * Mathf.Deg2Rad;
-                Vector3 rPos = basinCenter + new Vector3(Mathf.Sin(a) * 3.6f, 0f, Mathf.Cos(a) * 3.6f);
+                float a = i * (360f / 8f) * Mathf.Deg2Rad;
+                Vector3 rPos = basinCenter + new Vector3(Mathf.Sin(a) * 4.6f, 0f, Mathf.Cos(a) * 4.6f);
                 GameObject rPrefab = (i % 2 == 0) ? (rock9 ?? rock10) : (rock7 ?? rock8);
                 if (rPrefab != null)
                 {
                     GameObject r = (GameObject)PrefabUtility.InstantiatePrefab(rPrefab, ritualBasin.transform);
                     r.transform.position = rPos;
-                    r.transform.rotation = Quaternion.Euler(UnityEngine.Random.Range(-5f, 10f), (i * 60f + 15f), UnityEngine.Random.Range(-5f, 10f));
-                    r.transform.localScale = Vector3.one * (1.2f + (i % 2) * 0.25f);
+                    r.transform.rotation = Quaternion.Euler(UnityEngine.Random.Range(-5f, 10f), (i * 45f + 20f), UnityEngine.Random.Range(-5f, 10f));
+                    r.transform.localScale = Vector3.one * (1.25f + (i % 2) * 0.25f);
                     RemoveColliders(r);
                 }
             }
 
-            // Central Corrupted Altar Light
-            GameObject ritualLightObj = new GameObject("RitualBasinLight");
-            ritualLightObj.transform.SetParent(ritualBasin.transform, false);
-            ritualLightObj.transform.position = basinCenter + Vector3.up * 1.2f;
-            Light rLight = ritualLightObj.AddComponent<Light>();
-            rLight.type = LightType.Point;
-            rLight.color = new Color(0.20f, 0.85f, 0.40f);
-            rLight.range = 7.5f;
-            rLight.intensity = 1.8f;
-
-            // 4. Perimeter Boundary Dressing (Surrounding dense swamp woods)
-            GameObject boundaryProps = new GameObject("BoundaryProps");
-            boundaryProps.transform.SetParent(envW3.transform, false);
-
-            for (int i = -30; i <= 30; i += 7)
+            // Central Altar Stone with sickly muted amber/green illumination
+            if (rock8 != null)
             {
-                // North edge
-                SpawnPerimeterProp(deadTree2 ?? deadTree1, new Vector3(i, 0f, 32f), boundaryProps.transform);
-                // South edge
-                SpawnPerimeterProp(deadTree3 ?? deadTree2, new Vector3(i, 0f, -32f), boundaryProps.transform);
-                // East edge
-                SpawnPerimeterProp(deadTree1 ?? deadTree3, new Vector3(32f, 0f, i), boundaryProps.transform);
-                // West edge
-                SpawnPerimeterProp(deadTree2 ?? deadTree1, new Vector3(-32f, 0f, i), boundaryProps.transform);
+                GameObject altarRock = (GameObject)PrefabUtility.InstantiatePrefab(rock8, ritualBasin.transform);
+                altarRock.name = "CorruptedAltarStone";
+                altarRock.transform.position = basinCenter + new Vector3(0f, -0.1f, 3.2f);
+                altarRock.transform.rotation = Quaternion.Euler(-10f, 30f, 5f);
+                altarRock.transform.localScale = new Vector3(1.6f, 0.7f, 1.4f);
+                RemoveColliders(altarRock);
             }
 
-            // 5. Mire Spore Particles
+            // Central Corrupted Altar Light (sickly muted amber/green)
+            GameObject ritualLightObj = new GameObject("RitualBasinLight");
+            ritualLightObj.transform.SetParent(ritualBasin.transform, false);
+            ritualLightObj.transform.position = basinCenter + new Vector3(0f, 1.2f, 3.0f);
+            Light rLight = ritualLightObj.AddComponent<Light>();
+            rLight.type = LightType.Point;
+            rLight.color = new Color(0.32f, 0.75f, 0.28f); // Sickly muted amber/green
+            rLight.range = 8.5f;
+            rLight.intensity = 1.9f;
+
+            // Occult dressing around the megalith ring
+            for (int i = 0; i < 4; i++)
+            {
+                float a = (i * 90f + 45f) * Mathf.Deg2Rad;
+                Vector3 pPos = basinCenter + new Vector3(Mathf.Sin(a) * 4.4f, 0f, Mathf.Cos(a) * 4.4f);
+                GameObject pumpkin = (unlitPumpkin ?? crate1);
+                if (pumpkin != null)
+                {
+                    GameObject p = (GameObject)PrefabUtility.InstantiatePrefab(pumpkin, ritualBasin.transform);
+                    p.transform.position = pPos;
+                    p.transform.rotation = Quaternion.Euler(0f, i * 70f, 0f);
+                    p.transform.localScale = Vector3.one * 0.85f;
+                    RemoveColliders(p);
+                }
+            }
+
+            // ==========================================
+            // 4. VISIBLE PERIMETER WALLS (Dense Swamp Boundary)
+            // ==========================================
+            GameObject perimeter = new GameObject("VisiblePerimeterWalls_W3");
+            perimeter.transform.SetParent(envW3.transform, false);
+
+            float b = 31.5f;
+            for (float x = -b; x <= b; x += 5.5f)
+            {
+                SpawnPerimeterNode(perimeter.transform, new Vector3(x, 0f, b), deadTree2, rock9);
+                SpawnPerimeterNode(perimeter.transform, new Vector3(x, 0f, -b), deadTree3, rock10);
+            }
+            for (float z = -b + 5.5f; z < b; z += 5.5f)
+            {
+                SpawnPerimeterNode(perimeter.transform, new Vector3(b, 0f, z), deadTree1, rock7);
+                SpawnPerimeterNode(perimeter.transform, new Vector3(-b, 0f, z), deadTree2, rock8);
+            }
+
+            // ==========================================
+            // 5. MIRE SPORE PARTICLES
+            // ==========================================
             GameObject sporeObj = new GameObject("Mire_Spore_Particles");
             sporeObj.transform.SetParent(envW3.transform, false);
             sporeObj.transform.position = new Vector3(0f, 1.5f, 0f);
@@ -478,41 +613,51 @@ namespace CursedHarvest.Editor
             ParticleSystem.MainModule main = ps.main;
             main.startLifetime = 5.0f;
             main.startSpeed = 0.4f;
-            main.startSize = 0.12f;
+            main.startSize = 0.14f;
             main.startColor = new Color(0.35f, 0.85f, 0.45f, 0.45f);
-            main.maxParticles = 120;
+            main.maxParticles = 140;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
 
             ParticleSystem.EmissionModule emission = ps.emission;
-            emission.rateOverTime = 22f;
+            emission.rateOverTime = 25f;
 
             ParticleSystem.ShapeModule shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Box;
-            shape.scale = new Vector3(45f, 3f, 45f);
+            shape.scale = new Vector3(50f, 3f, 50f);
 
             // Connect to WorldEnvironmentController
-            WorldEnvironmentController wec = UnityEngine.Object.FindFirstObjectByType<WorldEnvironmentController>();
+            WorldEnvironmentController wec = UnityEngine.Object.FindAnyObjectByType<WorldEnvironmentController>(FindObjectsInactive.Include);
+            if (wec == null)
+            {
+                foreach (var r in activeScene.GetRootGameObjects())
+                {
+                    wec = r.GetComponentInChildren<WorldEnvironmentController>(true);
+                    if (wec != null) break;
+                }
+            }
             if (wec != null)
             {
                 wec.FindReferencesIfMissing();
-                // Assign via reflection/fields or SetEnvironments
                 wec.SetEnvironments(wec.EnvironmentW1, wec.EnvironmentW2, envW3,
                     RenderSettings.sun, wec.AshParticles, ps);
                 Debug.Log("[World3ArenaBuilder] Connected Environment_W3 to WorldEnvironmentController.");
             }
 
             // Connect to SpawnDirector
-            SpawnDirector sd = UnityEngine.Object.FindFirstObjectByType<SpawnDirector>();
+            SpawnDirector sd = UnityEngine.Object.FindAnyObjectByType<SpawnDirector>(FindObjectsInactive.Include);
+            if (sd == null)
+            {
+                foreach (var r in activeScene.GetRootGameObjects())
+                {
+                    sd = r.GetComponentInChildren<SpawnDirector>(true);
+                    if (sd != null) break;
+                }
+            }
             if (sd != null && bossPrefab != null)
             {
-                SerializedObject so = new SerializedObject(sd);
-                SerializedProperty prop = so.FindProperty("mireMotherBossPrefab");
-                if (prop != null)
-                {
-                    prop.objectReferenceValue = bossPrefab;
-                    so.ApplyModifiedProperties();
-                    Debug.Log("[World3ArenaBuilder] Assigned mireMotherBossPrefab to SpawnDirector.");
-                }
+                sd.SetMireMotherBossPrefab(bossPrefab);
+                EditorUtility.SetDirty(sd);
+                Debug.Log("[World3ArenaBuilder] Assigned mireMotherBossPrefab to SpawnDirector.");
             }
 
             // Default to inactive so World 1 remains default on clean start
@@ -520,17 +665,65 @@ namespace CursedHarvest.Editor
 
             EditorSceneManager.MarkSceneDirty(activeScene);
             EditorSceneManager.SaveScene(activeScene);
-            Debug.Log("[World3ArenaBuilder] Environment_W3 assembled and saved successfully in MainGame.unity!");
+            Debug.Log("[World3ArenaBuilder] Environment_W3 rebuilt and saved successfully in MainGame.unity!");
         }
 
-        private static void SpawnPerimeterProp(GameObject prefab, Vector3 pos, Transform parent)
+        private static void MaskWaterPlaneBorders(Transform parent, Vector3 center, Vector2 size, GameObject[] rocks, GameObject[] roots, GameObject[] stumps)
         {
-            if (prefab == null) return;
-            GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
-            obj.transform.position = pos + new Vector3(UnityEngine.Random.Range(-1.5f, 1.5f), 0f, UnityEngine.Random.Range(-1.5f, 1.5f));
-            obj.transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
-            obj.transform.localScale = Vector3.one * UnityEngine.Random.Range(1.1f, 1.4f);
-            RemoveColliders(obj);
+            float halfX = size.x * 0.48f;
+            float halfY = size.y * 0.48f;
+            float step = 2.6f;
+
+            // North & South edges
+            for (float x = -halfX; x <= halfX; x += step)
+            {
+                SpawnMaskEdgeItem(parent, center + new Vector3(x, 0.02f, halfY), rocks, roots, stumps);
+                SpawnMaskEdgeItem(parent, center + new Vector3(x, 0.02f, -halfY), rocks, roots, stumps);
+            }
+            // East & West edges
+            for (float z = -halfY + step; z < halfY; z += step)
+            {
+                SpawnMaskEdgeItem(parent, center + new Vector3(halfX, 0.02f, z), rocks, roots, stumps);
+                SpawnMaskEdgeItem(parent, center + new Vector3(-halfX, 0.02f, z), rocks, roots, stumps);
+            }
+        }
+
+        private static void SpawnMaskEdgeItem(Transform parent, Vector3 pos, GameObject[] rocks, GameObject[] roots, GameObject[] stumps)
+        {
+            int pick = UnityEngine.Random.Range(0, 3);
+            GameObject prefab = null;
+            if (pick == 0 && rocks != null && rocks.Length > 0) prefab = rocks[UnityEngine.Random.Range(0, rocks.Length)];
+            else if (pick == 1 && roots != null && roots.Length > 0) prefab = roots[UnityEngine.Random.Range(0, roots.Length)];
+            else if (stumps != null && stumps.Length > 0) prefab = stumps[UnityEngine.Random.Range(0, stumps.Length)];
+
+            if (prefab != null)
+            {
+                GameObject item = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
+                item.transform.position = pos + new Vector3(UnityEngine.Random.Range(-0.35f, 0.35f), 0f, UnityEngine.Random.Range(-0.35f, 0.35f));
+                item.transform.rotation = Quaternion.Euler(UnityEngine.Random.Range(-8f, 8f), UnityEngine.Random.Range(0f, 360f), UnityEngine.Random.Range(-8f, 8f));
+                item.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.85f, 1.25f);
+                RemoveColliders(item);
+            }
+        }
+
+        private static void SpawnPerimeterNode(Transform parent, Vector3 pos, GameObject treePrefab, GameObject rockPrefab)
+        {
+            if (treePrefab != null)
+            {
+                GameObject tree = (GameObject)PrefabUtility.InstantiatePrefab(treePrefab, parent);
+                tree.transform.position = pos + new Vector3(UnityEngine.Random.Range(-0.8f, 0.8f), 0f, UnityEngine.Random.Range(-0.8f, 0.8f));
+                tree.transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
+                tree.transform.localScale = Vector3.one * UnityEngine.Random.Range(1.05f, 1.35f);
+                RemoveColliders(tree);
+            }
+            if (rockPrefab != null)
+            {
+                GameObject rock = (GameObject)PrefabUtility.InstantiatePrefab(rockPrefab, parent);
+                rock.transform.position = pos + new Vector3(UnityEngine.Random.Range(-1.2f, 1.2f), 0f, UnityEngine.Random.Range(-1.2f, 1.2f));
+                rock.transform.rotation = Quaternion.Euler(UnityEngine.Random.Range(-5f, 15f), UnityEngine.Random.Range(0f, 360f), 0f);
+                rock.transform.localScale = Vector3.one * UnityEngine.Random.Range(1.1f, 1.4f);
+                RemoveColliders(rock);
+            }
         }
 
         private static void RemoveColliders(GameObject obj)

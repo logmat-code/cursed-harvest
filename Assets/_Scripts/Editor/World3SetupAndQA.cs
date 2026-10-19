@@ -208,7 +208,7 @@ namespace CursedHarvest.Editor
                 return false;
             }
 
-            MireMotherBoss boss = prefab.GetComponent<MireMotherBoss>();
+            MireMotherBoss boss = prefab.GetComponent<MireMotherBoss>() ?? prefab.GetComponentInChildren<MireMotherBoss>(true);
             if (boss == null)
             {
                 logErr("MireMotherBoss component missing on Boss_TheMireMother prefab!");
@@ -227,14 +227,14 @@ namespace CursedHarvest.Editor
                 return false;
             }
 
-            CharacterController cc = prefab.GetComponent<CharacterController>();
+            CharacterController cc = prefab.GetComponent<CharacterController>() ?? prefab.GetComponentInChildren<CharacterController>(true);
             if (cc == null)
             {
                 logErr("CharacterController component missing on Boss_TheMireMother prefab!");
                 return false;
             }
 
-            EnemyLocomotion loco = prefab.GetComponent<EnemyLocomotion>();
+            EnemyLocomotion loco = prefab.GetComponent<EnemyLocomotion>() ?? prefab.GetComponentInChildren<EnemyLocomotion>(true);
             if (loco == null)
             {
                 logErr("EnemyLocomotion component missing on Boss_TheMireMother prefab!");
@@ -296,8 +296,17 @@ namespace CursedHarvest.Editor
             }
 
             // Check SpawnDirector connection
-            EditorSceneManager.OpenScene("Assets/_Scenes/MainGame.unity", OpenSceneMode.Single);
-            SpawnDirector director = UnityEngine.Object.FindFirstObjectByType<SpawnDirector>();
+            Scene mainScene = EditorSceneManager.OpenScene("Assets/_Scenes/MainGame.unity", OpenSceneMode.Single);
+            SceneManager.SetActiveScene(mainScene);
+            SpawnDirector director = UnityEngine.Object.FindAnyObjectByType<SpawnDirector>(FindObjectsInactive.Include);
+            if (director == null)
+            {
+                foreach (var r in mainScene.GetRootGameObjects())
+                {
+                    director = r.GetComponentInChildren<SpawnDirector>(true);
+                    if (director != null) break;
+                }
+            }
             if (director != null && director.MireMotherBossPrefab == null)
             {
                 GameObject bossP = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Prefabs/Boss_TheMireMother.prefab");
@@ -305,13 +314,14 @@ namespace CursedHarvest.Editor
                 {
                     director.SetMireMotherBossPrefab(bossP);
                     EditorUtility.SetDirty(director);
-                    EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+                    EditorSceneManager.MarkSceneDirty(mainScene);
+                    EditorSceneManager.SaveScene(mainScene);
                 }
             }
 
             if (director == null || director.MireMotherBossPrefab == null)
             {
-                logErr("SpawnDirector missing or mireMotherBossPrefab not wired in MainGame!");
+                logErr($"SpawnDirector missing or mireMotherBossPrefab not wired in MainGame! (director null? {director == null}, bossPrefab null? {director?.MireMotherBossPrefab == null})");
                 return false;
             }
 
@@ -324,6 +334,7 @@ namespace CursedHarvest.Editor
         {
             log("[TEST 4/6] Verifying Meta Progression, Harvest Essence Economy & Stat Application...");
 
+            MetaProgressionManager.Instance.ResetAllProgression();
             int initialEssence = MetaProgressionManager.Instance.HarvestEssence;
 
             // Test 1: Currency Gain & Persistence
@@ -445,8 +456,17 @@ namespace CursedHarvest.Editor
             }
 
             // 2. Check MainGame scene has polished TopRightHUD and HarvestPlot
-            EditorSceneManager.OpenScene("Assets/_Scenes/MainGame.unity", OpenSceneMode.Single);
-            UIManager uim = UnityEngine.Object.FindFirstObjectByType<UIManager>();
+            Scene mainScene = EditorSceneManager.OpenScene("Assets/_Scenes/MainGame.unity", OpenSceneMode.Single);
+            SceneManager.SetActiveScene(mainScene);
+            UIManager uim = UnityEngine.Object.FindAnyObjectByType<UIManager>(FindObjectsInactive.Include);
+            if (uim == null)
+            {
+                foreach (var r in mainScene.GetRootGameObjects())
+                {
+                    uim = r.GetComponentInChildren<UIManager>(true);
+                    if (uim != null) break;
+                }
+            }
             if (uim == null)
             {
                 logErr("UIManager missing in MainGame!");
@@ -454,7 +474,15 @@ namespace CursedHarvest.Editor
             }
 
             // Check HarvestPlot prompt clearance
-            HarvestPlot plot = UnityEngine.Object.FindFirstObjectByType<HarvestPlot>();
+            HarvestPlot plot = UnityEngine.Object.FindAnyObjectByType<HarvestPlot>(FindObjectsInactive.Include);
+            if (plot == null)
+            {
+                foreach (var r in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+                {
+                    plot = r.GetComponentInChildren<HarvestPlot>(true);
+                    if (plot != null) break;
+                }
+            }
             if (plot != null)
             {
                 TextMesh prompt = plot.GetComponentInChildren<TextMesh>(true);
@@ -486,76 +514,111 @@ namespace CursedHarvest.Editor
             WorldDifficultyConfig.Current = WorldDifficultyConfig.FromWorldConfig(WorldConfig.GetConfig(3));
 
             EditorSceneManager.OpenScene("Assets/_Scenes/MainGame.unity", OpenSceneMode.Single);
-            WorldEnvironmentController controller = UnityEngine.Object.FindFirstObjectByType<WorldEnvironmentController>();
+            WorldEnvironmentController controller = UnityEngine.Object.FindAnyObjectByType<WorldEnvironmentController>(FindObjectsInactive.Include);
+            if (controller == null)
+            {
+                foreach (var r in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+                {
+                    controller = r.GetComponentInChildren<WorldEnvironmentController>(true);
+                    if (controller != null) break;
+                }
+            }
             if (controller != null)
             {
                 controller.ApplyEnvironment(3);
             }
 
-            UIManager uim = UnityEngine.Object.FindFirstObjectByType<UIManager>();
+            UIManager uim = UnityEngine.Object.FindAnyObjectByType<UIManager>(FindObjectsInactive.Include);
+            if (uim == null)
+            {
+                foreach (var r in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+                {
+                    uim = r.GetComponentInChildren<UIManager>(true);
+                    if (uim != null) break;
+                }
+            }
             if (uim != null) uim.EnsureHUDAndModals();
 
             GameObject player = GameObject.FindWithTag("Player");
             Camera cam = Camera.main;
 
-            // 1. World3_ArenaOverview.png (Wide atmospheric overview of The Blackened Mire)
+            // 1. World3_After_Rework.png & World3_ArenaOverview.png (Wide atmospheric overview of The Blackened Mire)
             if (cam != null)
             {
-                cam.transform.position = new Vector3(0f, 18.5f, -22f);
-                cam.transform.rotation = Quaternion.Euler(38f, 0f, 0f);
+                cam.transform.position = new Vector3(0f, 21.0f, -22f);
+                cam.transform.rotation = Quaternion.Euler(42f, 0f, 0f);
 
-                string shot = ScreenshotHelper.CaptureWithCanvas("World3_ArenaOverview", 1920, 1080);
+                string shot = ScreenshotHelper.CaptureWithCanvas("World3_After_Rework", 1920, 1080);
+                SaveArtifact(shot, "World3_After_Rework.png", log);
                 SaveArtifact(shot, "World3_ArenaOverview.png", log);
             }
 
-            // 2. World3_SunkenGraveMarsh.png (Landmark 1: Submerged graves & tomb)
+            // 2. World3_Center.png & World3_MireRitualBasin.png (Landmark 5: Megalithic stone ring & corrupted altar)
             if (cam != null)
             {
-                cam.transform.position = new Vector3(-18f, 4.2f, -14f);
-                cam.transform.LookAt(new Vector3(-18f, 1.2f, -8f));
+                cam.transform.position = new Vector3(0f, 4.2f, -5.5f);
+                cam.transform.LookAt(new Vector3(0f, 1.2f, 1.8f));
 
-                string shot = ScreenshotHelper.CaptureWithCanvas("World3_SunkenGraveMarsh", 1920, 1080);
+                string shot = ScreenshotHelper.CaptureWithCanvas("World3_Center", 1920, 1080);
+                SaveArtifact(shot, "World3_Center.png", log);
+                SaveArtifact(shot, "World3_MireRitualBasin.png", log);
+            }
+
+            // 3. World3_GraveMarsh.png & World3_SunkenGraveMarsh.png (Landmark 1: Submerged graves & tomb)
+            if (cam != null)
+            {
+                cam.transform.position = new Vector3(-11f, 4.2f, -10f);
+                cam.transform.LookAt(new Vector3(-16f, 1.0f, -15f));
+
+                string shot = ScreenshotHelper.CaptureWithCanvas("World3_GraveMarsh", 1920, 1080);
+                SaveArtifact(shot, "World3_GraveMarsh.png", log);
                 SaveArtifact(shot, "World3_SunkenGraveMarsh.png", log);
             }
 
-            // 3. World3_RottenFisherShack.png (Landmark 2: Sunken cabin & dock)
+            // 4. World3_Shack.png & World3_RottenFisherShack.png (Landmark 2: Sunken cabin & dock)
             if (cam != null)
             {
-                cam.transform.position = new Vector3(18f, 4.5f, -15f);
-                cam.transform.LookAt(new Vector3(18f, 1.8f, -7f));
+                cam.transform.position = new Vector3(-12.5f, 4.5f, 11f);
+                cam.transform.LookAt(new Vector3(-18f, 1.4f, 16f));
 
-                string shot = ScreenshotHelper.CaptureWithCanvas("World3_RottenFisherShack", 1920, 1080);
+                string shot = ScreenshotHelper.CaptureWithCanvas("World3_Shack", 1920, 1080);
+                SaveArtifact(shot, "World3_Shack.png", log);
                 SaveArtifact(shot, "World3_RottenFisherShack.png", log);
             }
 
-            // 4. World3_DiseasedRootGrove.png (Landmark 3: Twisted trees & logs)
+            // 5. World3_RootGrove.png & World3_DiseasedRootGrove.png (Landmark 3: Twisted trees, root arches & logs)
             if (cam != null)
             {
-                cam.transform.position = new Vector3(-20f, 4.5f, 7f);
-                cam.transform.LookAt(new Vector3(-20f, 1.5f, 14f));
+                cam.transform.position = new Vector3(12.5f, 4.5f, 11f);
+                cam.transform.LookAt(new Vector3(18f, 1.4f, 16f));
 
-                string shot = ScreenshotHelper.CaptureWithCanvas("World3_DiseasedRootGrove", 1920, 1080);
+                string shot = ScreenshotHelper.CaptureWithCanvas("World3_RootGrove", 1920, 1080);
+                SaveArtifact(shot, "World3_RootGrove.png", log);
                 SaveArtifact(shot, "World3_DiseasedRootGrove.png", log);
             }
 
-            // 5. World3_AbandonedPlagueCamp.png (Landmark 4: Crates, barrels, barricades)
+            // 6. World3_AbandonedPlagueCamp.png (Landmark 4: Crates, barrels, barricades)
             if (cam != null)
             {
-                cam.transform.position = new Vector3(19f, 4.2f, 7f);
-                cam.transform.LookAt(new Vector3(19f, 1.2f, 14f));
+                cam.transform.position = new Vector3(12.5f, 4.2f, -10f);
+                cam.transform.LookAt(new Vector3(18f, 1.2f, -15f));
 
                 string shot = ScreenshotHelper.CaptureWithCanvas("World3_AbandonedPlagueCamp", 1920, 1080);
                 SaveArtifact(shot, "World3_AbandonedPlagueCamp.png", log);
             }
 
-            // 6. World3_MireRitualBasin.png (Landmark 5: Megalithic stone ring & corrupted altar)
-            if (cam != null)
+            // 7. World3_Gameplay_Final.png (Gameplay camera perspective with HUD and active swamp atmosphere)
+            if (cam != null && player != null)
             {
-                cam.transform.position = new Vector3(2f, 4.8f, 12f);
-                cam.transform.LookAt(new Vector3(2f, 1.2f, 20f));
+                player.transform.position = new Vector3(0f, 0.1f, -2.5f);
+                player.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+                PoseHumanoid(player);
 
-                string shot = ScreenshotHelper.CaptureWithCanvas("World3_MireRitualBasin", 1920, 1080);
-                SaveArtifact(shot, "World3_MireRitualBasin.png", log);
+                cam.transform.position = new Vector3(0f, 13.5f, -16.5f);
+                cam.transform.rotation = Quaternion.Euler(38f, 0f, 0f);
+
+                string shot = ScreenshotHelper.CaptureWithCanvas("World3_Gameplay_Final", 1920, 1080);
+                SaveArtifact(shot, "World3_Gameplay_Final.png", log);
             }
 
             // 7. World3_BossIntro.png (The Mire Mother intro toast & health bar)

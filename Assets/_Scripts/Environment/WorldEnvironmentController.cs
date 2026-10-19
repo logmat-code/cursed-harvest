@@ -35,10 +35,10 @@ namespace CursedHarvest
         [SerializeField] private float w2MoonlightIntensity = 0.45f;
 
         [Header("World 3 Visual Profile (The Blackened Mire)")]
-        [SerializeField] private Color w3FogColor = new Color(0.07f, 0.09f, 0.08f); // Cold stagnant swamp murk
-        [SerializeField] private float w3FogDensity = 0.028f;
-        [SerializeField] private Color w3MoonlightColor = new Color(0.45f, 0.58f, 0.50f); // Dim greenish-grey moonlight
-        [SerializeField] private float w3MoonlightIntensity = 0.42f;
+        [SerializeField] private Color w3FogColor = new Color(0.09f, 0.12f, 0.11f); // Cool swamp peat grey
+        [SerializeField] private float w3FogDensity = 0.024f;
+        [SerializeField] private Color w3MoonlightColor = new Color(0.48f, 0.58f, 0.52f); // Sickly desaturated green-grey moonlight
+        [SerializeField] private float w3MoonlightIntensity = 0.52f;
 
         private int activeWorldId = 1;
         public int ActiveWorldId => activeWorldId;
