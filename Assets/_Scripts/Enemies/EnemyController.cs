@@ -282,7 +282,8 @@ namespace CursedHarvest
                 }
                 else if (chargeState == ChargeState.None)
                 {
-                    if (distToPlayer <= chargeTriggerDistance && distToPlayer >= 3f && Time.time >= lastChargeTime + chargeCooldown)
+                    bool visibleInCamera = TopDownCameraFollow.Instance == null || TopDownCameraFollow.Instance.IsWorldPositionVisibleInViewport(transform.position, 0.04f);
+                    if (visibleInCamera && distToPlayer <= chargeTriggerDistance && distToPlayer >= 3f && Time.time >= lastChargeTime + chargeCooldown)
                     {
                         lockedChargeDirection = toPlayer.normalized;
                         chargeState = ChargeState.Telegraphing;

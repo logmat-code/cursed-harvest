@@ -80,7 +80,11 @@ namespace CursedHarvest
 
         private void Update()
         {
-            if (CanDash && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.LeftShift) || Input.GetMouseButtonDown(1)))
+            bool dashRequested = (GameInputManager.Instance != null)
+                ? GameInputManager.Instance.ConsumeDashPressed()
+                : (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.LeftShift));
+
+            if (CanDash && dashRequested)
             {
                 StartDash();
             }
@@ -99,6 +103,7 @@ namespace CursedHarvest
 
             lastDashTime = Time.time;
             AudioManager.Instance?.PlaySound(SoundType.PlayerDash, 0.85f, 0.08f);
+            MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticType.Light);
             TopDownCameraFollow.Instance?.TriggerShake(0.08f, 0.12f);
             StartCoroutine(DashRoutine());
         }

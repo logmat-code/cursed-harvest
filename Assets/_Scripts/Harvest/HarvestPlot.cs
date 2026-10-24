@@ -109,6 +109,15 @@ namespace CursedHarvest
             EnsureGroundBoundaryVisual();
         }
 
+        public void EnsureVisuals()
+        {
+            CreatePromptTextMesh();
+            EnsureGroundBoundaryVisual();
+            FindPlayer();
+            UpdateBillboardRotation();
+            UpdatePromptText();
+        }
+
         private void EnsureGroundBoundaryVisual()
         {
             if (boundaryVisualRoot != null && boundaryLine != null) return;
@@ -184,17 +193,39 @@ namespace CursedHarvest
 
         private void CreatePromptTextMesh()
         {
-            GameObject promptObj = new GameObject("HarvestPromptText");
-            promptObj.transform.SetParent(transform, false);
-            promptObj.transform.localPosition = new Vector3(0f, 3.0f, 0f);
+            // Reuse or clean up existing HarvestPromptText children so duplicates never stack in the scene
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                Transform child = transform.GetChild(i);
+                if (child != null && child.name == "HarvestPromptText")
+                {
+                    if (promptTextMesh == null)
+                    {
+                        promptTextMesh = child.GetComponent<TextMesh>();
+                    }
+                    else
+                    {
+                        DestroyImmediate(child.gameObject);
+                    }
+                }
+            }
 
-            promptTextMesh = promptObj.AddComponent<TextMesh>();
-            promptTextMesh.fontSize = 28;
-            promptTextMesh.characterSize = 0.08f;
+            bool isPortrait = Application.isMobilePlatform || Screen.height >= Screen.width ||
+                              (Camera.main != null && Camera.main.aspect <= 1.0f);
+
+            if (promptTextMesh == null)
+            {
+                GameObject promptObj = new GameObject("HarvestPromptText");
+                promptObj.transform.SetParent(transform, false);
+                promptTextMesh = promptObj.AddComponent<TextMesh>();
+            }
+
+            promptTextMesh.transform.localPosition = new Vector3(0f, isPortrait ? 2.55f : 3.0f, 0f);
+            promptTextMesh.fontSize = isPortrait ? 26 : 28;
+            promptTextMesh.characterSize = isPortrait ? 0.068f : 0.08f;
             promptTextMesh.alignment = TextAlignment.Center;
             promptTextMesh.anchor = TextAnchor.MiddleCenter;
             promptTextMesh.fontStyle = FontStyle.Bold;
-            promptTextMesh.text = "";
         }
 
         private void Start()
@@ -318,12 +349,16 @@ namespace CursedHarvest
                 case PlotState.Ready:
                     if (CursedSeedPickup.PlayerSeedCount > 0)
                     {
-                        promptTextMesh.text = "[E] PLANT CURSED SEED";
+                        TopDownCameraFollow camFollow = Camera.main != null ? Camera.main.GetComponent<TopDownCameraFollow>() : null;
+                        bool isTouchOrPortrait = Application.isMobilePlatform || Screen.height >= Screen.width ||
+                                                 (Camera.main != null && Camera.main.aspect <= 1.0f) ||
+                                                 (camFollow != null && camFollow.IsPortrait);
+                        promptTextMesh.text = isTouchOrPortrait ? "ENTER CIRCLE TO PLANT SEED" : "[E] PLANT CURSED SEED";
                         promptTextMesh.color = new Color(1f, 0.85f, 0.2f);
                     }
                     else
                     {
-                        promptTextMesh.text = "YOU NEED A CURSED SEED";
+                        promptTextMesh.text = "NEED A CURSED SEED";
                         promptTextMesh.color = new Color(0.95f, 0.35f, 0.3f);
                     }
                     break;
@@ -631,6 +666,7 @@ namespace CursedHarvest
             if (result == HarvestResult.Lucky)
             {
                 outcomeDetail = ExecuteLuckyReward();
+                MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.HarvestLucky);
                 string title = (outcomeDetail.Contains("RESTORED") || outcomeDetail.Contains("FULL HP"))
                     ? "★ RESTORATIVE HARVEST! ★"
                     : "★ LUCKY HARVEST! ★";

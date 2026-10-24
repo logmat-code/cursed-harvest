@@ -76,6 +76,10 @@ namespace CursedHarvest
 
             PlayGameplayMusic(1.0f);
             StartAmbientDrone();
+            if (MobileSettingsAndLifecycleManager.Instance != null)
+            {
+                MobileSettingsAndLifecycleManager.Instance.SyncWithAudioManager();
+            }
         }
 
         private void OnDestroy()
@@ -284,6 +288,14 @@ namespace CursedHarvest
             if (musicChannel != null)
             {
                 musicChannel.volume = musicVolume;
+            }
+        }
+
+        public void SetDroneMuted(bool muted)
+        {
+            if (droneChannel != null)
+            {
+                droneChannel.mute = muted;
             }
         }
     }

@@ -18,6 +18,21 @@ namespace CursedHarvest
         {
             if (selectButton != null)
             {
+                selectButton.onClick.RemoveAllListeners();
+                selectButton.onClick.AddListener(HandleClicked);
+            }
+        }
+
+        public void ConfigureReferences(Text title, Text category, Text desc, Text level, Button btn)
+        {
+            titleText = title;
+            categoryText = category;
+            descriptionText = desc;
+            levelText = level;
+            selectButton = btn;
+            if (selectButton != null)
+            {
+                selectButton.onClick.RemoveAllListeners();
                 selectButton.onClick.AddListener(HandleClicked);
             }
         }

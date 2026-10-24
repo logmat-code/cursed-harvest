@@ -171,8 +171,9 @@ namespace CursedHarvest
             {
                 StartCoroutine(ExecuteGroundSplinterRoutine());
             }
-            // 3. Long range (> 7.0m) -> Enraged Charge
-            else if (distToPlayer >= 7.0f && Time.time >= lastChargeTime + chargeCooldown)
+            // 3. Long range (> 7.0m, visible in camera) -> Enraged Charge
+            else if (distToPlayer >= 6.5f && distToPlayer <= 11.5f && Time.time >= lastChargeTime + chargeCooldown &&
+                     (TopDownCameraFollow.Instance == null || TopDownCameraFollow.Instance.IsWorldPositionVisibleInViewport(transform.position, 0.03f)))
             {
                 StartCoroutine(ExecuteEnragedChargeRoutine());
             }

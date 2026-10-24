@@ -170,6 +170,7 @@ namespace CursedHarvest
             }
 
             AudioManager.Instance?.PlaySound(SoundType.LuckyLast, 1.0f, 0f);
+            MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.LuckyLast);
 
             if (luckyLastAuraPrefab != null && activeAuraInstance == null)
             {

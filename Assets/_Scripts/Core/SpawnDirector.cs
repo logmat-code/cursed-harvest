@@ -337,7 +337,9 @@ namespace CursedHarvest
             }
 
             if (prefabToSpawn == null) return null;
-            Vector3 spawnPos = playerTransform != null ? playerTransform.position + Vector3.forward * 16f : new Vector3(0f, 0.5f, 16f);
+            bool isPortrait = TopDownCameraFollow.Instance != null ? TopDownCameraFollow.Instance.IsPortrait : (Screen.height >= Screen.width);
+            float forwardDist = isPortrait ? 11.2f : 16f;
+            Vector3 spawnPos = playerTransform != null ? playerTransform.position + Vector3.forward * forwardDist : new Vector3(0f, 0.5f, forwardDist);
             spawnPos.x = Mathf.Clamp(spawnPos.x, -arenaHalfBounds + 4f, arenaHalfBounds - 4f);
             spawnPos.z = Mathf.Clamp(spawnPos.z, -arenaHalfBounds + 4f, arenaHalfBounds - 4f);
             spawnPos.y = 0.5f;
@@ -1262,11 +1264,59 @@ namespace CursedHarvest
 
         private Vector3 CalculateSpawnPosition()
         {
+            Vector3 basePos = playerTransform != null ? playerTransform.position : Vector3.zero;
+
+            if (TopDownCameraFollow.Instance != null && TopDownCameraFollow.Instance.IsPortrait)
+            {
+                Vector2 halfExtents = TopDownCameraFollow.Instance.GetVisibleGroundHalfExtents(2.2f);
+                float halfW = Mathf.Max(8.5f, halfExtents.x);
+                float halfH = Mathf.Max(13.5f, halfExtents.y);
+
+                for (int attempt = 0; attempt < 6; attempt++)
+                {
+                    int side = UnityEngine.Random.Range(0, 4); // 0=Top, 1=Bottom, 2=Left, 3=Right
+                    float margin = UnityEngine.Random.Range(0.4f, 3.2f);
+                    float dx = 0f;
+                    float dz = 0f;
+
+                    switch (side)
+                    {
+                        case 0: // North (ahead)
+                            dx = UnityEngine.Random.Range(-halfW - 1.5f, halfW + 1.5f);
+                            dz = halfH + margin;
+                            break;
+                        case 1: // South (behind)
+                            dx = UnityEngine.Random.Range(-halfW - 1.5f, halfW + 1.5f);
+                            dz = -(halfH * 0.88f + margin);
+                            break;
+                        case 2: // West (left)
+                            dx = -(halfW + margin);
+                            dz = UnityEngine.Random.Range(-halfH * 0.85f, halfH + 1.0f);
+                            break;
+                        default: // East (right)
+                            dx = halfW + margin;
+                            dz = UnityEngine.Random.Range(-halfH * 0.85f, halfH + 1.0f);
+                            break;
+                    }
+
+                    Vector3 candidate = basePos + new Vector3(dx, 0f, dz);
+                    candidate.x = Mathf.Clamp(candidate.x, -arenaHalfBounds, arenaHalfBounds);
+                    candidate.z = Mathf.Clamp(candidate.z, -arenaHalfBounds, arenaHalfBounds);
+                    candidate.y = 0.5f;
+
+                    // If clamping pulled the spawn point inside the camera viewport, pick an unclamped flank if possible
+                    if (!TopDownCameraFollow.Instance.IsWorldPositionVisibleInViewport(candidate, -0.02f) || attempt == 5)
+                    {
+                        return candidate;
+                    }
+                }
+            }
+
             float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
             float radius = UnityEngine.Random.Range(minSpawnRadius, maxSpawnRadius);
             Vector3 offset = new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
 
-            Vector3 rawPos = playerTransform.position + offset;
+            Vector3 rawPos = basePos + offset;
             rawPos.x = Mathf.Clamp(rawPos.x, -arenaHalfBounds, arenaHalfBounds);
             rawPos.z = Mathf.Clamp(rawPos.z, -arenaHalfBounds, arenaHalfBounds);
             rawPos.y = 0.5f;

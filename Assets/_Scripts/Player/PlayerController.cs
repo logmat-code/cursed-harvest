@@ -94,11 +94,18 @@ namespace CursedHarvest
                 return;
             }
 
-            // Read desktop inputs (WASD / Arrow Keys)
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
-
-            moveInput = new Vector3(h, 0f, v).normalized;
+            // Read unified input from GameInputManager (Mobile Virtual Joystick + Editor Desktop WASD)
+            if (GameInputManager.Instance != null)
+            {
+                moveInput = GameInputManager.Instance.MoveVector;
+                if (moveInput.sqrMagnitude > 1f) moveInput.Normalize();
+            }
+            else
+            {
+                float h = Input.GetAxisRaw("Horizontal");
+                float v = Input.GetAxisRaw("Vertical");
+                moveInput = new Vector3(h, 0f, v).normalized;
+            }
 
             // If dashing, dash routine handles horizontal displacement
             if (playerDash != null && playerDash.IsDashing)

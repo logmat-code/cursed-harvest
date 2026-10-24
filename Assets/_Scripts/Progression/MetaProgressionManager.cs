@@ -268,6 +268,7 @@ namespace CursedHarvest
             branchRanks[branch] = currentRank + 1;
             SaveProgression();
 
+            MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.UpgradePurchase);
             OnEssenceChanged?.Invoke(harvestEssence);
             OnUpgradePurchased?.Invoke(branch, branchRanks[branch]);
             return true;
