@@ -864,31 +864,31 @@ namespace CursedHarvest
             rtBanner.anchorMax = new Vector2(0.5f, 1f);
             rtBanner.pivot = new Vector2(0.5f, 1f);
             rtBanner.anchoredPosition = new Vector2(0f, -24f);
-            rtBanner.sizeDelta = new Vector2(980f, 290f);
+            rtBanner.sizeDelta = new Vector2(980f, 300f);
             Image bannerImg = topBanner.AddComponent<Image>();
-            bannerImg.color = ColDarkPanel;
+            FolkHorrorUITheme.StylePanel(bannerImg, true);
 
-            CreateLabel(topBanner.transform, "StudioLabel", "LOGMAT PRESENTS", 22, FontStyle.Bold, ColTextMuted, new Vector2(0f, 102f), new Vector2(880f, 34f));
+            CreateLabel(topBanner.transform, "StudioLabel", "LOGMAT PRESENTS", 22, FontStyle.Bold, ColTextMuted, new Vector2(0f, 106f), new Vector2(880f, 34f));
 
-            Text titleText = CreateLabel(topBanner.transform, "TitleText", "CURSED HARVEST.", 74, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 32f), new Vector2(940f, 92f));
+            Text titleText = CreateLabel(topBanner.transform, "TitleText", "CURSED HARVEST.", 74, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 38f), new Vector2(940f, 92f));
             Outline titleOutline = titleText.gameObject.AddComponent<Outline>();
             titleOutline.effectColor = new Color(0.12f, 0.05f, 0.02f, 0.95f);
             titleOutline.effectDistance = new Vector2(3f, -3f);
 
-            CreateLabel(topBanner.transform, "SubtitleText", "DARK FOLK HORROR SURVIVOR  •  3 WORLDS  •  15 ARENAS", 23, FontStyle.Bold, ColTextPrimary, new Vector2(0f, -38f), new Vector2(920f, 38f));
+            CreateLabel(topBanner.transform, "SubtitleText", "DARK FOLK HORROR SURVIVOR  •  3 WORLDS  •  15 ARENAS", 23, FontStyle.Bold, ColTextPrimary, new Vector2(0f, -32f), new Vector2(920f, 38f));
 
             GameObject essPill = new GameObject("HomeEssencePill");
             essPill.transform.SetParent(topBanner.transform, false);
             RectTransform rtPill = essPill.AddComponent<RectTransform>();
             rtPill.anchorMin = new Vector2(0.5f, 0.5f);
             rtPill.anchorMax = new Vector2(0.5f, 0.5f);
-            rtPill.anchoredPosition = new Vector2(0f, -98f);
-            rtPill.sizeDelta = new Vector2(440f, 52f);
+            rtPill.anchoredPosition = new Vector2(0f, -96f);
+            rtPill.sizeDelta = new Vector2(460f, 54f);
             Image pillBg = essPill.AddComponent<Image>();
-            pillBg.color = ColElevated;
+            FolkHorrorUITheme.StylePanel(pillBg, false);
 
             int currentEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.HarvestEssence : 0;
-            homeEssenceBadgeText = CreateLabel(essPill.transform, "HomeEssenceText", $"✦ HARVEST ESSENCE: {currentEssence}", 24, FontStyle.Bold, ColHarvestGold, Vector2.zero, new Vector2(420f, 46f));
+            homeEssenceBadgeText = CreateLabel(essPill.transform, "HomeEssenceText", $"✦ HARVEST ESSENCE: {currentEssence}", 24, FontStyle.Bold, ColHarvestGold, Vector2.zero, new Vector2(440f, 46f));
 
             // Bottom Thumb-Zone Action Deck
             GameObject deckObj = new GameObject("BottomButtonDeck");
@@ -898,14 +898,14 @@ namespace CursedHarvest
             rtDeck.anchorMax = new Vector2(0.5f, 0f);
             rtDeck.pivot = new Vector2(0.5f, 0f);
             rtDeck.anchoredPosition = new Vector2(0f, 88f);
-            rtDeck.sizeDelta = new Vector2(860f, 560f);
+            rtDeck.sizeDelta = new Vector2(880f, 580f);
             Image deckBg = deckObj.AddComponent<Image>();
-            deckBg.color = ColDarkPanel;
+            FolkHorrorUITheme.StylePanel(deckBg, true);
 
-            homePlayButton = CreateMenuButton(deckObj.transform, "PlayButton", "PLAY", new Vector2(0f, 185f), new Vector2(760f, 118f), ColHarvestGold, 38);
-            homeUpgradesButton = CreateMenuButton(deckObj.transform, "UpgradesButton", "UPGRADES", new Vector2(0f, 48f), new Vector2(760f, 102f), ColElevated, 32);
-            homeSettingsButton = CreateMenuButton(deckObj.transform, "SettingsButton", "SETTINGS", new Vector2(0f, -78f), new Vector2(760f, 96f), ColElevated, 30);
-            homeCreditsButton = CreateMenuButton(deckObj.transform, "CreditsButton", "CREDITS", new Vector2(0f, -198f), new Vector2(760f, 92f), ColElevated, 28);
+            homePlayButton = CreateMenuButton(deckObj.transform, "PlayButton", "ENTER THE HARVEST", new Vector2(0f, 190f), new Vector2(780f, 120f), ColHarvestGold, 38);
+            homeUpgradesButton = CreateMenuButton(deckObj.transform, "UpgradesButton", "OCCULT UPGRADES", new Vector2(0f, 52f), new Vector2(780f, 104f), ColElevated, 32);
+            homeSettingsButton = CreateMenuButton(deckObj.transform, "SettingsButton", "SETTINGS", new Vector2(0f, -74f), new Vector2(780f, 96f), ColElevated, 30);
+            homeCreditsButton = CreateMenuButton(deckObj.transform, "CreditsButton", "CREDITS", new Vector2(0f, -192f), new Vector2(780f, 92f), ColElevated, 28);
 
             CreateLabel(parent, "VersionText", "LOGMAT  •  CURSED HARVEST. v1.1.0  •  ANDROID PORTRAIT EDITION", 18, FontStyle.Normal, ColTextMuted, new Vector2(0f, -915f), new Vector2(960f, 36f));
         }
@@ -942,7 +942,7 @@ namespace CursedHarvest
                 rtCard.anchoredPosition = new Vector2(0f, yPos);
 
                 Image cardBg = cardObj.AddComponent<Image>();
-                cardBg.color = ColDarkPanel;
+                FolkHorrorUITheme.StylePanel(cardBg, true);
 
                 GameObject borderObj = new GameObject("Border");
                 borderObj.transform.SetParent(cardObj.transform, false);
@@ -951,17 +951,17 @@ namespace CursedHarvest
                 rtBorder.anchorMax = Vector2.one;
                 rtBorder.sizeDelta = Vector2.zero;
                 Image borderImg = borderObj.AddComponent<Image>();
-                borderImg.color = new Color(0.42f, 0.36f, 0.26f, 0.55f);
+                FolkHorrorUITheme.StylePanel(borderImg, false);
 
                 GameObject innerBgObj = new GameObject("InnerCardBg");
                 innerBgObj.transform.SetParent(cardObj.transform, false);
                 RectTransform rtInner = innerBgObj.AddComponent<RectTransform>();
                 rtInner.anchorMin = Vector2.zero;
                 rtInner.anchorMax = Vector2.one;
-                rtInner.offsetMin = new Vector2(5f, 5f);
-                rtInner.offsetMax = new Vector2(-5f, -5f);
+                rtInner.offsetMin = new Vector2(6f, 6f);
+                rtInner.offsetMax = new Vector2(-6f, -6f);
                 Image innerBgImg = innerBgObj.AddComponent<Image>();
-                innerBgImg.color = ColDarkPanel;
+                FolkHorrorUITheme.StylePanel(innerBgImg, false);
                 cardBg = innerBgImg;
 
                 Button btn = cardObj.AddComponent<Button>();
@@ -1033,7 +1033,7 @@ namespace CursedHarvest
                 rtCard.anchoredPosition = new Vector2(0f, yPos);
 
                 Image cardBg = cardObj.AddComponent<Image>();
-                cardBg.color = ColDarkPanel;
+                FolkHorrorUITheme.StylePanel(cardBg, false);
 
                 GameObject borderObj = new GameObject("Border");
                 borderObj.transform.SetParent(cardObj.transform, false);
@@ -1042,7 +1042,7 @@ namespace CursedHarvest
                 rtBorder.anchorMax = Vector2.one;
                 rtBorder.sizeDelta = Vector2.zero;
                 Image borderImg = borderObj.AddComponent<Image>();
-                borderImg.color = new Color(0.42f, 0.36f, 0.26f, 0.55f);
+                FolkHorrorUITheme.StylePanel(borderImg, true);
 
                 GameObject innerBgObj = new GameObject("InnerCardBg");
                 innerBgObj.transform.SetParent(cardObj.transform, false);
@@ -1052,7 +1052,7 @@ namespace CursedHarvest
                 rtInner.offsetMin = new Vector2(4f, 4f);
                 rtInner.offsetMax = new Vector2(-4f, -4f);
                 Image innerBgImg = innerBgObj.AddComponent<Image>();
-                innerBgImg.color = ColDarkPanel;
+                FolkHorrorUITheme.StylePanel(innerBgImg, false);
                 cardBg = innerBgImg;
 
                 Button btn = cardObj.AddComponent<Button>();
@@ -1087,7 +1087,7 @@ namespace CursedHarvest
             rtDetails.anchoredPosition = new Vector2(0f, -460f);
             rtDetails.sizeDelta = new Vector2(960f, 180f);
             Image detailsBg = detailsObj.AddComponent<Image>();
-            detailsBg.color = ColDarkPanel;
+            FolkHorrorUITheme.StylePanel(detailsBg, true);
 
             selectedArenaDescText = CreateLabel(detailsObj.transform, "ArenaDesc", "A moonlit rural farm under eerie quietude.", 22, FontStyle.Normal, ColTextPrimary, new Vector2(0f, 38f), new Vector2(900f, 60f), TextAnchor.MiddleLeft);
             selectedArenaBossSummaryText = CreateLabel(detailsObj.transform, "BossSummary", "WAVE 5 BOSS: THE LAST HARVEST", 24, FontStyle.Bold, ColDanger, new Vector2(0f, -32f), new Vector2(900f, 40f), TextAnchor.MiddleLeft);
@@ -1122,7 +1122,7 @@ namespace CursedHarvest
             rtEss.anchoredPosition = new Vector2(0f, 735f);
             rtEss.sizeDelta = new Vector2(960f, 76f);
             Image essBg = essBadgeObj.AddComponent<Image>();
-            essBg.color = ColDarkPanel;
+            FolkHorrorUITheme.StylePanel(essBg, false);
 
             essenceBalanceText = CreateLabel(essBadgeObj.transform, "EssenceText", "✦ HARVEST ESSENCE: 0", 30, FontStyle.Bold, ColHarvestGold, Vector2.zero, new Vector2(920f, 64f));
 
@@ -1148,13 +1148,32 @@ namespace CursedHarvest
                 rt.anchoredPosition = new Vector2(colX[col], rowY[row]);
 
                 Image bg = cObj.AddComponent<Image>();
-                bg.color = ColDarkPanel;
+                FolkHorrorUITheme.StylePanel(bg, true);
 
-                Text tN = CreateLabel(cObj.transform, "Title", $"{def.iconGlyph}  {def.displayName.ToUpper()}", 26, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 118f), new Vector2(430f, 42f));
-                Text tR = CreateLabel(cObj.transform, "Rank", "LEVEL: [□ □ □ □ □] 0/5", 20, FontStyle.Bold, ColCursedGreen, new Vector2(0f, 68f), new Vector2(430f, 32f));
-                Text tD = CreateLabel(cObj.transform, "Desc", "", 19, FontStyle.Normal, ColTextPrimary, new Vector2(0f, -6f), new Vector2(424f, 96f));
+                // Add icon image if available
+                Sprite iconSp = null;
+#if UNITY_EDITOR
+                iconSp = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/_Documentation/Branding/Mobile/MetaIcon_{branch}.png");
+#endif
+                if (iconSp != null)
+                {
+                    GameObject icoObj = new GameObject("CardIcon");
+                    icoObj.transform.SetParent(cObj.transform, false);
+                    RectTransform rtIco = icoObj.AddComponent<RectTransform>();
+                    rtIco.anchorMin = new Vector2(0.5f, 1f);
+                    rtIco.anchorMax = new Vector2(0.5f, 1f);
+                    rtIco.pivot = new Vector2(0.5f, 1f);
+                    rtIco.anchoredPosition = new Vector2(0f, -14f);
+                    rtIco.sizeDelta = new Vector2(64f, 64f);
+                    Image icoImg = icoObj.AddComponent<Image>();
+                    icoImg.sprite = iconSp;
+                }
 
-                Button uBtn = CreateMenuButton(cObj.transform, "UpgradeButton", "UPGRADE", new Vector2(0f, -112f), new Vector2(420f, 78f), ColHarvestGold, 22);
+                Text tN = CreateLabel(cObj.transform, "Title", $"{def.displayName.ToUpper()}", 25, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 76f), new Vector2(430f, 38f));
+                Text tR = CreateLabel(cObj.transform, "Rank", "LEVEL: [□ □ □ □ □] 0/5", 20, FontStyle.Bold, ColCursedGreen, new Vector2(0f, 38f), new Vector2(430f, 30f));
+                Text tD = CreateLabel(cObj.transform, "Desc", "", 19, FontStyle.Normal, ColTextPrimary, new Vector2(0f, -22f), new Vector2(424f, 82f));
+
+                Button uBtn = CreateMenuButton(cObj.transform, "UpgradeButton", "UPGRADE", new Vector2(0f, -112f), new Vector2(420f, 76f), ColHarvestGold, 22);
                 Text btnText = uBtn.GetComponentInChildren<Text>();
 
                 uBtn.onClick.RemoveAllListeners();
@@ -1248,7 +1267,7 @@ namespace CursedHarvest
             rtCard.anchorMax = new Vector2(0.5f, 0.5f);
             rtCard.sizeDelta = new Vector2(860f, 860f);
             Image cardBg = cardObj.AddComponent<Image>();
-            cardBg.color = ColDarkPanel;
+            FolkHorrorUITheme.StylePanel(cardBg, true);
 
             CreateLabel(cardObj.transform, "SettingsTitle", "SETTINGS", 48, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 320f), new Vector2(760f, 64f));
             CreateLabel(cardObj.transform, "SettingsSub", "Audio & Touch Haptics Preferences", 22, FontStyle.Normal, ColTextMuted, new Vector2(0f, 260f), new Vector2(760f, 36f));
@@ -1277,7 +1296,7 @@ namespace CursedHarvest
             rtCard.anchorMax = new Vector2(0.5f, 0.5f);
             rtCard.sizeDelta = new Vector2(800f, 520f);
             Image cardBg = cardObj.AddComponent<Image>();
-            cardBg.color = ColDarkPanel;
+            FolkHorrorUITheme.StylePanel(cardBg, false);
 
             CreateLabel(cardObj.transform, "ExitTitle", "ABANDON HARVEST?", 44, FontStyle.Bold, ColDanger, new Vector2(0f, 160f), new Vector2(720f, 60f));
             CreateLabel(cardObj.transform, "ExitMessage", "Are you sure you wish to exit to device?", 24, FontStyle.Normal, ColTextPrimary, new Vector2(0f, 75f), new Vector2(720f, 50f));
@@ -1304,7 +1323,7 @@ namespace CursedHarvest
             rtCard.sizeDelta = new Vector2(960f, 1400f);
             rtCard.anchoredPosition = new Vector2(0f, -60f);
             Image cardBg = cardObj.AddComponent<Image>();
-            cardBg.color = ColDarkPanel;
+            FolkHorrorUITheme.StylePanel(cardBg, true);
 
             string creditsText =
                 "CURSED HARVEST. — MOBILE v1.1.0\n" +
@@ -1405,15 +1424,10 @@ namespace CursedHarvest
             rt.anchoredPosition = position;
 
             Image img = btnObj.AddComponent<Image>();
-            img.color = bgColor;
-
             Button btn = btnObj.AddComponent<Button>();
-            ColorBlock cb = btn.colors;
-            cb.normalColor = Color.white;
-            cb.highlightedColor = new Color(1.20f, 1.20f, 1.20f);
-            cb.pressedColor = new Color(0.78f, 0.78f, 0.78f);
-            cb.disabledColor = new Color(0.42f, 0.42f, 0.42f, 0.55f);
-            btn.colors = cb;
+
+            string style = (bgColor == ColHarvestGold) ? "gold" : ((bgColor == ColDanger) ? "danger" : "dark");
+            FolkHorrorUITheme.StyleButton(btn, img, style);
 
             GameObject textObj = new GameObject("Text");
             textObj.transform.SetParent(btnObj.transform, false);
@@ -1428,7 +1442,7 @@ namespace CursedHarvest
             t.fontStyle = FontStyle.Bold;
             t.alignment = TextAnchor.MiddleCenter;
             t.text = label;
-            t.color = (bgColor == ColHarvestGold) ? new Color(0.12f, 0.08f, 0.04f) : ColTextPrimary;
+            t.color = (style == "gold") ? new Color(0.12f, 0.08f, 0.04f) : ColTextPrimary;
 
             return btn;
         }

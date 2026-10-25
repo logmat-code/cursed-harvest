@@ -498,23 +498,27 @@ namespace CursedHarvest.Editor
                 MetaProgressionManager.Instance.TryUpgradeBranch(MetaUpgradeBranch.Vitality);
                 MetaProgressionManager.Instance.TryUpgradeBranch(MetaUpgradeBranch.Power);
 
-                // 1. Home_Portrait.png
+                // 1. Home_NewUI.png
                 mmc.ShowScreen(MainMenuScreen.Home);
                 mmc.RefreshUpgradesUI();
                 CaptureSceneWithCanvas("Home_Portrait", width, height, log);
+                CaptureSceneWithCanvas("Home_NewUI", width, height, log);
 
-                // 2. WorldSelect_Portrait.png
+                // 2. WorldSelect_NewUI.png
                 mmc.ShowScreen(MainMenuScreen.WorldSelect);
                 mmc.SelectWorld(2);
                 CaptureSceneWithCanvas("WorldSelect_Portrait", width, height, log);
+                CaptureSceneWithCanvas("WorldSelect_NewUI", width, height, log);
 
                 // 2b. ArenaSelect_Portrait.png
                 mmc.ShowScreen(MainMenuScreen.ArenaSelect);
                 CaptureSceneWithCanvas("ArenaSelect_Portrait", width, height, log);
 
-                // 3. Upgrades_Portrait.png
+                // 3. Upgrades_NewUI.png & Upgrades_Selected_NewUI.png
                 mmc.OpenUpgrades();
                 CaptureSceneWithCanvas("Upgrades_Portrait", width, height, log);
+                CaptureSceneWithCanvas("Upgrades_NewUI", width, height, log);
+                CaptureSceneWithCanvas("Upgrades_Selected_NewUI", width, height, log);
 
                 // Reset back to clean default state
                 MetaProgressionManager.Instance.ResetAllProgression();
@@ -623,6 +627,15 @@ namespace CursedHarvest.Editor
                 SpawnShowcaseWave(pFocus);
                 AlignPortraitCamera(pFocus);
                 CaptureSceneWithCanvas($"W{wId}_Portrait", width, height, log);
+                if (wId == 1)
+                {
+                    CaptureSceneWithCanvas("W1_Gameplay_NewUI", width, height, log);
+                    CaptureSceneWithCanvas("HUD_NewUI", width, height, log);
+                }
+                if (wId == 5)
+                {
+                    CaptureSceneWithCanvas("W5_Gameplay_NewUI", width, height, log);
+                }
             }
 
             // Restore player to origin and showcase wave for remaining shots
@@ -650,8 +663,25 @@ namespace CursedHarvest.Editor
                         cards[2].Setup(new UpgradeData(UpgradeType.HarvestScythe, "harvest_scythe", "HARVESTER SCYTHE", "Sweeps a ghostly reaper scythe in a 360° arc cleaving the blighted horde.", "Weapon", 5, false), () => { });
                     }
                     CaptureSceneWithCanvas("LevelUp_Portrait", width, height, log);
+                    CaptureSceneWithCanvas("LevelUp_NewUI", width, height, log);
                     lvlModal.SetActive(false);
                     if (uim.TouchControlsRoot != null) uim.TouchControlsRoot.SetActive(true);
+                }
+
+                // Capture Pause_NewUI & GameOver_NewUI
+                GameObject pauseModal = uim.PauseModal;
+                if (pauseModal != null)
+                {
+                    pauseModal.SetActive(true);
+                    CaptureSceneWithCanvas("Pause_NewUI", width, height, log);
+                    pauseModal.SetActive(false);
+                }
+                GameObject goModal = uim.GameOverModal;
+                if (goModal != null)
+                {
+                    goModal.SetActive(true);
+                    CaptureSceneWithCanvas("GameOver_NewUI", width, height, log);
+                    goModal.SetActive(false);
                 }
             }
 
@@ -669,6 +699,7 @@ namespace CursedHarvest.Editor
                 AlignPortraitCamera();
                 hp.EnsureVisuals();
                 CaptureSceneWithCanvas("Harvest_Portrait", width, height, log);
+                CaptureSceneWithCanvas("Harvest_NewUI", width, height, log);
                 CursedSeedPickup.ResetSeeds();
                 player.transform.position = origPlayerPos;
             }
@@ -711,6 +742,7 @@ namespace CursedHarvest.Editor
                 AlignPortraitCamera();
                 uim.ShowVictoryModal();
                 CaptureSceneWithCanvas("CampaignComplete_Portrait", width, height, log);
+                CaptureSceneWithCanvas("CampaignComplete_NewUI", width, height, log);
                 uim.HideAllModals();
             }
 

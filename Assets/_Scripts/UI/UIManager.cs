@@ -1265,13 +1265,24 @@ namespace CursedHarvest
             GameObject hpBg = CreateBox(topLeft.transform, "HealthBg",
                 new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
                 new Vector2(312, 30), new Vector2(14, -12),
-                new Color(0.12f, 0.13f, 0.17f, 0.96f));
+                Color.white);
+            Image hpBgImg = hpBg.GetComponent<Image>();
+            if (FolkHorrorUITheme.BarTrack != null)
+            {
+                hpBgImg.sprite = FolkHorrorUITheme.BarTrack;
+                hpBgImg.type = Image.Type.Sliced;
+            }
 
             GameObject hpFillObj = CreateBox(hpBg.transform, "HealthFill",
                 Vector2.zero, Vector2.one, new Vector2(0, 0.5f),
                 Vector2.zero, Vector2.zero,
-                new Color(0.76f, 0.14f, 0.14f, 1f));
+                Color.white);
             healthBarFill = hpFillObj.GetComponent<Image>();
+            if (FolkHorrorUITheme.BarHpFill != null)
+            {
+                healthBarFill.sprite = FolkHorrorUITheme.BarHpFill;
+                healthBarFill.type = Image.Type.Sliced;
+            }
 
             healthText = CreateLabel(hpBg.transform, "HealthText", "100 / 100", 19, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(0.98f, 0.96f, 0.92f), defaultFont);
             StretchFull(healthText.rectTransform);
@@ -1280,13 +1291,24 @@ namespace CursedHarvest
             GameObject xpBg = CreateBox(topLeft.transform, "XpBg",
                 new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
                 new Vector2(312, 20), new Vector2(14, -48),
-                new Color(0.10f, 0.12f, 0.16f, 0.95f));
+                Color.white);
+            Image xpBgImg = xpBg.GetComponent<Image>();
+            if (FolkHorrorUITheme.BarTrack != null)
+            {
+                xpBgImg.sprite = FolkHorrorUITheme.BarTrack;
+                xpBgImg.type = Image.Type.Sliced;
+            }
 
             GameObject xpFillObj = CreateBox(xpBg.transform, "XpFill",
                 Vector2.zero, new Vector2(0f, 1f), new Vector2(0, 0.5f),
                 Vector2.zero, Vector2.zero,
-                new Color(0.20f, 0.68f, 0.82f, 1f));
+                Color.white);
             xpBarFill = xpFillObj.GetComponent<Image>();
+            if (FolkHorrorUITheme.BarXpFill != null)
+            {
+                xpBarFill.sprite = FolkHorrorUITheme.BarXpFill;
+                xpBarFill.type = Image.Type.Sliced;
+            }
 
             levelText = CreateLabel(topLeft.transform, "LevelText", "LVL 1", 19, FontStyle.Bold, TextAnchor.MiddleLeft, new Color(0.95f, 0.84f, 0.42f), defaultFont);
             SetRect(levelText.rectTransform, new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(110, 30), new Vector2(16, 8));
@@ -1708,7 +1730,13 @@ namespace CursedHarvest
             rt.sizeDelta = size;
             rt.anchoredPosition = pos;
             Image img = go.GetComponent<Image>();
-            img.color = color;
+
+            // Auto-style with authentic Folk-Horror 9-slice panel
+            FolkHorrorUITheme.StylePanel(img, true);
+            if (color != Color.white && color.a > 0.05f)
+            {
+                img.color = new Color(color.r, color.g, color.b, color.a);
+            }
             return go;
         }
 
@@ -1767,15 +1795,10 @@ namespace CursedHarvest
             rt.anchoredPosition = anchoredPos;
 
             Image img = btnObj.GetComponent<Image>();
-            img.color = bgColor;
-
             Button btn = btnObj.GetComponent<Button>();
-            btn.targetGraphic = img;
 
-            ColorBlock cb = btn.colors;
-            cb.highlightedColor = Color.Lerp(bgColor, Color.white, 0.22f);
-            cb.pressedColor = Color.Lerp(bgColor, Color.black, 0.25f);
-            btn.colors = cb;
+            string style = (bgColor.r > 0.5f && bgColor.g < 0.35f) ? "danger" : ((bgColor.r > 0.5f && bgColor.g > 0.4f) ? "gold" : "dark");
+            FolkHorrorUITheme.StyleButton(btn, img, style);
 
             GameObject textObj = new GameObject("Text", typeof(RectTransform), typeof(Text));
             textObj.transform.SetParent(btnObj.transform, false);
@@ -1788,7 +1811,7 @@ namespace CursedHarvest
             txt.fontSize = fontSize;
             txt.fontStyle = FontStyle.Bold;
             txt.alignment = TextAnchor.MiddleCenter;
-            txt.color = textColor;
+            txt.color = (style == "gold") ? new Color(0.12f, 0.08f, 0.04f) : FolkHorrorUITheme.ColorTextCream;
 
             return btnObj;
         }

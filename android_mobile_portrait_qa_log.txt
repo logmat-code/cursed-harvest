@@ -28,26 +28,38 @@
   [PASS] QA 2 (19.5:9 Portrait (1290p) 1290x2796): Player Viewport Y=46.7% | Ground Vis=±7.5m x ±16.6m
   [PASS] QA 2 (20:9 Portrait (WQHD+) 1440x3200): Player Viewport Y=46.8% | Ground Vis=±7.4m x ±16.9m
   [PASS] QA 2 (Tablet Portrait (16:10) 1600x2560): Player Viewport Y=46.6% | Ground Vis=±8.3m x ±13.5m
-  [PASS] QA 3: Portrait Viewport-Aware Spawn verified (18/20 samples outside inner viewport) + DemonCharger/TimberGoliath visibility gate active.
+  [PASS] QA 3: Portrait Viewport-Aware Spawn verified (17/20 samples outside inner viewport) + DemonCharger/TimberGoliath visibility gate active.
   [PASS] QA 4: VirtualJoystickUI (bottom-left 360°) & DashTouchButtonUI (bottom-right radial cooldown) verified and auto-hidden during modals.
   [PASS] QA 5: Meta Upgrades real stat application & PlayerPrefs persistence verified in Portrait.
   [PASS] QA 6: 3 Worlds and 15 Arenas (5 waves per arena) verified with boss wave 5.
 [ANDROID PORTRAIT PIPELINE] QA Suite Status: ALL PASSED
 
 --- [STEP 4] CAPTURING ALL 12 OFFICIAL PORTRAIT SCREENSHOTS (1080 x 1920) ---
-  ✓ Captured Home_Portrait.png (1080x1920, 448 KB)
+  ✓ Captured Home_Portrait.png (1080x1920, 450 KB)
+  ✓ Captured Home_NewUI.png (1080x1920, 450 KB)
   ✓ Captured WorldSelect_Portrait.png (1080x1920, 253 KB)
+  ✓ Captured WorldSelect_NewUI.png (1080x1920, 253 KB)
   ✓ Captured ArenaSelect_Portrait.png (1080x1920, 253 KB)
-  ✓ Captured Upgrades_Portrait.png (1080x1920, 261 KB)
+  ✓ Captured Upgrades_Portrait.png (1080x1920, 253 KB)
+  ✓ Captured Upgrades_NewUI.png (1080x1920, 253 KB)
+  ✓ Captured Upgrades_Selected_NewUI.png (1080x1920, 253 KB)
   ✓ Captured W1_Portrait.png (1080x1920, 328 KB)
+  ✓ Captured W1_Gameplay_NewUI.png (1080x1920, 328 KB)
+  ✓ Captured HUD_NewUI.png (1080x1920, 328 KB)
   ✓ Captured W2_Portrait.png (1080x1920, 517 KB)
   ✓ Captured W3_Portrait.png (1080x1920, 1630 KB)
   ✓ Captured W4_Portrait.png (1080x1920, 346 KB)
   ✓ Captured W5_Portrait.png (1080x1920, 294 KB)
+  ✓ Captured W5_Gameplay_NewUI.png (1080x1920, 294 KB)
   ✓ Captured LevelUp_Portrait.png (1080x1920, 270 KB)
+  ✓ Captured LevelUp_NewUI.png (1080x1920, 270 KB)
+  ✓ Captured Pause_NewUI.png (1080x1920, 144 KB)
+  ✓ Captured GameOver_NewUI.png (1080x1920, 148 KB)
   ✓ Captured Harvest_Portrait.png (1080x1920, 442 KB)
+  ✓ Captured Harvest_NewUI.png (1080x1920, 442 KB)
   ✓ Captured Boss_Portrait.png (1080x1920, 318 KB)
   ✓ Captured CampaignComplete_Portrait.png (1080x1920, 158 KB)
+  ✓ Captured CampaignComplete_NewUI.png (1080x1920, 158 KB)
   ✓ All 12 Portrait Screenshots (1080x1920) captured and synced!
 
 --- [STEP 5] BUILDING PRODUCTION ANDROID APP BUNDLE (.AAB) ---
@@ -66,8 +78,8 @@
   • Signing Configuration: useCustomKeystore=True (/Users/logmat/Documents/LOGMAT_Signing/CursedHarvest/cursedharvest-upload-key.jks)
 =========================================================================
   ✓ [AAB BUILD SUCCEEDED] Path: Builds/Android/Release/CursedHarvest_Android_1.1.0_vc2_RELEASE.aab
-  ✓ Bundle Size: 57.39 MB (60,176,878 bytes)
-  ✓ Build Time:  32.3 seconds
+  ✓ Bundle Size: 57.39 MB (60,180,017 bytes)
+  ✓ Build Time:  26.6 seconds
 =========================================================================
 =========================================================================
 [ANDROID PORTRAIT PIPELINE] Complete!

@@ -681,12 +681,19 @@ namespace CursedHarvest
             return spawned;
         }
 
+        private float lastBroadcastTimerSecond = -1f;
+
         private void Update()
         {
             if (!isRunning) return;
 
             runTime += Time.deltaTime;
-            OnRunTimerUpdated?.Invoke(runTime);
+            int currentSecond = (int)runTime;
+            if (currentSecond != (int)lastBroadcastTimerSecond)
+            {
+                lastBroadcastTimerSecond = currentSecond;
+                OnRunTimerUpdated?.Invoke(runTime);
+            }
 
             switch (currentState)
             {
