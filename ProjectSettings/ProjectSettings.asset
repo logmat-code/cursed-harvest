@@ -273,8 +273,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 2
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: /Users/logmat/Documents/LOGMAT_Signing/CursedHarvest/cursedharvest-upload-key.jks
+  AndroidKeyaliasName: cursedharvest-upload
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidEnableArm64MTE: 0
   AndroidBuildApkPerCpuArchitecture: 0
@@ -286,7 +286,7 @@ PlayerSettings:
   AndroidEnableTango: 0
   androidEnableBanner: 1
   androidUseLowAccuracyLocation: 0
-  androidUseCustomKeystore: 0
+  androidUseCustomKeystore: 1
   m_AndroidBanners:
   - width: 320
     height: 180
@@ -302,7 +302,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 3df0a99a5408c45b1b31141c80602b6d, type: 3}
+      m_Icon: {fileID: 2800000, guid: 6d10af757f7f64eb5b0ff4e04e6fafe1, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -310,43 +310,43 @@ PlayerSettings:
   - m_BuildTarget: Android
     m_Icons:
     - m_Textures:
-      - {fileID: 2800000, guid: 640fdc06bd18f474e985fbe953c9687d, type: 3}
-      - {fileID: 2800000, guid: c4751b5e247b842dd8ce03f114d0744d, type: 3}
+      - {fileID: 2800000, guid: ac989f34d4c08461ebb43a8f047a6de2, type: 3}
+      - {fileID: 2800000, guid: 9e4f421e7c7194a0ba4510472677b9b7, type: 3}
       m_Width: 432
       m_Height: 432
       m_Kind: 2
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: 640fdc06bd18f474e985fbe953c9687d, type: 3}
-      - {fileID: 2800000, guid: c4751b5e247b842dd8ce03f114d0744d, type: 3}
+      - {fileID: 2800000, guid: ac989f34d4c08461ebb43a8f047a6de2, type: 3}
+      - {fileID: 2800000, guid: 9e4f421e7c7194a0ba4510472677b9b7, type: 3}
       m_Width: 324
       m_Height: 324
       m_Kind: 2
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: 640fdc06bd18f474e985fbe953c9687d, type: 3}
-      - {fileID: 2800000, guid: c4751b5e247b842dd8ce03f114d0744d, type: 3}
+      - {fileID: 2800000, guid: ac989f34d4c08461ebb43a8f047a6de2, type: 3}
+      - {fileID: 2800000, guid: 9e4f421e7c7194a0ba4510472677b9b7, type: 3}
       m_Width: 216
       m_Height: 216
       m_Kind: 2
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: 640fdc06bd18f474e985fbe953c9687d, type: 3}
-      - {fileID: 2800000, guid: c4751b5e247b842dd8ce03f114d0744d, type: 3}
+      - {fileID: 2800000, guid: ac989f34d4c08461ebb43a8f047a6de2, type: 3}
+      - {fileID: 2800000, guid: 9e4f421e7c7194a0ba4510472677b9b7, type: 3}
       m_Width: 162
       m_Height: 162
       m_Kind: 2
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: 640fdc06bd18f474e985fbe953c9687d, type: 3}
-      - {fileID: 2800000, guid: c4751b5e247b842dd8ce03f114d0744d, type: 3}
+      - {fileID: 2800000, guid: ac989f34d4c08461ebb43a8f047a6de2, type: 3}
+      - {fileID: 2800000, guid: 9e4f421e7c7194a0ba4510472677b9b7, type: 3}
       m_Width: 108
       m_Height: 108
       m_Kind: 2
       m_SubKind: 
     - m_Textures:
-      - {fileID: 2800000, guid: 640fdc06bd18f474e985fbe953c9687d, type: 3}
-      - {fileID: 2800000, guid: c4751b5e247b842dd8ce03f114d0744d, type: 3}
+      - {fileID: 2800000, guid: ac989f34d4c08461ebb43a8f047a6de2, type: 3}
+      - {fileID: 2800000, guid: 9e4f421e7c7194a0ba4510472677b9b7, type: 3}
       m_Width: 81
       m_Height: 81
       m_Kind: 2

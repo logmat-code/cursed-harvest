@@ -26,11 +26,15 @@ namespace CursedHarvest.Editor
         public const string AuthoritativeBundleVersion = "1.0.0";
         public const int AuthoritativeVersionCode = 1;
 
-        public const string AndroidBuildOutputDir = "Builds/Android";
-        public const string AndroidAabOutputPath = "Builds/Android/CursedHarvest_Android_1.0.0_vc1.aab";
+        public const string AndroidBuildOutputDir = "Builds/Android/Release";
+        public const string AndroidAabOutputPath = "Builds/Android/Release/CursedHarvest_Android_1.0.0_vc1_RELEASE.aab";
         public const string MobileScreenshotsDir = "Assets/_Documentation/Screenshots/MobilePortrait";
+        public const string PlayStoreIconsDir = "Assets/_Documentation/Branding/Mobile/PlayStore";
         public const string ArtifactsDir = "/Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b";
         public const string QALogPath = "android_mobile_portrait_qa_log.txt";
+
+        private static readonly string KeystorePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Documents/LOGMAT_Signing/CursedHarvest/cursedharvest-upload-key.jks");
+        private static readonly string CredentialsPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Documents/LOGMAT_Signing/CursedHarvest/CursedHarvest_Keystore_Credentials.txt");
 
         private static readonly string[] BuildScenes = new string[]
         {
@@ -107,11 +111,11 @@ namespace CursedHarvest.Editor
         {
             log("\n--- [STEP 1] CONFIGURING ANDROID PORTRAIT PLAYER SETTINGS & BRANDING ---");
 
-            // Ensure Branding Texture Importers are configured properly
-            ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/Icon_Master_1024.png", false, 1024);
-            ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/Icon_PlayStore_512.png", false, 512);
-            ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/AdaptiveIcon_Background.png", false, 1024);
-            ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/AdaptiveIcon_Foreground.png", true, 1024);
+            // Ensure Branding Texture Importers are configured properly for New Play Store Icons
+            ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/PlayStore/CursedHarvest_Icon_Master_1024.png", false, 1024);
+            ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/PlayStore/CursedHarvest_Icon_PlayStore_512.png", false, 512);
+            ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/PlayStore/CursedHarvest_Adaptive_Background.png", false, 1024);
+            ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/PlayStore/CursedHarvest_Adaptive_Foreground.png", true, 1024);
             ConfigureTextureImporter("Assets/_Documentation/Branding/Mobile/MobileSplash_Portrait_1080x1920.png", true, 2048);
 
             // 1. Authoritative Identity
@@ -145,10 +149,10 @@ namespace CursedHarvest.Editor
             EditorUserBuildSettings.buildScriptsOnly = false;
             EditorUserBuildSettings.buildAppBundle = true;
 
-            // 5. Assign Master Icon & Android Adaptive Icons
-            Texture2D masterIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Documentation/Branding/Mobile/Icon_Master_1024.png");
-            Texture2D adaptiveBg = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Documentation/Branding/Mobile/AdaptiveIcon_Background.png");
-            Texture2D adaptiveFg = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Documentation/Branding/Mobile/AdaptiveIcon_Foreground.png");
+            // 5. Assign NEW Master Icon & Android Adaptive Icons
+            Texture2D masterIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Documentation/Branding/Mobile/PlayStore/CursedHarvest_Icon_Master_1024.png");
+            Texture2D adaptiveBg = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Documentation/Branding/Mobile/PlayStore/CursedHarvest_Adaptive_Background.png");
+            Texture2D adaptiveFg = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Documentation/Branding/Mobile/PlayStore/CursedHarvest_Adaptive_Foreground.png");
 
             if (masterIcon != null)
             {
@@ -164,7 +168,7 @@ namespace CursedHarvest.Editor
                     adaptiveIcons[i].SetTextures(adaptiveBg, adaptiveFg);
                 }
                 PlayerSettings.SetPlatformIcons(NamedBuildTarget.Android, UnityEditor.Android.AndroidPlatformIconKind.Adaptive, adaptiveIcons);
-                log("  ✓ Assigned Android Adaptive Icon (Background + Foreground) & Master 1024 Icon.");
+                log("  ✓ Assigned NEW Android Adaptive Icon (Background + Foreground) and Master 1024 Icon.");
             }
 
             // 6. Assign Portrait Splash Screen
@@ -176,7 +180,41 @@ namespace CursedHarvest.Editor
                 PlayerSettings.SplashScreen.backgroundPortrait = splashSprite;
             }
 
-            // 7. Confirm Build Scenes (MainMenu = 0, MainGame = 1)
+            // 7. Configure Custom Upload Keystore Release Signing
+            if (File.Exists(KeystorePath) && File.Exists(CredentialsPath))
+            {
+                string[] credLines = File.ReadAllLines(CredentialsPath);
+                string ksPass = "";
+                string keyPass = "";
+                string alias = "cursedharvest-upload";
+
+                foreach (string line in credLines)
+                {
+                    if (line.StartsWith("Keystore Password:")) ksPass = line.Substring("Keystore Password:".Length).Trim();
+                    else if (line.StartsWith("Key Password:")) keyPass = line.Substring("Key Password:".Length).Trim();
+                    else if (line.StartsWith("Alias:")) alias = line.Substring("Alias:".Length).Trim();
+                }
+
+                if (!string.IsNullOrEmpty(ksPass) && !string.IsNullOrEmpty(keyPass))
+                {
+                    PlayerSettings.Android.useCustomKeystore = true;
+                    PlayerSettings.Android.keystoreName = KeystorePath;
+                    PlayerSettings.Android.keystorePass = ksPass;
+                    PlayerSettings.Android.keyaliasName = alias;
+                    PlayerSettings.Android.keyaliasPass = keyPass;
+                    log($"  ✓ Configured Release Signing with Upload Keystore: '{alias}' ({KeystorePath})");
+                }
+                else
+                {
+                    logErr("  ✗ Failed to parse credentials from credentials file!");
+                }
+            }
+            else
+            {
+                logErr($"  ✗ Upload Keystore not found at '{KeystorePath}'!");
+            }
+
+            // 8. Confirm Build Scenes (MainMenu = 0, MainGame = 1)
             EditorBuildSettings.scenes = new EditorBuildSettingsScene[]
             {
                 new EditorBuildSettingsScene("Assets/_Scenes/MainMenu.unity", true),
