@@ -36,6 +36,15 @@
 ehthumbs.db
 [Tt]humbs.db
 
+# Android Signing / Keystore Security (Never commit keys or credentials)
+*.jks
+*.keystore
+*.key
+*signing*
+*credentials*
+*Credentials*
+LOGMAT_Signing/
+
 # Large raw archive files
 Assets/*.unitypackage
 Assets/*.unitypackage.meta
