@@ -65,6 +65,8 @@ namespace CursedHarvest
         private Vector3 visualOriginalPos;
         private Quaternion visualOriginalRot;
         private readonly List<EnemyController> nearbyBuffer = new List<EnemyController>(16);
+        private Vector3 cachedCachedSeparation = Vector3.zero;
+        private int separationTickOffset;
 
         public EnemyType Type => enemyType;
         public float BaseMoveSpeed => baseMoveSpeed;
@@ -152,6 +154,8 @@ namespace CursedHarvest
             knockbackVelocity = Vector3.zero;
             lastAttackTime = -attackCooldown;
             walkCycleTimer = Random.Range(0f, 10f); // Desync bobbing between enemies
+            cachedCachedSeparation = Vector3.zero;
+            separationTickOffset = UnityEngine.Random.Range(0, 4); // 0, 1, 2, or 3
             if (visualRoot != null)
             {
                 visualRoot.localPosition = visualOriginalPos;
@@ -299,25 +303,28 @@ namespace CursedHarvest
                 TryAttackPlayer();
             }
 
-            // Flocking: calculate separation vector from nearby enemies
-            Vector3 separation = Vector3.zero;
-            EnemyRegistry.GetEnemiesInRange(currentPos, separationRadius, nearbyBuffer);
-            for (int i = 0; i < nearbyBuffer.Count; i++)
+            // Flocking: calculate separation vector from nearby enemies (staggered ticks to eliminate per-frame CPU bottleneck)
+            if (((Time.frameCount + separationTickOffset) & 3) == 0)
             {
-                EnemyController other = nearbyBuffer[i];
-                if (other != this && other != null && other.IsAlive)
+                cachedCachedSeparation = Vector3.zero;
+                EnemyRegistry.GetEnemiesInRange(currentPos, separationRadius, nearbyBuffer);
+                for (int i = 0; i < nearbyBuffer.Count; i++)
                 {
-                    Vector3 away = currentPos - other.transform.position;
-                    away.y = 0f;
-                    float d = away.magnitude;
-                    if (d > 0.001f && d < separationRadius)
+                    EnemyController other = nearbyBuffer[i];
+                    if (other != this && other != null && other.IsAlive)
                     {
-                        separation += (away / d) * (1f - d / separationRadius);
+                        Vector3 away = currentPos - other.transform.position;
+                        away.y = 0f;
+                        float d = away.magnitude;
+                        if (d > 0.001f && d < separationRadius)
+                        {
+                            cachedCachedSeparation += (away / d) * (1f - d / separationRadius);
+                        }
                     }
                 }
             }
 
-            Vector3 moveDirection = (toPlayer.normalized + separation * separationWeight).normalized;
+            Vector3 moveDirection = (toPlayer.normalized + cachedCachedSeparation * separationWeight).normalized;
             Vector3 finalVelocity = moveDirection * MoveSpeed + knockbackVelocity;
             finalVelocity.y = -5f; // Keep grounded
 

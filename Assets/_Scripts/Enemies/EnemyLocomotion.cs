@@ -259,12 +259,22 @@ namespace CursedHarvest
         {
             if (!isInitialized) return;
 
+            // Frustum / distance culling for procedural bone rotation transforms:
+            // Off-screen or distant enemies do not need 16 per-bone matrix calculations per frame
+            bool shouldUpdateBones = true;
+            if (TopDownCameraFollow.Instance != null)
+            {
+                shouldUpdateBones = TopDownCameraFollow.Instance.IsWorldPositionVisibleInViewport(transform.position, 0.12f);
+            }
+
             // Compute actual horizontal speed
             Vector3 disp = transform.position - lastPosition;
             disp.y = 0f;
             float dt = Mathf.Max(0.0001f, Time.deltaTime);
             float speed = disp.magnitude / dt;
             lastPosition = transform.position;
+
+            if (!shouldUpdateBones) return;
 
             bool isMoving = speed > 0.08f;
             float targetWeight = isMoving ? 1f : 0f;

@@ -142,7 +142,6 @@ namespace CursedHarvest
             Time.timeScale = 1f;
 
             var _ = MobileSettingsAndLifecycleManager.Instance;
-            var __ = AdsManager.Instance;
             EnsureAudioSetup();
             EnsureFont();
         }
@@ -1337,9 +1336,9 @@ namespace CursedHarvest
                 "Original Dark Folk-Horror Mobile Branding\n\n" +
                 "AUDIO & ATMOSPHERE\n" +
                 "Folk Horror Drone & Procedural Synthesizer\n\n" +
-                "MOBILE CONVERSION & ADS\n" +
+                "MOBILE ARCHITECTURE\n" +
                 "Native Android Portrait Pipeline\n" +
-                "Yodo1 MAS Integration (AppKey: uJcp43j4h4)\n\n" +
+                "Touch-First Mobile Navigation & Controls\n\n" +
                 "DEDICATED TO ALL OCCULT ROGUELIKE HARVESTERS";
 
             Text tCredits = CreateLabel(cardObj.transform, "CreditsBody", creditsText, 24, FontStyle.Normal, ColTextPrimary, Vector2.zero, new Vector2(880f, 1300f), TextAnchor.MiddleCenter);

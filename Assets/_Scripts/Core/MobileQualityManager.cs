@@ -90,9 +90,9 @@ namespace CursedHarvest
             switch (tier)
             {
                 case MobileQualityTier.MobileHigh:
-                    // MOBILE HIGH: 4x MSAA, 45m shadows (2 cascades), 1.0x native
+                    // MOBILE HIGH: 4x MSAA, 30m shadows (2 cascades), 1.0x native
                     QualitySettings.antiAliasing = 4;
-                    QualitySettings.shadowDistance = 45f;
+                    QualitySettings.shadowDistance = 30f;
                     QualitySettings.shadowResolution = ShadowResolution.High;
                     QualitySettings.shadowCascades = 2;
                     QualitySettings.globalTextureMipmapLimit = 0;
@@ -100,9 +100,9 @@ namespace CursedHarvest
                     break;
 
                 case MobileQualityTier.MobilePerformance:
-                    // MOBILE PERFORMANCE: 0.80x render scale, 22m shadows, no cascades
+                    // MOBILE PERFORMANCE: 0.80x render scale, 16m shadows, no cascades
                     QualitySettings.antiAliasing = 0;
-                    QualitySettings.shadowDistance = 22f;
+                    QualitySettings.shadowDistance = 16f;
                     QualitySettings.shadowResolution = ShadowResolution.Low;
                     QualitySettings.shadowCascades = 1;
                     QualitySettings.globalTextureMipmapLimit = 0;
@@ -111,9 +111,9 @@ namespace CursedHarvest
 
                 case MobileQualityTier.MobileBalanced:
                 default:
-                    // MOBILE BALANCED (DEFAULT): 1.0x full native render, 2x MSAA, 30m shadows (1 cascade)
+                    // MOBILE BALANCED (DEFAULT): 1.0x full native render, 2x MSAA, 22m shadows (1 cascade)
                     QualitySettings.antiAliasing = 2;
-                    QualitySettings.shadowDistance = 30f;
+                    QualitySettings.shadowDistance = 22f;
                     QualitySettings.shadowResolution = ShadowResolution.Medium;
                     QualitySettings.shadowCascades = 1;
                     QualitySettings.globalTextureMipmapLimit = 0;

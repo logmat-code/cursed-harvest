@@ -23,11 +23,11 @@ namespace CursedHarvest.Editor
         public const string AuthoritativeCompanyName = "LOGMAT";
         public const string AuthoritativeProductName = "CURSED HARVEST.";
         public const string AuthoritativePackageName = "com.logmat.cursedharvest";
-        public const string AuthoritativeBundleVersion = "1.1.0";
+        public const string AuthoritativeBundleVersion = "1.0.0";
         public const int AuthoritativeVersionCode = 2;
 
         public const string AndroidBuildOutputDir = "Builds/Android/Release";
-        public const string AndroidAabOutputPath = "Builds/Android/Release/CursedHarvest_Android_1.1.0_vc2_RELEASE.aab";
+        public const string AndroidAabOutputPath = "Builds/Android/Release/CursedHarvest_Android_1.0.0_vc2_TEST.aab";
         public const string MobileScreenshotsDir = "Assets/_Documentation/Screenshots/MobilePortrait";
         public const string PlayStoreIconsDir = "Assets/_Documentation/Branding/Mobile/PlayStore";
         public const string ArtifactsDir = "/Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b";

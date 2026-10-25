@@ -578,15 +578,15 @@ namespace CursedHarvest.Editor
 
             ParticleSystem ps = emberObj.AddComponent<ParticleSystem>();
             ParticleSystem.MainModule main = ps.main;
-            main.startLifetime = 5.5f;
-            main.startSpeed = 0.35f;
-            main.startSize = 0.14f;
-            main.startColor = new Color(0.88f, 0.32f, 0.15f, 0.65f);
-            main.maxParticles = 160;
+            main.startLifetime = 4.0f;
+            main.startSpeed = 0.30f;
+            main.startSize = 0.12f;
+            main.startColor = new Color(0.88f, 0.32f, 0.15f, 0.55f);
+            main.maxParticles = 50;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
 
             ParticleSystem.EmissionModule emission = ps.emission;
-            emission.rateOverTime = 30f;
+            emission.rateOverTime = 12f;
 
             ParticleSystem.ShapeModule shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Box;

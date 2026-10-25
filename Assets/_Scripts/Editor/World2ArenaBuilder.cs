@@ -489,10 +489,10 @@ namespace CursedHarvest.Editor
                 new Color(0.98f, 0.55f, 0.18f, 0.95f)  // Glowing ember spark
             );
             main.simulationSpace = ParticleSystemSimulationSpace.World;
-            main.maxParticles = 800;
+            main.maxParticles = 60;
 
             var emission = ps.emission;
-            emission.rateOverTime = 120f;
+            emission.rateOverTime = 15f;
 
             var shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Box;

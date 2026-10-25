@@ -572,15 +572,15 @@ namespace CursedHarvest.Editor
             ParticleSystem ps = particlesObj.AddComponent<ParticleSystem>();
             var main = ps.main;
             main.loop = true;
-            main.startLifetime = 4.5f;
-            main.startSpeed = 0.5f;
-            main.startSize = 0.22f;
-            main.maxParticles = 120;
-            main.startColor = new Color(0.70f, 0.25f, 0.95f, 0.65f);
+            main.startLifetime = 3.0f;
+            main.startSpeed = 0.4f;
+            main.startSize = 0.18f;
+            main.maxParticles = 40;
+            main.startColor = new Color(0.70f, 0.25f, 0.95f, 0.55f);
             main.simulationSpace = ParticleSystemSimulationSpace.World;
 
             var emission = ps.emission;
-            emission.rateOverTime = 25f;
+            emission.rateOverTime = 12f;
 
             var shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Box;

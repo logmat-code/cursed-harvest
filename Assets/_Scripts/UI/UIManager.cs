@@ -83,8 +83,6 @@ namespace CursedHarvest
         [Header("Game Over Modal")]
         [SerializeField] private GameObject gameOverModal;
         [SerializeField] private Text gameOverStatsText;
-        [SerializeField] private Button doubleEssenceAdButton;
-        [SerializeField] private Text doubleEssenceAdButtonText;
         [SerializeField] private Button retryButton;
         [SerializeField] private Button gameOverWorldSelectButton;
         [SerializeField] private Button gameOverHomeButton;
@@ -187,7 +185,6 @@ namespace CursedHarvest
             if (settingsCloseButton != null) { settingsCloseButton.onClick.RemoveAllListeners(); settingsCloseButton.onClick.AddListener(CloseSettingsModal); }
 
             if (retryButton != null) { retryButton.onClick.RemoveAllListeners(); retryButton.onClick.AddListener(RestartRun); }
-            if (doubleEssenceAdButton != null) { doubleEssenceAdButton.onClick.RemoveAllListeners(); doubleEssenceAdButton.onClick.AddListener(OnDoubleEssenceAdClicked); }
             if (gameOverWorldSelectButton != null) { gameOverWorldSelectButton.onClick.RemoveAllListeners(); gameOverWorldSelectButton.onClick.AddListener(ReturnToWorldSelect); }
             if (gameOverHomeButton != null) { gameOverHomeButton.onClick.RemoveAllListeners(); gameOverHomeButton.onClick.AddListener(ReturnToHome); }
 
@@ -938,10 +935,6 @@ namespace CursedHarvest
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             Time.timeScale = 1f;
 
-            // Notify AdsManager of run end and evaluate frequency-capped interstitial transition
-            AdsManager.Instance?.NotifyRunCompleted();
-            AdsManager.Instance?.TryShowInterstitial("RunEnd_WorldSelect");
-
             if (GameSession.Instance != null)
             {
                 GameSession.Instance.ReturnToWorldSelect();
@@ -956,10 +949,6 @@ namespace CursedHarvest
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             Time.timeScale = 1f;
-
-            // Notify AdsManager of run end and evaluate frequency-capped interstitial transition
-            AdsManager.Instance?.NotifyRunCompleted();
-            AdsManager.Instance?.TryShowInterstitial("RunEnd_Home");
 
             if (GameSession.Instance != null)
             {
@@ -980,19 +969,6 @@ namespace CursedHarvest
                 gameOverModal.SetActive(true);
                 UpdateTouchControlsVisibility();
                 RefreshGameOverStatsText();
-
-                // Reset double essence ad button state
-                if (doubleEssenceAdButton != null)
-                {
-                    int runEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEssenceEarned : 0;
-                    bool canDouble = runEssence > 0;
-                    doubleEssenceAdButton.gameObject.SetActive(canDouble);
-                    doubleEssenceAdButton.interactable = canDouble;
-                    if (doubleEssenceAdButtonText != null)
-                    {
-                        doubleEssenceAdButtonText.text = $"✦ DOUBLE ESSENCE (+{runEssence}) [AD] ✦";
-                    }
-                }
             }
         }
 
@@ -1031,40 +1007,6 @@ namespace CursedHarvest
                 $"✦ HARVEST ESSENCE +{essenceEarned} ✦\n" +
                 $"TOTAL ESSENCE: {totalEssence} ✦\n\n" +
                 $"SCORE: {score}";
-        }
-
-        private void OnDoubleEssenceAdClicked()
-        {
-            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
-            if (AdsManager.Instance == null) return;
-
-            if (doubleEssenceAdButton != null) doubleEssenceAdButton.interactable = false;
-
-            AdsManager.Instance.ShowRewardedAd("GameOver_DoubleEssence", (rewardGranted) =>
-            {
-                if (rewardGranted)
-                {
-                    if (MetaProgressionManager.Instance != null)
-                    {
-                        MetaProgressionManager.Instance.DoubleRunEssence();
-                    }
-                    RefreshGameOverStatsText();
-                    if (doubleEssenceAdButtonText != null)
-                    {
-                        doubleEssenceAdButtonText.text = "✦ ESSENCE DOUBLED! ✦";
-                    }
-                    if (doubleEssenceAdButton != null)
-                    {
-                        doubleEssenceAdButton.interactable = false;
-                    }
-                    ShowToast("HARVEST CONSECRATED!", "Run essence doubled via reward!", 3.0f, new Color(0.98f, 0.85f, 0.28f));
-                }
-                else
-                {
-                    if (doubleEssenceAdButton != null) doubleEssenceAdButton.interactable = true;
-                    ShowToast("REWARD FAILED", "Video ad not completed or unavailable.", 2.5f, new Color(0.9f, 0.4f, 0.4f));
-                }
-            });
         }
 
         public void ShowVictoryModal()
@@ -1641,7 +1583,7 @@ namespace CursedHarvest
 
             GameObject panel = CreateBox(modal.transform, "Panel",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(900, 1140), Vector2.zero,
+                new Vector2(880, 1020), Vector2.zero,
                 new Color(0.60f, 0.18f, 0.18f, 1f));
 
             GameObject body = CreateBox(panel.transform, "Body",
@@ -1650,34 +1592,25 @@ namespace CursedHarvest
                 new Color(0.08f, 0.06f, 0.08f, 0.98f));
 
             Text title = CreateLabel(body.transform, "Title", "HARVEST CLAIMED YOU", 50, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(0.98f, 0.24f, 0.22f), font);
-            SetRect(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(840, 70), new Vector2(0, 440));
+            SetRect(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(840, 70), new Vector2(0, 385));
 
             gameOverStatsText = CreateLabel(body.transform, "StatsText", "ARENA TRIAL\nSURVIVED UNTIL WAVE 1\nTIME: 00:00", 25, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(0.95f, 0.92f, 0.86f), font);
             gameOverStatsText.lineSpacing = 1.25f;
-            SetRect(gameOverStatsText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(800, 390), new Vector2(0, 175));
-
-            // Rewarded Ad Button: Double Essence
-            GameObject adBtnObj = CreateSimpleButton(body.transform, "DoubleEssenceAdButton", "✦ DOUBLE ESSENCE (WATCH AD) ✦",
-                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(700, 96), new Vector2(0, -90),
-                new Color(0.85f, 0.60f, 0.16f), Color.white, 28, font);
-            AddBorder(adBtnObj.transform, new Color(1f, 0.85f, 0.35f, 0.9f));
-            doubleEssenceAdButton = adBtnObj.GetComponent<Button>();
-            doubleEssenceAdButtonText = adBtnObj.GetComponentInChildren<Text>();
+            SetRect(gameOverStatsText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(800, 390), new Vector2(0, 115));
 
             retryButton = CreateSimpleButton(body.transform, "RetryButton", "RETRY TRIAL",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(700, 90), new Vector2(0, -205),
+                new Vector2(700, 94), new Vector2(0, -165),
                 new Color(0.22f, 0.60f, 0.30f), Color.white, 30, font).GetComponent<Button>();
 
             gameOverWorldSelectButton = CreateSimpleButton(body.transform, "GameOverWorldSelectButton", "WORLD SELECT",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(700, 86), new Vector2(0, -315),
+                new Vector2(700, 88), new Vector2(0, -280),
                 new Color(0.24f, 0.32f, 0.48f), Color.white, 28, font).GetComponent<Button>();
 
             gameOverHomeButton = CreateSimpleButton(body.transform, "GameOverHomeButton", "HOME",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(700, 86), new Vector2(0, -420),
+                new Vector2(700, 88), new Vector2(0, -390),
                 new Color(0.48f, 0.20f, 0.20f), Color.white, 28, font).GetComponent<Button>();
 
             modal.SetActive(false);
