@@ -40,22 +40,23 @@ namespace CursedHarvest
                 case MetaUpgradeBranch.Vitality:
                     return $"+{rank * 7} Maximum Health";
                 case MetaUpgradeBranch.Power:
-                    return $"+{rank * 8}% All Weapon Damage";
+                    return $"+{rank * 8}% Weapon Damage";
                 case MetaUpgradeBranch.Haste:
-                    return $"+{rank * 7}% Attack Speed";
+                    return $"+{rank * 7}% Attack Rate";
                 case MetaUpgradeBranch.Agility:
                     return $"+{rank * 6}% Movement Speed";
                 case MetaUpgradeBranch.Fortune:
-                    return $"+{rank * 15}% Essence & +{rank * 3}% Lucky Harvest";
+                    return $"Lucky Harvest: {70 + rank * 3}% (Base 70%) & +{rank * 15}% Essence";
                 case MetaUpgradeBranch.Survival:
                     float healPct = rank switch { 1 => 5f, 2 => 10f, 3 => 17f, 4 => 25f, 5 => 35f, _ => 0f };
-                    return $"+{healPct:0}% Heal & +{(rank * 0.5f):F1} HP/s Regen";
+                    return $"Healing: +{healPct:0}%  •  Regen: +{(rank * 0.5f):F1} HP/s";
                 case MetaUpgradeBranch.LuckyLast:
                     float dur = rank switch { 1 => 1f, 2 => 1f, 3 => 2f, 4 => 2f, 5 => 4f, _ => 0f };
                     float extraHp = rank switch { 2 => 3f, 3 => 3f, 4 => 8f, 5 => 8f, _ => 0f };
-                    return extraHp > 0 ? $"+{dur:0}s Duration & +{extraHp:0} Recovery HP" : $"+{dur:0}s Lucky Last Duration";
+                    return $"Duration: {12 + dur:0}s (Base 12s)  •  Recovery: {15 + extraHp:0} HP";
                 case MetaUpgradeBranch.HarvestMastery:
-                    return $"-{rank * 4}% Channel Time ({(1f - rank * 0.04f):0.00}x duration)";
+                    float seconds = 3.5f * (1f - rank * 0.04f);
+                    return $"Channel Time: {seconds:0.00}s (Base 3.50s, -{rank * 4}%)";
                 default:
                     return "";
             }
@@ -375,17 +376,20 @@ namespace CursedHarvest
 
         public float GetPowerMultiplier()
         {
-            return 1f + (GetRank(MetaUpgradeBranch.Power) * 0.08f); // Lv1..5: 1.08x, 1.16x, 1.24x, 1.32x, 1.40x All Damage
+            float mult = 1f + (GetRank(MetaUpgradeBranch.Power) * 0.08f); // Lv1..5: 1.08x, 1.16x, 1.24x, 1.32x, 1.40x All Damage
+            return Mathf.Min(mult, 1.50f); // Authoritative safety cap: max 1.50x meta power
         }
 
         public float GetHasteMultiplier()
         {
-            return 1f + (GetRank(MetaUpgradeBranch.Haste) * 0.07f); // Lv1..5: 1.07x, 1.14x, 1.21x, 1.28x, 1.35x Fire Rate
+            float mult = 1f + (GetRank(MetaUpgradeBranch.Haste) * 0.07f); // Lv1..5: 1.07x, 1.14x, 1.21x, 1.28x, 1.35x Fire Rate
+            return Mathf.Min(mult, 1.40f); // Authoritative safety cap: max 1.40x attack speed
         }
 
         public float GetAgilityMultiplier()
         {
-            return 1f + (GetRank(MetaUpgradeBranch.Agility) * 0.06f); // Lv1..5: 1.06x, 1.12x, 1.18x, 1.24x, 1.30x Move Speed
+            float mult = 1f + (GetRank(MetaUpgradeBranch.Agility) * 0.06f); // Lv1..5: 1.06x, 1.12x, 1.18x, 1.24x, 1.30x Move Speed
+            return Mathf.Min(mult, 1.35f); // Authoritative safety cap: max 1.35x movement speed
         }
 
         public float GetFortuneBonus()
