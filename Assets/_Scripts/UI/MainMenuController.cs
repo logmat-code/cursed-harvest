@@ -7,18 +7,30 @@ using UnityEngine.EventSystems;
 namespace CursedHarvest
 {
     /// <summary>
-    /// Master Mobile Portrait Frontend controller managing HOME, WORLD SELECT, UPGRADES, SETTINGS, and CREDITS screens.
-    /// Built around a 1080 x 1920 Portrait reference canvas with Safe Area binding, real 3D folk-horror diorama backdrop,
-    /// vertical scrollable 5-World cards with procedural biome thumbnails, and a 2x4 Meta Upgrades grid.
+    /// Master Mobile Portrait Frontend controller for CURSED HARVEST. v1.1.0.
+    /// Manages HOME, WORLD SELECT, ARENA SELECT, UPGRADES, SETTINGS, and CREDITS screens.
+    /// Hierarchy flow: HOME -> WORLD SELECT (Worlds 1..3) -> ARENA SELECT (Arenas 1..5) -> START RUN.
+    /// Coherent folk-horror aesthetic palette (#121510 background, #1B211A dark panels, #D59A38 harvest gold, #74884B cursed green).
     /// </summary>
     public class MainMenuController : MonoBehaviour
     {
         private static MainMenuController _instance;
         public static MainMenuController Instance => _instance;
 
+        // Palette Constants
+        public static readonly Color ColBackground = new Color(0.07f, 0.08f, 0.06f, 0.98f);    // #121510
+        public static readonly Color ColDarkPanel = new Color(0.11f, 0.13f, 0.10f, 0.96f);     // #1B211A
+        public static readonly Color ColElevated = new Color(0.15f, 0.17f, 0.13f, 0.98f);      // #252C22
+        public static readonly Color ColTextPrimary = new Color(0.94f, 0.91f, 0.84f, 1.0f);    // #EFE7D5
+        public static readonly Color ColTextMuted = new Color(0.69f, 0.65f, 0.58f, 1.0f);      // #AFA795
+        public static readonly Color ColHarvestGold = new Color(0.84f, 0.60f, 0.22f, 1.0f);    // #D59A38
+        public static readonly Color ColCursedGreen = new Color(0.45f, 0.53f, 0.29f, 1.0f);    // #74884B
+        public static readonly Color ColDanger = new Color(0.64f, 0.28f, 0.24f, 1.0f);         // #A4473D
+
         [Header("Screen Roots")]
         [SerializeField] private GameObject homeScreenRoot;
         [SerializeField] private GameObject worldSelectScreenRoot;
+        [SerializeField] private GameObject arenaSelectScreenRoot;
         [SerializeField] private GameObject upgradesScreenRoot;
         [SerializeField] private GameObject creditsScreenRoot;
         [SerializeField] private GameObject settingsModalRoot;
@@ -32,21 +44,19 @@ namespace CursedHarvest
         [SerializeField] private Button homeQuitButton;
         [SerializeField] private Text homeEssenceBadgeText;
 
-        [Header("World Select UI")]
+        [Header("World Select UI (3 Worlds)")]
         [SerializeField] private Button worldSelectBackButton;
+        [SerializeField] private List<WorldCardUIElements> worldCards = new List<WorldCardUIElements>();
+
+        [Header("Arena Select UI (5 Arenas per World)")]
+        [SerializeField] private Button arenaSelectBackButton;
+        [SerializeField] private Text arenaSelectTitleText;
+        [SerializeField] private Text arenaSelectSubtitleText;
+        [SerializeField] private List<ArenaCardUIElements> arenaCards = new List<ArenaCardUIElements>();
         [SerializeField] private Button startRunButton;
         [SerializeField] private Text startRunButtonText;
-        [SerializeField] private Text selectedWorldTitleText;
-        [SerializeField] private Text selectedWorldSubtitleText;
-        [SerializeField] private Text selectedWorldTierText;
-        [SerializeField] private Text selectedWorldDescText;
-        [SerializeField] private Text selectedWorldWaveCountText;
-        [SerializeField] private Text selectedWorldModifiersText;
-        [SerializeField] private Text selectedWorldBossText;
-        [SerializeField] private Text selectedWorldStatusBadgeText;
-
-        [Header("World Cards UI")]
-        [SerializeField] private List<WorldCardUIElements> worldCards = new List<WorldCardUIElements>();
+        [SerializeField] private Text selectedArenaDescText;
+        [SerializeField] private Text selectedArenaBossSummaryText;
 
         [Header("Upgrades UI")]
         [SerializeField] private Button upgradesBackButton;
@@ -89,14 +99,30 @@ namespace CursedHarvest
             public Text worldNumberText;
             public Text worldNameText;
             public Text difficultyBadgeText;
-            public Text waveAndBossSummaryText;
+            public Text arenaSummaryText;
             public Text statusBadgeText;
             public Image highlightBorder;
             public Image background;
             public Image previewThumbnail;
         }
 
+        [Serializable]
+        public class ArenaCardUIElements
+        {
+            public int globalArenaId;
+            public int arenaIndexInWorld;
+            public GameObject cardRoot;
+            public Button selectButton;
+            public Text arenaNumberText;
+            public Text arenaNameText;
+            public Text difficultyBadgeText;
+            public Text statusBadgeText;
+            public Image highlightBorder;
+            public Image background;
+        }
+
         private int currentlySelectedWorldId = 1;
+        private int currentlySelectedArenaId = 1;
         private Font cachedFont;
         private float lastUpgradeClickTime = -1f;
         private GameObject backdropDioramaRoot;
@@ -116,59 +142,131 @@ namespace CursedHarvest
             Time.timeScale = 1f;
 
             var _ = MobileSettingsAndLifecycleManager.Instance;
+            var __ = AdsManager.Instance;
             EnsureAudioSetup();
             EnsureFont();
-            Ensure3DPortraitBackdrop();
-            EnsureMainMenuUI();
-            WireEventListeners();
-        }
-
-        private void EnsureAudioSetup()
-        {
-            if (FindFirstObjectByType<AudioListener>() == null)
-            {
-                Camera cam = Camera.main;
-                if (cam != null)
-                {
-                    cam.gameObject.AddComponent<AudioListener>();
-                }
-            }
         }
 
         private void Start()
         {
-            Time.timeScale = 1f;
-
-            if (homeQuitButton != null)
-            {
-                homeQuitButton.gameObject.SetActive(false);
-            }
-
-            if (GameSession.Instance != null)
-            {
-                currentlySelectedWorldId = GameSession.Instance.SelectedWorldId;
-            }
+            EnsureAudioSetup();
+            EnsureFont();
+            Ensure3DPortraitBackdrop();
+            EnsureMainMenuUI();
 
             MainMenuScreen startScreen = MainMenuScreen.Home;
             if (GameSession.Instance != null)
             {
                 startScreen = GameSession.Instance.InitialMenuScreen;
+                currentlySelectedWorldId = GameSession.Instance.SelectedWorldId;
+                currentlySelectedArenaId = GameSession.Instance.SelectedArenaId;
             }
 
             ShowScreen(startScreen);
-            RefreshWorldSelectionCards();
-            UpdateWorldDetailsPanel(currentlySelectedWorldId);
-            RefreshUpgradesUI();
-            RefreshSettingsModalLabels();
+        }
+
+        private void EnsureFont()
+        {
+            if (cachedFont == null)
+            {
+                cachedFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                if (cachedFont == null) cachedFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            }
+        }
+
+        private void EnsureAudioSetup()
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayGameplayMusic(1.0f);
+            }
+        }
+
+        public void Ensure3DPortraitBackdrop()
+        {
+            if (backdropDioramaRoot != null) return;
+            Transform existing = transform.Find("3D_Portrait_Altar_Backdrop");
+            if (existing != null)
+            {
+                backdropDioramaRoot = existing.gameObject;
+                floatingAltarPumpkin = backdropDioramaRoot.transform.Find("FloatingPumpkinCenterpiece");
+                Transform lightTr = backdropDioramaRoot.transform.Find("AltarPointLight");
+                if (lightTr != null) altarPointLight = lightTr.GetComponent<Light>();
+                return;
+            }
+
+            backdropDioramaRoot = new GameObject("3D_Portrait_Altar_Backdrop");
+            backdropDioramaRoot.transform.SetParent(transform, false);
+
+            Shader litShader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            Material bloodwoodMat = new Material(litShader);
+            bloodwoodMat.color = new Color(0.18f, 0.08f, 0.06f);
+
+            Material stoneMat = new Material(litShader);
+            stoneMat.color = new Color(0.24f, 0.22f, 0.20f);
+
+            Material goldRuneMat = new Material(Shader.Find("Sprites/Default") ?? litShader);
+            goldRuneMat.color = new Color(1.0f, 0.76f, 0.20f, 0.95f);
+
+            GameObject groundObj = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            groundObj.name = "AltarGroundMound";
+            groundObj.transform.SetParent(backdropDioramaRoot.transform, false);
+            groundObj.transform.localPosition = new Vector3(0f, -0.6f, 5.5f);
+            groundObj.transform.localScale = new Vector3(1.4f, 1f, 1.4f);
+            Renderer gRend = groundObj.GetComponent<Renderer>();
+            if (gRend != null) gRend.material = stoneMat;
+            DestroyCollider(groundObj);
+
+            GameObject baseBlock = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            baseBlock.name = "AltarStoneBase";
+            baseBlock.transform.SetParent(backdropDioramaRoot.transform, false);
+            baseBlock.transform.localPosition = new Vector3(0f, 0.15f, 5.2f);
+            baseBlock.transform.localScale = new Vector3(1.8f, 0.45f, 1.4f);
+            Renderer bRend = baseBlock.GetComponent<Renderer>();
+            if (bRend != null) bRend.material = stoneMat;
+            DestroyCollider(baseBlock);
+
+            GameObject pumpkinObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            pumpkinObj.name = "FloatingPumpkinCenterpiece";
+            pumpkinObj.transform.SetParent(backdropDioramaRoot.transform, false);
+            pumpkinObj.transform.localPosition = new Vector3(0f, 1.38f, 5.0f);
+            pumpkinObj.transform.localScale = new Vector3(1.35f, 1.15f, 1.35f);
+            Renderer pRend = pumpkinObj.GetComponent<Renderer>();
+            if (pRend != null)
+            {
+                Material pMat = new Material(litShader);
+                pMat.color = new Color(0.92f, 0.44f, 0.08f);
+                pRend.material = pMat;
+            }
+            DestroyCollider(pumpkinObj);
+            floatingAltarPumpkin = pumpkinObj.transform;
+
+            GameObject lightObj = new GameObject("AltarPointLight");
+            lightObj.transform.SetParent(backdropDioramaRoot.transform, false);
+            lightObj.transform.localPosition = new Vector3(0f, 1.55f, 4.6f);
+            altarPointLight = lightObj.AddComponent<Light>();
+            altarPointLight.type = LightType.Point;
+            altarPointLight.color = new Color(1.0f, 0.65f, 0.18f);
+            altarPointLight.range = 7.5f;
+            altarPointLight.intensity = 3.8f;
+        }
+
+        private void DestroyCollider(GameObject go)
+        {
+            Collider col = go.GetComponent<Collider>();
+            if (col != null)
+            {
+                if (Application.isPlaying) Destroy(col);
+                else DestroyImmediate(col);
+            }
         }
 
         private void Update()
         {
-            // Subtle breathing/levitation animation on the 3D Portrait altar centerpiece
             if (floatingAltarPumpkin != null)
             {
                 float t = Time.unscaledTime;
-                floatingAltarPumpkin.localPosition = new Vector3(0f, 1.38f + Mathf.Sin(t * 1.8f) * 0.08f, 0f);
+                floatingAltarPumpkin.localPosition = new Vector3(0f, 1.38f + Mathf.Sin(t * 1.8f) * 0.08f, 5.0f);
                 floatingAltarPumpkin.localRotation = Quaternion.Euler(6f * Mathf.Sin(t * 0.9f), 180f + Mathf.Sin(t * 0.65f) * 11f, 0f);
             }
             if (altarPointLight != null)
@@ -176,7 +274,6 @@ namespace CursedHarvest
                 altarPointLight.intensity = 3.8f + Mathf.Sin(Time.unscaledTime * 3.1f) * 0.45f;
             }
 
-            // Android Back Button / Escape Navigation
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 HandleBackNavigation();
@@ -190,268 +287,33 @@ namespace CursedHarvest
                 CloseSettingsModal();
                 return;
             }
-
             if (exitConfirmModalRoot != null && exitConfirmModalRoot.activeSelf)
             {
                 CloseExitConfirmation();
                 return;
             }
-
-            if ((worldSelectScreenRoot != null && worldSelectScreenRoot.activeSelf) ||
-                (upgradesScreenRoot != null && upgradesScreenRoot.activeSelf) ||
-                (creditsScreenRoot != null && creditsScreenRoot.activeSelf))
+            if (arenaSelectScreenRoot != null && arenaSelectScreenRoot.activeSelf)
+            {
+                OpenWorldSelect();
+                return;
+            }
+            if (worldSelectScreenRoot != null && worldSelectScreenRoot.activeSelf)
+            {
+                OpenHome();
+                return;
+            }
+            if (upgradesScreenRoot != null && upgradesScreenRoot.activeSelf)
+            {
+                OpenHome();
+                return;
+            }
+            if (creditsScreenRoot != null && creditsScreenRoot.activeSelf)
             {
                 OpenHome();
                 return;
             }
 
-            if (homeScreenRoot != null && homeScreenRoot.activeSelf)
-            {
-                OpenExitConfirmation();
-            }
-        }
-
-        private void OnEnable()
-        {
-            GameSession.OnWorldProgressionChanged += HandleProgressionChanged;
-            MetaProgressionManager.OnEssenceChanged += HandleEssenceChanged;
-            MetaProgressionManager.OnUpgradePurchased += HandleUpgradePurchased;
-        }
-
-        private void OnDisable()
-        {
-            GameSession.OnWorldProgressionChanged -= HandleProgressionChanged;
-            MetaProgressionManager.OnEssenceChanged -= HandleEssenceChanged;
-            MetaProgressionManager.OnUpgradePurchased -= HandleUpgradePurchased;
-        }
-
-        private void HandleProgressionChanged(int highestUnlocked)
-        {
-            RefreshWorldSelectionCards();
-            UpdateWorldDetailsPanel(currentlySelectedWorldId);
-        }
-
-        private void HandleEssenceChanged(int essence)
-        {
-            RefreshUpgradesUI();
-        }
-
-        private void HandleUpgradePurchased(MetaUpgradeBranch branch, int rank)
-        {
-            RefreshUpgradesUI();
-        }
-
-        private void EnsureFont()
-        {
-            if (cachedFont == null)
-            {
-                cachedFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                if (cachedFont == null)
-                {
-                    cachedFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
-                }
-            }
-        }
-
-        // ==================== REAL 3D PORTRAIT BACKDROP DIORAMA ====================
-
-        public void Ensure3DPortraitBackdrop()
-        {
-            Camera cam = Camera.main;
-            if (cam == null)
-            {
-                GameObject camObj = new GameObject("Main Camera");
-                camObj.tag = "MainCamera";
-                cam = camObj.AddComponent<Camera>();
-            }
-
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.035f, 0.028f, 0.048f, 1f);
-            cam.orthographic = false;
-            cam.fieldOfView = 46f;
-            // Frame the altar & ritual clearing in the upper-middle of the Portrait 9:16 screen
-            cam.transform.position = new Vector3(0f, 3.15f, -7.8f);
-            cam.transform.rotation = Quaternion.Euler(14.5f, 0f, 0f);
-
-            RenderSettings.fog = true;
-            RenderSettings.fogMode = FogMode.ExponentialSquared;
-            RenderSettings.fogColor = new Color(0.05f, 0.04f, 0.07f, 1f);
-            RenderSettings.fogDensity = 0.045f;
-            RenderSettings.ambientLight = new Color(0.16f, 0.14f, 0.22f, 1f);
-
-            GameObject existing = GameObject.Find("MenuPortraitDiorama_3D");
-            if (existing != null)
-            {
-                backdropDioramaRoot = existing;
-                Transform foundPumpkin = existing.transform.Find("AltarFocalGroup/CursedPumpkinHead");
-                if (foundPumpkin != null) floatingAltarPumpkin = foundPumpkin;
-                Transform foundLight = existing.transform.Find("AltarFocalGroup/AltarGlowLight");
-                if (foundLight != null) altarPointLight = foundLight.GetComponent<Light>();
-                return;
-            }
-
-            backdropDioramaRoot = new GameObject("MenuPortraitDiorama_3D");
-
-            Shader litShader = Shader.Find("Universal Render Pipeline/Lit");
-            if (litShader == null) litShader = Shader.Find("Standard");
-
-            Material soilMat = CreateDioramaMaterial(litShader, new Color(0.08f, 0.065f, 0.06f), 0.1f);
-            Material stoneMat = CreateDioramaMaterial(litShader, new Color(0.20f, 0.19f, 0.23f), 0.2f);
-            Material woodMat = CreateDioramaMaterial(litShader, new Color(0.15f, 0.10f, 0.08f), 0.15f);
-            Material pumpkinMat = CreateDioramaMaterial(litShader, new Color(0.88f, 0.36f, 0.06f), 0.35f);
-            Material glowMat = CreateDioramaEmissiveMaterial(litShader, new Color(1.0f, 0.76f, 0.18f), new Color(1.0f, 0.65f, 0.12f) * 3.2f);
-            Material bladeMat = CreateDioramaMaterial(litShader, new Color(0.62f, 0.68f, 0.76f), 0.75f);
-
-            // Ground Mound
-            GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            ground.name = "CursedClearingGround";
-            ground.transform.SetParent(backdropDioramaRoot.transform, false);
-            ground.transform.localPosition = new Vector3(0f, -0.45f, 1.5f);
-            ground.transform.localScale = new Vector3(18f, 0.5f, 18f);
-            ground.GetComponent<Renderer>().sharedMaterial = soilMat;
-            DestroyCollider(ground);
-
-            // Altar Focal Group (positioned at y=2.2..3.6 in world so it sits in the upper clearing of Portrait screen)
-            GameObject altarGroup = new GameObject("AltarFocalGroup");
-            altarGroup.transform.SetParent(backdropDioramaRoot.transform, false);
-            altarGroup.transform.localPosition = new Vector3(0f, 1.45f, 0.6f);
-
-            // Stepped Stone Altar Plinth
-            CreateBlock(altarGroup.transform, "AltarBaseStep1", new Vector3(0f, 0.18f, 0f), new Vector3(2.5f, 0.36f, 1.8f), stoneMat);
-            CreateBlock(altarGroup.transform, "AltarBaseStep2", new Vector3(0f, 0.52f, 0f), new Vector3(1.9f, 0.38f, 1.4f), stoneMat);
-            CreateBlock(altarGroup.transform, "AltarPedestal", new Vector3(0f, 0.88f, 0f), new Vector3(1.35f, 0.42f, 1.1f), stoneMat);
-
-            // Glowing Rune Trim on Altar
-            CreateBlock(altarGroup.transform, "AltarRuneBand", new Vector3(0f, 0.92f, -0.56f), new Vector3(1.05f, 0.09f, 0.04f), glowMat);
-
-            // Cursed Pumpkin Centerpiece
-            GameObject pumpkinRoot = new GameObject("CursedPumpkinHead");
-            pumpkinRoot.transform.SetParent(altarGroup.transform, false);
-            pumpkinRoot.transform.localPosition = new Vector3(0f, 1.38f, 0f);
-            pumpkinRoot.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            floatingAltarPumpkin = pumpkinRoot.transform;
-
-            GameObject pCore = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            pCore.name = "PumpkinRind";
-            pCore.transform.SetParent(pumpkinRoot.transform, false);
-            pCore.transform.localScale = new Vector3(1.12f, 0.92f, 1.05f);
-            pCore.GetComponent<Renderer>().sharedMaterial = pumpkinMat;
-            DestroyCollider(pCore);
-
-            // Pumpkin ribs for stylized silhouette
-            for (int r = 0; r < 4; r++)
-            {
-                GameObject rib = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                rib.name = $"PumpkinRib_{r}";
-                rib.transform.SetParent(pumpkinRoot.transform, false);
-                rib.transform.localRotation = Quaternion.Euler(0f, r * 45f, 0f);
-                rib.transform.localScale = new Vector3(1.18f, 0.90f, 0.72f);
-                rib.GetComponent<Renderer>().sharedMaterial = pumpkinMat;
-                DestroyCollider(rib);
-            }
-
-            // Stem
-            CreateBlock(pumpkinRoot.transform, "PumpkinStem", new Vector3(0f, 0.52f, 0f), new Vector3(0.16f, 0.28f, 0.16f), woodMat, Quaternion.Euler(0f, 0f, -14f));
-
-            // Glowing Carved Eyes & Grin (facing camera at -Z, since pumpkinRoot is rotated 180° Y, local +Z faces camera)
-            CreateBlock(pumpkinRoot.transform, "LeftEyeGlow", new Vector3(-0.22f, 0.10f, 0.48f), new Vector3(0.20f, 0.16f, 0.12f), glowMat, Quaternion.Euler(0f, 0f, -12f));
-            CreateBlock(pumpkinRoot.transform, "RightEyeGlow", new Vector3(0.22f, 0.10f, 0.48f), new Vector3(0.20f, 0.16f, 0.12f), glowMat, Quaternion.Euler(0f, 0f, 12f));
-            CreateBlock(pumpkinRoot.transform, "MouthGlowCenter", new Vector3(0f, -0.16f, 0.49f), new Vector3(0.52f, 0.11f, 0.12f), glowMat);
-
-            // Crossed Harvest Scythe behind the Pumpkin
-            GameObject scytheGroup = new GameObject("CrossedHarvestScythe");
-            scytheGroup.transform.SetParent(altarGroup.transform, false);
-            scytheGroup.transform.localPosition = new Vector3(0.1f, 1.45f, 0.35f);
-            scytheGroup.transform.localRotation = Quaternion.Euler(0f, 0f, -28f);
-
-            CreateBlock(scytheGroup.transform, "ScytheShaft", new Vector3(0f, 0f, 0f), new Vector3(0.11f, 3.1f, 0.11f), woodMat);
-            CreateBlock(scytheGroup.transform, "ScytheBlade", new Vector3(0.68f, 1.32f, 0f), new Vector3(1.45f, 0.22f, 0.05f), bladeMat, Quaternion.Euler(0f, 0f, -18f));
-            CreateBlock(scytheGroup.transform, "ScytheRuneEdge", new Vector3(0.66f, 1.24f, -0.03f), new Vector3(1.25f, 0.05f, 0.05f), glowMat, Quaternion.Euler(0f, 0f, -18f));
-
-            // Framing Standing Stones & Gnarled Trees on Left & Right edges of Portrait viewport
-            CreateStandingMonolith(backdropDioramaRoot.transform, new Vector3(-2.35f, 1.4f, 1.8f), new Vector3(0f, 18f, -5f), 2.8f, stoneMat, glowMat);
-            CreateStandingMonolith(backdropDioramaRoot.transform, new Vector3(2.35f, 1.4f, 1.8f), new Vector3(0f, -18f, 5f), 2.8f, stoneMat, glowMat);
-            CreateGnarledTreeSilhouette(backdropDioramaRoot.transform, new Vector3(-3.2f, 1.8f, 3.8f), -1f, woodMat);
-            CreateGnarledTreeSilhouette(backdropDioramaRoot.transform, new Vector3(3.2f, 1.8f, 3.8f), 1f, woodMat);
-
-            // Altar Warm Point Light
-            GameObject lightObj = new GameObject("AltarGlowLight");
-            lightObj.transform.SetParent(altarGroup.transform, false);
-            lightObj.transform.localPosition = new Vector3(0f, 1.45f, -0.85f);
-            altarPointLight = lightObj.AddComponent<Light>();
-            altarPointLight.type = LightType.Point;
-            altarPointLight.color = new Color(1.0f, 0.62f, 0.16f);
-            altarPointLight.range = 9.5f;
-            altarPointLight.intensity = 3.8f;
-
-            // Cool Rim Moonlight
-            GameObject rimLightObj = new GameObject("MoonRimLight");
-            rimLightObj.transform.SetParent(backdropDioramaRoot.transform, false);
-            rimLightObj.transform.localPosition = new Vector3(-2.5f, 6.0f, 4.5f);
-            rimLightObj.transform.rotation = Quaternion.Euler(45f, -155f, 0f);
-            Light rimLight = rimLightObj.AddComponent<Light>();
-            rimLight.type = LightType.Directional;
-            rimLight.color = new Color(0.38f, 0.46f, 0.72f);
-            rimLight.intensity = 1.15f;
-        }
-
-        private Material CreateDioramaMaterial(Shader shader, Color color, float smoothness)
-        {
-            Material m = new Material(shader);
-            m.color = color;
-            if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", color);
-            if (m.HasProperty("_Smoothness")) m.SetFloat("_Smoothness", smoothness);
-            return m;
-        }
-
-        private Material CreateDioramaEmissiveMaterial(Shader shader, Color baseCol, Color emissionCol)
-        {
-            Material m = CreateDioramaMaterial(shader, baseCol, 0.5f);
-            m.EnableKeyword("_EMISSION");
-            if (m.HasProperty("_EmissionColor")) m.SetColor("_EmissionColor", emissionCol);
-            return m;
-        }
-
-        private void CreateBlock(Transform parent, string name, Vector3 localPos, Vector3 localScale, Material mat, Quaternion localRot = default)
-        {
-            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            go.name = name;
-            go.transform.SetParent(parent, false);
-            go.transform.localPosition = localPos;
-            go.transform.localRotation = (localRot.x == 0f && localRot.y == 0f && localRot.z == 0f && localRot.w == 0f) ? Quaternion.identity : localRot;
-            go.transform.localScale = localScale;
-            go.GetComponent<Renderer>().sharedMaterial = mat;
-            DestroyCollider(go);
-        }
-
-        private void CreateStandingMonolith(Transform parent, Vector3 pos, Vector3 euler, float height, Material stoneMat, Material glowMat)
-        {
-            GameObject root = new GameObject("RuneMonolith");
-            root.transform.SetParent(parent, false);
-            root.transform.localPosition = pos;
-            root.transform.localRotation = Quaternion.Euler(euler);
-            CreateBlock(root.transform, "StoneBody", new Vector3(0f, height * 0.5f, 0f), new Vector3(0.68f, height, 0.42f), stoneMat);
-            CreateBlock(root.transform, "RuneCarving", new Vector3(0f, height * 0.55f, -0.22f), new Vector3(0.14f, height * 0.42f, 0.04f), glowMat);
-        }
-
-        private void CreateGnarledTreeSilhouette(Transform parent, Vector3 pos, float sideSign, Material woodMat)
-        {
-            GameObject tree = new GameObject("GnarledBloodwoodTree");
-            tree.transform.SetParent(parent, false);
-            tree.transform.localPosition = pos;
-            CreateBlock(tree.transform, "Trunk", new Vector3(0f, 2.2f, 0f), new Vector3(0.55f, 4.4f, 0.55f), woodMat, Quaternion.Euler(0f, 0f, -sideSign * 8f));
-            CreateBlock(tree.transform, "BranchInward", new Vector3(-sideSign * 0.85f, 3.8f, -0.2f), new Vector3(0.24f, 2.1f, 0.24f), woodMat, Quaternion.Euler(0f, 0f, sideSign * 48f));
-            CreateBlock(tree.transform, "BranchUpper", new Vector3(-sideSign * 0.45f, 4.5f, 0.1f), new Vector3(0.18f, 1.6f, 0.18f), woodMat, Quaternion.Euler(0f, 0f, sideSign * 32f));
-        }
-
-        private void DestroyCollider(GameObject go)
-        {
-            Collider col = go.GetComponent<Collider>();
-            if (col != null)
-            {
-                if (Application.isPlaying) Destroy(col);
-                else DestroyImmediate(col);
-            }
+            OpenExitConfirmation();
         }
 
         // ==================== SCREEN NAVIGATION ====================
@@ -460,15 +322,24 @@ namespace CursedHarvest
         {
             if (homeScreenRoot != null) homeScreenRoot.SetActive(screen == MainMenuScreen.Home);
             if (worldSelectScreenRoot != null) worldSelectScreenRoot.SetActive(screen == MainMenuScreen.WorldSelect);
+            if (arenaSelectScreenRoot != null) arenaSelectScreenRoot.SetActive(screen == MainMenuScreen.ArenaSelect);
             if (upgradesScreenRoot != null) upgradesScreenRoot.SetActive(screen == MainMenuScreen.Upgrades);
             if (creditsScreenRoot != null) creditsScreenRoot.SetActive(screen == MainMenuScreen.Credits);
             if (settingsModalRoot != null) settingsModalRoot.SetActive(false);
             if (exitConfirmModalRoot != null) exitConfirmModalRoot.SetActive(false);
 
+            if (backdropDioramaRoot != null)
+            {
+                backdropDioramaRoot.SetActive(screen == MainMenuScreen.Home);
+            }
+
             if (screen == MainMenuScreen.WorldSelect)
             {
                 RefreshWorldSelectionCards();
-                UpdateWorldDetailsPanel(currentlySelectedWorldId);
+            }
+            else if (screen == MainMenuScreen.ArenaSelect)
+            {
+                RefreshArenaSelectionCards();
             }
             else if (screen == MainMenuScreen.Upgrades || screen == MainMenuScreen.Home)
             {
@@ -488,6 +359,15 @@ namespace CursedHarvest
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.LightTap);
             ShowScreen(MainMenuScreen.WorldSelect);
+        }
+
+        public void OpenArenaSelect(int worldId)
+        {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.LightTap);
+            currentlySelectedWorldId = Mathf.Clamp(worldId, 1, 3);
+            currentlySelectedArenaId = (currentlySelectedWorldId - 1) * 5 + 1;
+            ShowScreen(MainMenuScreen.ArenaSelect);
         }
 
         public void OpenUpgrades()
@@ -579,17 +459,17 @@ namespace CursedHarvest
             if (settingsMusicToggleText != null)
             {
                 settingsMusicToggleText.text = musicOn ? "MUSIC: ON" : "MUSIC: OFF";
-                settingsMusicToggleText.color = musicOn ? new Color(0.45f, 1f, 0.55f) : new Color(0.85f, 0.45f, 0.45f);
+                settingsMusicToggleText.color = musicOn ? ColCursedGreen : ColDanger;
             }
             if (settingsSfxToggleText != null)
             {
                 settingsSfxToggleText.text = sfxOn ? "SFX: ON" : "SFX: OFF";
-                settingsSfxToggleText.color = sfxOn ? new Color(0.45f, 1f, 0.55f) : new Color(0.85f, 0.45f, 0.45f);
+                settingsSfxToggleText.color = sfxOn ? ColCursedGreen : ColDanger;
             }
             if (settingsHapticsToggleText != null)
             {
                 settingsHapticsToggleText.text = hapticsOn ? "HAPTICS: ON" : "HAPTICS: OFF";
-                settingsHapticsToggleText.color = hapticsOn ? new Color(0.45f, 1f, 0.55f) : new Color(0.85f, 0.45f, 0.45f);
+                settingsHapticsToggleText.color = hapticsOn ? ColCursedGreen : ColDanger;
             }
         }
 
@@ -608,7 +488,6 @@ namespace CursedHarvest
         public void QuitGame()
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
-            Debug.Log("[MainMenuController] Quitting application...");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -620,33 +499,16 @@ namespace CursedHarvest
 
         public void SelectWorld(int worldId)
         {
-            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
-            MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.LightTap);
-            currentlySelectedWorldId = Mathf.Clamp(worldId, 1, 5);
-            RefreshWorldSelectionCards();
-            UpdateWorldDetailsPanel(currentlySelectedWorldId);
-        }
-
-        public void StartSelectedWorld()
-        {
+            currentlySelectedWorldId = Mathf.Clamp(worldId, 1, 3);
             bool isUnlocked = GameSession.Instance == null || GameSession.Instance.IsWorldUnlocked(currentlySelectedWorldId);
-            if (!isUnlocked)
+            if (isUnlocked)
             {
-                Debug.LogWarning($"[MainMenuController] Cannot start World {currentlySelectedWorldId}: Locked!");
-                return;
-            }
-
-            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
-            MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.LevelUp);
-            Debug.Log($"[MainMenuController] Launching World {currentlySelectedWorldId}...");
-
-            if (GameSession.Instance != null)
-            {
-                GameSession.Instance.StartRun(currentlySelectedWorldId);
+                OpenArenaSelect(currentlySelectedWorldId);
             }
             else
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene("MainGame");
+                AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+                RefreshWorldSelectionCards();
             }
         }
 
@@ -663,48 +525,32 @@ namespace CursedHarvest
                 WorldConfig config = WorldConfig.GetConfig(wId);
                 bool isUnlocked = GameSession.Instance == null || GameSession.Instance.IsWorldUnlocked(wId);
                 bool isCompleted = GameSession.Instance != null && GameSession.Instance.IsWorldCompleted(wId);
-                bool isSelected = (wId == currentlySelectedWorldId);
 
-                if (card.worldNumberText != null)
-                {
-                    card.worldNumberText.text = $"WORLD {wId}";
-                }
-
-                if (card.worldNameText != null)
-                {
-                    card.worldNameText.text = config != null ? config.displayName : $"WORLD {wId}";
-                }
-
+                if (card.worldNumberText != null) card.worldNumberText.text = $"WORLD {wId}";
+                if (card.worldNameText != null) card.worldNameText.text = config != null ? config.displayName : $"WORLD {wId}";
                 if (card.difficultyBadgeText != null)
                 {
                     card.difficultyBadgeText.text = config != null ? config.difficultyTier : "NORMAL";
                     card.difficultyBadgeText.color = GetTierColor(config != null ? config.difficultyTier : "");
                 }
-
-                if (card.waveAndBossSummaryText != null && config != null)
-                {
-                    string bossMilestones = config.totalWaves == 10
-                        ? "Final Boss: Wave 10"
-                        : $"Mid-Boss: W10  •  Final Boss: W{config.totalWaves}";
-                    card.waveAndBossSummaryText.text = $"{config.totalWaves} Waves  •  {bossMilestones}";
-                }
+                if (card.arenaSummaryText != null) card.arenaSummaryText.text = "5 Unique Arenas  •  Wave 5 Boss Encounter";
 
                 if (card.statusBadgeText != null)
                 {
                     if (isCompleted)
                     {
-                        card.statusBadgeText.text = "★ COMPLETED";
-                        card.statusBadgeText.color = new Color(0.35f, 1.0f, 0.45f);
+                        card.statusBadgeText.text = "★ WORLD COMPLETED";
+                        card.statusBadgeText.color = ColCursedGreen;
                     }
                     else if (isUnlocked)
                     {
-                        card.statusBadgeText.text = "UNLOCKED";
-                        card.statusBadgeText.color = new Color(1.0f, 0.85f, 0.25f);
+                        card.statusBadgeText.text = "★ UNLOCKED — TAP TO CHOOSE ARENA";
+                        card.statusBadgeText.color = ColHarvestGold;
                     }
                     else
                     {
-                        card.statusBadgeText.text = $"LOCKED (Complete W{wId - 1})";
-                        card.statusBadgeText.color = new Color(0.85f, 0.35f, 0.35f);
+                        card.statusBadgeText.text = $"LOCKED (Complete World {wId - 1})";
+                        card.statusBadgeText.color = ColDanger;
                     }
                 }
 
@@ -715,118 +561,133 @@ namespace CursedHarvest
 
                 if (card.highlightBorder != null)
                 {
-                    card.highlightBorder.color = isSelected
-                        ? new Color(1f, 0.78f, 0.18f, 1f)
-                        : (isUnlocked ? new Color(0.42f, 0.36f, 0.26f, 0.55f) : new Color(0.22f, 0.20f, 0.22f, 0.4f));
+                    card.highlightBorder.color = (wId == currentlySelectedWorldId) ? ColHarvestGold : (isUnlocked ? new Color(0.42f, 0.36f, 0.26f, 0.55f) : new Color(0.22f, 0.20f, 0.22f, 0.4f));
                 }
 
                 if (card.background != null)
                 {
-                    if (isSelected)
-                    {
-                        card.background.color = new Color(0.22f, 0.16f, 0.11f, 0.99f);
-                    }
-                    else if (isUnlocked)
-                    {
-                        card.background.color = new Color(0.11f, 0.09f, 0.12f, 0.96f);
-                    }
-                    else
-                    {
-                        card.background.color = new Color(0.06f, 0.05f, 0.07f, 0.90f);
-                    }
+                    card.background.color = isUnlocked ? ColDarkPanel : new Color(0.06f, 0.05f, 0.07f, 0.90f);
                 }
             }
         }
 
-        private void UpdateWorldDetailsPanel(int worldId)
+        // ==================== ARENA SELECTION ====================
+
+        public void SelectArena(int globalArenaId)
         {
-            WorldConfig config = WorldConfig.GetConfig(worldId);
-            if (config == null) return;
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.LightTap);
+            currentlySelectedArenaId = Mathf.Clamp(globalArenaId, 1, 15);
+            RefreshArenaSelectionCards();
+        }
 
-            bool isUnlocked = GameSession.Instance == null || GameSession.Instance.IsWorldUnlocked(worldId);
-            bool isCompleted = GameSession.Instance != null && GameSession.Instance.IsWorldCompleted(worldId);
-
-            if (selectedWorldTitleText != null)
+        public void StartSelectedArena()
+        {
+            bool isUnlocked = GameSession.Instance == null || GameSession.Instance.IsArenaUnlocked(currentlySelectedArenaId);
+            if (!isUnlocked)
             {
-                selectedWorldTitleText.text = $"WORLD {worldId} — {config.displayName}";
-                selectedWorldTitleText.color = config.themeColor;
+                Debug.LogWarning($"[MainMenuController] Cannot start Arena {currentlySelectedArenaId}: Locked!");
+                return;
             }
 
-            if (selectedWorldSubtitleText != null)
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            MobileSettingsAndLifecycleManager.Instance?.TriggerHaptic(HapticPattern.LevelUp);
+            Debug.Log($"[MainMenuController] Launching Arena {currentlySelectedArenaId}...");
+
+            if (GameSession.Instance != null)
             {
-                selectedWorldSubtitleText.text = config.subtitle;
+                GameSession.Instance.StartRun(currentlySelectedArenaId);
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainGame");
+            }
+        }
+
+        private void RefreshArenaSelectionCards()
+        {
+            WorldConfig worldCfg = WorldConfig.GetConfig(currentlySelectedWorldId);
+            if (arenaSelectTitleText != null && worldCfg != null)
+            {
+                arenaSelectTitleText.text = $"{worldCfg.displayName}";
+                arenaSelectTitleText.color = worldCfg.themeColor;
+            }
+            if (arenaSelectSubtitleText != null && worldCfg != null)
+            {
+                arenaSelectSubtitleText.text = $"WORLD {currentlySelectedWorldId} ARENAS  •  CHOOSE YOUR BATTLEGROUND";
             }
 
-            if (selectedWorldTierText != null)
+            List<ArenaConfig> arenas = WorldConfig.GetArenasForWorld(currentlySelectedWorldId);
+            for (int i = 0; i < arenaCards.Count && i < arenas.Count; i++)
             {
-                selectedWorldTierText.text = $"{config.difficultyTier}  •  {config.totalWaves} WAVES";
-                selectedWorldTierText.color = GetTierColor(config.difficultyTier);
-            }
+                var card = arenaCards[i];
+                var arena = arenas[i];
+                if (card == null || card.cardRoot == null) continue;
 
-            if (selectedWorldDescText != null)
-            {
-                selectedWorldDescText.text = config.description;
-            }
+                card.globalArenaId = arena.arenaId;
+                card.arenaIndexInWorld = arena.arenaIndexInWorld;
 
-            if (selectedWorldWaveCountText != null)
-            {
-                selectedWorldWaveCountText.text = $"TOTAL WAVES: {config.totalWaves}";
-            }
+                bool isUnlocked = GameSession.Instance == null || GameSession.Instance.IsArenaUnlocked(arena.arenaId);
+                bool isCompleted = GameSession.Instance != null && GameSession.Instance.IsArenaCompleted(arena.arenaId);
+                bool isSelected = (arena.arenaId == currentlySelectedArenaId);
 
-            if (selectedWorldBossText != null)
-            {
-                if (config.bossEncounters != null && config.bossEncounters.Length > 0)
+                if (card.arenaNumberText != null) card.arenaNumberText.text = $"ARENA {arena.worldId}-{arena.arenaIndexInWorld}";
+                if (card.arenaNameText != null) card.arenaNameText.text = arena.arenaName;
+                if (card.difficultyBadgeText != null)
                 {
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    for (int i = 0; i < config.bossEncounters.Length; i++)
+                    card.difficultyBadgeText.text = arena.difficultyTier;
+                    card.difficultyBadgeText.color = GetTierColor(arena.difficultyTier);
+                }
+
+                if (card.statusBadgeText != null)
+                {
+                    if (isCompleted)
                     {
-                        var enc = config.bossEncounters[i];
-                        if (i > 0) sb.Append("   |   ");
-                        string typeStr = enc.isFinalBoss ? "FINAL BOSS" : "MID-BOSS";
-                        sb.Append($"W{enc.waveNumber}: {enc.bossName} ({typeStr})");
+                        card.statusBadgeText.text = "★ COMPLETED";
+                        card.statusBadgeText.color = ColCursedGreen;
                     }
-                    selectedWorldBossText.text = sb.ToString();
+                    else if (isUnlocked)
+                    {
+                        card.statusBadgeText.text = "UNLOCKED";
+                        card.statusBadgeText.color = ColHarvestGold;
+                    }
+                    else
+                    {
+                        card.statusBadgeText.text = $"LOCKED";
+                        card.statusBadgeText.color = ColDanger;
+                    }
                 }
-                else
+
+                if (card.highlightBorder != null)
                 {
-                    selectedWorldBossText.text = "W10: THE LAST HARVEST (FINAL BOSS)";
+                    card.highlightBorder.color = isSelected ? ColHarvestGold : (isUnlocked ? new Color(0.35f, 0.42f, 0.28f, 0.6f) : new Color(0.2f, 0.2f, 0.2f, 0.4f));
+                }
+
+                if (card.background != null)
+                {
+                    card.background.color = isSelected ? ColElevated : (isUnlocked ? ColDarkPanel : new Color(0.06f, 0.05f, 0.07f, 0.90f));
                 }
             }
 
-            if (selectedWorldModifiersText != null)
+            // Update details panel
+            ArenaConfig selectedArena = WorldConfig.GetArenaConfig(currentlySelectedArenaId);
+            bool arenaUnlocked = GameSession.Instance == null || GameSession.Instance.IsArenaUnlocked(currentlySelectedArenaId);
+            if (selectedArenaDescText != null && selectedArena != null)
             {
-                selectedWorldModifiersText.text =
-                    $"Enemy Dmg: {config.enemyDamageMultiplier * 100:0}%  •  Boss Dmg: {config.bossDamageMultiplier * 100:0}%  •  Speed: {config.enemySpeedMultiplier * 100:0}%";
+                selectedArenaDescText.text = selectedArena.description;
             }
-
-            if (selectedWorldStatusBadgeText != null)
+            if (selectedArenaBossSummaryText != null && selectedArena != null && selectedArena.bossEncounters != null && selectedArena.bossEncounters.Length > 0)
             {
-                if (isCompleted)
-                {
-                    selectedWorldStatusBadgeText.text = "★ WORLD COMPLETED";
-                    selectedWorldStatusBadgeText.color = new Color(0.35f, 1.0f, 0.45f);
-                }
-                else if (isUnlocked)
-                {
-                    selectedWorldStatusBadgeText.text = "★ UNLOCKED & READY";
-                    selectedWorldStatusBadgeText.color = new Color(1.0f, 0.85f, 0.25f);
-                }
-                else
-                {
-                    selectedWorldStatusBadgeText.text = $"☠ LOCKED — Complete World {config.unlockRequirement} first";
-                    selectedWorldStatusBadgeText.color = new Color(0.95f, 0.35f, 0.35f);
-                }
+                selectedArenaBossSummaryText.text = $"WAVE 5 BOSS: {selectedArena.bossEncounters[0].bossName} ({selectedArena.bossEncounters[0].bossTitle})";
             }
-
             if (startRunButton != null)
             {
-                startRunButton.interactable = isUnlocked;
+                startRunButton.interactable = arenaUnlocked;
             }
-
             if (startRunButtonText != null)
             {
-                startRunButtonText.text = isUnlocked ? "START WORLD" : $"LOCKED (COMPLETE W{config.unlockRequirement})";
-                startRunButtonText.color = isUnlocked ? new Color(1f, 0.95f, 0.35f) : new Color(0.6f, 0.6f, 0.6f);
+                startRunButtonText.text = arenaUnlocked ? $"ENTER ARENA {selectedArena.worldId}-{selectedArena.arenaIndexInWorld}" : "ARENA LOCKED";
+                startRunButtonText.color = arenaUnlocked ? ColHarvestGold : ColTextMuted;
             }
         }
 
@@ -834,37 +695,13 @@ namespace CursedHarvest
         {
             switch (tier?.ToUpperInvariant())
             {
-                case "EASY": return new Color(0.4f, 0.95f, 0.45f);
-                case "NORMAL": return new Color(1.0f, 0.85f, 0.25f);
-                case "HARD": return new Color(1.0f, 0.55f, 0.15f);
-                case "VERY HARD": return new Color(0.95f, 0.25f, 0.25f);
+                case "NORMAL": return ColCursedGreen;
+                case "HARD": return ColHarvestGold;
+                case "VERY HARD": return new Color(0.95f, 0.45f, 0.22f);
                 case "NIGHTMARE": return new Color(0.85f, 0.35f, 1.0f);
-                default: return Color.white;
+                default: return ColTextPrimary;
             }
         }
-
-        // ==================== DEBUG TOOLS (EDITOR-ONLY) ====================
-#if UNITY_EDITOR
-        public void DebugUnlockAll()
-        {
-            if (GameSession.Instance != null)
-            {
-                GameSession.Instance.UnlockAllWorlds();
-            }
-            RefreshWorldSelectionCards();
-            UpdateWorldDetailsPanel(currentlySelectedWorldId);
-        }
-
-        public void DebugResetProgress()
-        {
-            if (GameSession.Instance != null)
-            {
-                GameSession.Instance.ResetProgress();
-            }
-            RefreshWorldSelectionCards();
-            UpdateWorldDetailsPanel(currentlySelectedWorldId);
-        }
-#endif
 
         // ==================== EVENT LISTENER WIRING ====================
 
@@ -877,7 +714,8 @@ namespace CursedHarvest
             if (homeQuitButton != null) { homeQuitButton.onClick.RemoveAllListeners(); homeQuitButton.onClick.AddListener(QuitGame); }
 
             if (worldSelectBackButton != null) { worldSelectBackButton.onClick.RemoveAllListeners(); worldSelectBackButton.onClick.AddListener(OpenHome); }
-            if (startRunButton != null) { startRunButton.onClick.RemoveAllListeners(); startRunButton.onClick.AddListener(StartSelectedWorld); }
+            if (arenaSelectBackButton != null) { arenaSelectBackButton.onClick.RemoveAllListeners(); arenaSelectBackButton.onClick.AddListener(OpenWorldSelect); }
+            if (startRunButton != null) { startRunButton.onClick.RemoveAllListeners(); startRunButton.onClick.AddListener(StartSelectedArena); }
 
             if (upgradesBackButton != null) { upgradesBackButton.onClick.RemoveAllListeners(); upgradesBackButton.onClick.AddListener(OpenHome); }
             if (creditsBackButton != null) { creditsBackButton.onClick.RemoveAllListeners(); creditsBackButton.onClick.AddListener(OpenHome); }
@@ -898,6 +736,23 @@ namespace CursedHarvest
                     int wId = card.worldId;
                     card.selectButton.onClick.RemoveAllListeners();
                     card.selectButton.onClick.AddListener(() => SelectWorld(wId));
+                }
+            }
+
+            for (int i = 0; i < arenaCards.Count; i++)
+            {
+                var card = arenaCards[i];
+                if (card != null && card.selectButton != null)
+                {
+                    card.selectButton.onClick.RemoveAllListeners();
+                    int capturedIndex = i;
+                    card.selectButton.onClick.AddListener(() =>
+                    {
+                        if (capturedIndex < arenaCards.Count)
+                        {
+                            SelectArena(arenaCards[capturedIndex].globalArenaId);
+                        }
+                    });
                 }
             }
         }
@@ -937,7 +792,6 @@ namespace CursedHarvest
             scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             scaler.matchWidthOrHeight = 0.5f;
 
-            // Rebuild cleanly for Portrait 1080x1920
             Transform canvasTransform = canvas.transform;
             if (transform.parent == canvasTransform)
             {
@@ -952,7 +806,6 @@ namespace CursedHarvest
             }
             transform.SetParent(canvasTransform, false);
 
-            // Subtle dark vignette that leaves the center-top 3D diorama visible on Home
             GameObject safeRootObj = new GameObject("SafeAreaRoot");
             safeRootObj.transform.SetParent(canvasTransform, false);
             RectTransform safeRt = safeRootObj.AddComponent<RectTransform>();
@@ -964,28 +817,25 @@ namespace CursedHarvest
 
             Transform root = safeRootObj.transform;
 
-            // 1. HOME SCREEN ROOT
             homeScreenRoot = CreateScreenPanel(root, "HomeScreenRoot");
             BuildHomeScreenContent(homeScreenRoot.transform);
 
-            // 2. WORLD SELECT SCREEN ROOT
             worldSelectScreenRoot = CreateScreenPanel(root, "WorldSelectScreenRoot");
             BuildWorldSelectScreenContent(worldSelectScreenRoot.transform);
 
-            // 3. UPGRADES SCREEN ROOT
+            arenaSelectScreenRoot = CreateScreenPanel(root, "ArenaSelectScreenRoot");
+            BuildArenaSelectScreenContent(arenaSelectScreenRoot.transform);
+
             upgradesScreenRoot = CreateScreenPanel(root, "UpgradesScreenRoot");
             BuildUpgradesScreenContent(upgradesScreenRoot.transform);
 
-            // 4. CREDITS SCREEN ROOT
             creditsScreenRoot = CreateScreenPanel(root, "CreditsScreenRoot");
             BuildCreditsScreenContent(creditsScreenRoot.transform);
 
-            // 5. SETTINGS MODAL ROOT
             settingsModalRoot = CreateScreenPanel(root, "SettingsModalRoot");
             BuildSettingsModalContent(settingsModalRoot.transform);
             settingsModalRoot.SetActive(false);
 
-            // 6. EXIT CONFIRMATION MODAL ROOT
             exitConfirmModalRoot = CreateScreenPanel(root, "ExitConfirmModalRoot");
             BuildExitConfirmationContent(exitConfirmModalRoot.transform);
             exitConfirmModalRoot.SetActive(false);
@@ -1006,7 +856,7 @@ namespace CursedHarvest
 
         private void BuildHomeScreenContent(Transform parent)
         {
-            // Top Header Backdrop Banner (semi-transparent so 3D diorama shines in the middle)
+            // Top Header Backdrop Banner
             GameObject topBanner = new GameObject("TopTitleBanner");
             topBanner.transform.SetParent(parent, false);
             RectTransform rtBanner = topBanner.AddComponent<RectTransform>();
@@ -1016,21 +866,17 @@ namespace CursedHarvest
             rtBanner.anchoredPosition = new Vector2(0f, -24f);
             rtBanner.sizeDelta = new Vector2(980f, 290f);
             Image bannerImg = topBanner.AddComponent<Image>();
-            bannerImg.color = new Color(0.05f, 0.04f, 0.07f, 0.78f);
+            bannerImg.color = ColDarkPanel;
 
-            // Developer Studio Tag
-            CreateLabel(topBanner.transform, "StudioLabel", "LOGMAT PRESENTS", 22, FontStyle.Bold, new Color(0.78f, 0.72f, 0.64f), new Vector2(0f, 102f), new Vector2(880f, 34f));
+            CreateLabel(topBanner.transform, "StudioLabel", "LOGMAT PRESENTS", 22, FontStyle.Bold, ColTextMuted, new Vector2(0f, 102f), new Vector2(880f, 34f));
 
-            // Main Product Title (Authoritative: "CURSED HARVEST.")
-            Text titleText = CreateLabel(topBanner.transform, "TitleText", "CURSED HARVEST.", 74, FontStyle.Bold, new Color(1.0f, 0.78f, 0.22f), new Vector2(0f, 32f), new Vector2(940f, 92f));
+            Text titleText = CreateLabel(topBanner.transform, "TitleText", "CURSED HARVEST.", 74, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 32f), new Vector2(940f, 92f));
             Outline titleOutline = titleText.gameObject.AddComponent<Outline>();
-            titleOutline.effectColor = new Color(0.18f, 0.06f, 0.02f, 0.95f);
+            titleOutline.effectColor = new Color(0.12f, 0.05f, 0.02f, 0.95f);
             titleOutline.effectDistance = new Vector2(3f, -3f);
 
-            // Subtitle
-            CreateLabel(topBanner.transform, "SubtitleText", "DARK FOLK HORROR SURVIVOR  •  FIVE BLIGHTED REALMS", 23, FontStyle.Bold, new Color(0.90f, 0.84f, 0.74f), new Vector2(0f, -38f), new Vector2(920f, 38f));
+            CreateLabel(topBanner.transform, "SubtitleText", "DARK FOLK HORROR SURVIVOR  •  3 WORLDS  •  15 ARENAS", 23, FontStyle.Bold, ColTextPrimary, new Vector2(0f, -38f), new Vector2(920f, 38f));
 
-            // Discrete Harvest Essence Pill inside Header
             GameObject essPill = new GameObject("HomeEssencePill");
             essPill.transform.SetParent(topBanner.transform, false);
             RectTransform rtPill = essPill.AddComponent<RectTransform>();
@@ -1039,12 +885,10 @@ namespace CursedHarvest
             rtPill.anchoredPosition = new Vector2(0f, -98f);
             rtPill.sizeDelta = new Vector2(440f, 52f);
             Image pillBg = essPill.AddComponent<Image>();
-            pillBg.color = new Color(0.12f, 0.09f, 0.14f, 0.95f);
+            pillBg.color = ColElevated;
 
             int currentEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.HarvestEssence : 0;
-            homeEssenceBadgeText = CreateLabel(essPill.transform, "HomeEssenceText", $"✦ HARVEST ESSENCE: {currentEssence}", 24, FontStyle.Bold, new Color(1.0f, 0.86f, 0.28f), Vector2.zero, new Vector2(420f, 46f));
-
-            // Note: Center vertical zone (y = +240 down to -120) is intentionally left open to showcase the 3D Cursed Pumpkin & Scythe Altar diorama!
+            homeEssenceBadgeText = CreateLabel(essPill.transform, "HomeEssenceText", $"✦ HARVEST ESSENCE: {currentEssence}", 24, FontStyle.Bold, ColHarvestGold, Vector2.zero, new Vector2(420f, 46f));
 
             // Bottom Thumb-Zone Action Deck
             GameObject deckObj = new GameObject("BottomButtonDeck");
@@ -1056,85 +900,50 @@ namespace CursedHarvest
             rtDeck.anchoredPosition = new Vector2(0f, 88f);
             rtDeck.sizeDelta = new Vector2(860f, 560f);
             Image deckBg = deckObj.AddComponent<Image>();
-            deckBg.color = new Color(0.05f, 0.04f, 0.07f, 0.84f);
+            deckBg.color = ColDarkPanel;
 
-            homePlayButton = CreateMenuButton(deckObj.transform, "PlayButton", "PLAY", new Vector2(0f, 185f), new Vector2(760f, 118f), new Color(0.88f, 0.54f, 0.14f), 38);
-            homeUpgradesButton = CreateMenuButton(deckObj.transform, "UpgradesButton", "UPGRADES", new Vector2(0f, 48f), new Vector2(760f, 102f), new Color(0.22f, 0.18f, 0.26f), 32);
-            homeSettingsButton = CreateMenuButton(deckObj.transform, "SettingsButton", "SETTINGS", new Vector2(0f, -78f), new Vector2(760f, 96f), new Color(0.18f, 0.17f, 0.22f), 30);
-            homeCreditsButton = CreateMenuButton(deckObj.transform, "CreditsButton", "CREDITS", new Vector2(0f, -198f), new Vector2(760f, 92f), new Color(0.16f, 0.15f, 0.19f), 28);
+            homePlayButton = CreateMenuButton(deckObj.transform, "PlayButton", "PLAY", new Vector2(0f, 185f), new Vector2(760f, 118f), ColHarvestGold, 38);
+            homeUpgradesButton = CreateMenuButton(deckObj.transform, "UpgradesButton", "UPGRADES", new Vector2(0f, 48f), new Vector2(760f, 102f), ColElevated, 32);
+            homeSettingsButton = CreateMenuButton(deckObj.transform, "SettingsButton", "SETTINGS", new Vector2(0f, -78f), new Vector2(760f, 96f), ColElevated, 30);
+            homeCreditsButton = CreateMenuButton(deckObj.transform, "CreditsButton", "CREDITS", new Vector2(0f, -198f), new Vector2(760f, 92f), ColElevated, 28);
 
-            // Footer Version Info
-            CreateLabel(parent, "VersionText", "LOGMAT  •  CURSED HARVEST. v1.0.0  •  ANDROID PORTRAIT EDITION", 18, FontStyle.Normal, new Color(0.58f, 0.54f, 0.50f), new Vector2(0f, -915f), new Vector2(960f, 36f));
+            CreateLabel(parent, "VersionText", "LOGMAT  •  CURSED HARVEST. v1.1.0  •  ANDROID PORTRAIT EDITION", 18, FontStyle.Normal, ColTextMuted, new Vector2(0f, -915f), new Vector2(960f, 36f));
         }
 
         private void BuildWorldSelectScreenContent(Transform parent)
         {
             worldCards.Clear();
 
-            // Full dark backdrop for readability
             Image screenBg = parent.gameObject.AddComponent<Image>();
-            screenBg.color = new Color(0.05f, 0.04f, 0.07f, 0.96f);
+            screenBg.color = ColBackground;
 
-            // Top Header Bar with ← BACK button and Title
-            worldSelectBackButton = CreateMenuButton(parent, "BackButton", "← BACK", new Vector2(-370f, 865f), new Vector2(220f, 84f), new Color(0.22f, 0.20f, 0.26f), 26);
+            worldSelectBackButton = CreateMenuButton(parent, "BackButton", "← BACK", new Vector2(-370f, 865f), new Vector2(220f, 84f), ColElevated, 26);
 
-            CreateLabel(parent, "WorldSelectTitle", "SELECT REALM", 44, FontStyle.Bold, new Color(1.0f, 0.80f, 0.25f), new Vector2(95f, 878f), new Vector2(660f, 56f));
-            CreateLabel(parent, "WorldSelectSubtitle", "Consecrate all 5 realms to unlock Endless Harvest", 21, FontStyle.Normal, new Color(0.82f, 0.78f, 0.72f), new Vector2(95f, 834f), new Vector2(680f, 32f));
+            CreateLabel(parent, "WorldSelectTitle", "SELECT WORLD", 44, FontStyle.Bold, ColHarvestGold, new Vector2(95f, 878f), new Vector2(660f, 56f));
+            CreateLabel(parent, "WorldSelectSubtitle", "Each World contains 5 unique Arenas and Bosses", 21, FontStyle.Normal, ColTextMuted, new Vector2(95f, 834f), new Vector2(680f, 32f));
 
-            // Vertical ScrollRect containing the 5 Portrait World Cards (y = +780 down to -340, height = 1120)
-            GameObject scrollObj = new GameObject("WorldsScrollView");
-            scrollObj.transform.SetParent(parent, false);
-            RectTransform rtScroll = scrollObj.AddComponent<RectTransform>();
-            rtScroll.anchorMin = new Vector2(0.5f, 0.5f);
-            rtScroll.anchorMax = new Vector2(0.5f, 0.5f);
-            rtScroll.anchoredPosition = new Vector2(0f, 220f);
-            rtScroll.sizeDelta = new Vector2(980f, 1120f);
-            Image scrollBg = scrollObj.AddComponent<Image>();
-            scrollBg.color = new Color(0.03f, 0.025f, 0.04f, 0.65f);
-            Mask scrollMask = scrollObj.AddComponent<Mask>();
-            scrollMask.showMaskGraphic = true;
+            float cardWidth = 960f;
+            float cardHeight = 310f;
+            float cardSpacing = 28f;
+            float startY = 560f;
 
-            GameObject contentObj = new GameObject("Content");
-            contentObj.transform.SetParent(scrollObj.transform, false);
-            RectTransform rtContent = contentObj.AddComponent<RectTransform>();
-            rtContent.anchorMin = new Vector2(0.5f, 1f);
-            rtContent.anchorMax = new Vector2(0.5f, 1f);
-            rtContent.pivot = new Vector2(0.5f, 1f);
-
-            float cardWidth = 930f;
-            float cardHeight = 204f;
-            float cardSpacing = 16f;
-            float totalContentHeight = 5 * cardHeight + 4 * cardSpacing + 24f;
-            rtContent.sizeDelta = new Vector2(960f, totalContentHeight);
-            rtContent.anchoredPosition = Vector2.zero;
-
-            ScrollRect sr = scrollObj.AddComponent<ScrollRect>();
-            sr.content = rtContent;
-            sr.viewport = rtScroll;
-            sr.horizontal = false;
-            sr.vertical = true;
-            sr.movementType = ScrollRect.MovementType.Clamped;
-            sr.scrollSensitivity = 35f;
-
-            for (int i = 1; i <= 5; i++)
+            for (int i = 1; i <= 3; i++)
             {
                 int worldId = i;
                 WorldConfig cfg = WorldConfig.GetConfig(worldId);
 
                 GameObject cardObj = new GameObject($"WorldCard_{worldId}");
-                cardObj.transform.SetParent(rtContent, false);
+                cardObj.transform.SetParent(parent, false);
                 RectTransform rtCard = cardObj.AddComponent<RectTransform>();
-                rtCard.anchorMin = new Vector2(0.5f, 1f);
-                rtCard.anchorMax = new Vector2(0.5f, 1f);
-                rtCard.pivot = new Vector2(0.5f, 1f);
+                rtCard.anchorMin = new Vector2(0.5f, 0.5f);
+                rtCard.anchorMax = new Vector2(0.5f, 0.5f);
                 rtCard.sizeDelta = new Vector2(cardWidth, cardHeight);
-                float yPos = -12f - (i - 1) * (cardHeight + cardSpacing);
+                float yPos = startY - (i - 1) * (cardHeight + cardSpacing);
                 rtCard.anchoredPosition = new Vector2(0f, yPos);
 
                 Image cardBg = cardObj.AddComponent<Image>();
-                cardBg.color = new Color(0.11f, 0.09f, 0.11f, 0.95f);
+                cardBg.color = ColDarkPanel;
 
-                // Selection Highlight Border (Outer frame)
                 GameObject borderObj = new GameObject("Border");
                 borderObj.transform.SetParent(cardObj.transform, false);
                 RectTransform rtBorder = borderObj.AddComponent<RectTransform>();
@@ -1144,52 +953,37 @@ namespace CursedHarvest
                 Image borderImg = borderObj.AddComponent<Image>();
                 borderImg.color = new Color(0.42f, 0.36f, 0.26f, 0.55f);
 
-                // Inner Card Fill (inset by 4px so outer border frames the card cleanly)
                 GameObject innerBgObj = new GameObject("InnerCardBg");
                 innerBgObj.transform.SetParent(cardObj.transform, false);
                 RectTransform rtInner = innerBgObj.AddComponent<RectTransform>();
                 rtInner.anchorMin = Vector2.zero;
                 rtInner.anchorMax = Vector2.one;
-                rtInner.offsetMin = new Vector2(4f, 4f);
-                rtInner.offsetMax = new Vector2(-4f, -4f);
+                rtInner.offsetMin = new Vector2(5f, 5f);
+                rtInner.offsetMax = new Vector2(-5f, -5f);
                 Image innerBgImg = innerBgObj.AddComponent<Image>();
-                innerBgImg.color = new Color(0.11f, 0.09f, 0.12f, 0.96f);
+                innerBgImg.color = ColDarkPanel;
                 cardBg = innerBgImg;
 
                 Button btn = cardObj.AddComponent<Button>();
-                ColorBlock cb = btn.colors;
-                cb.normalColor = Color.white;
-                cb.highlightedColor = new Color(1.15f, 1.15f, 1.15f);
-                cb.pressedColor = new Color(0.85f, 0.85f, 0.85f);
-                btn.colors = cb;
 
-                // Left Portrait Biome Thumbnail (220 x 176)
+                // Biome Thumbnail (240 x 260)
                 GameObject thumbObj = new GameObject("BiomePreviewThumbnail");
                 thumbObj.transform.SetParent(cardObj.transform, false);
                 RectTransform rtThumb = thumbObj.AddComponent<RectTransform>();
                 rtThumb.anchorMin = new Vector2(0f, 0.5f);
                 rtThumb.anchorMax = new Vector2(0f, 0.5f);
                 rtThumb.pivot = new Vector2(0f, 0.5f);
-                rtThumb.anchoredPosition = new Vector2(16f, 0f);
-                rtThumb.sizeDelta = new Vector2(220f, 172f);
+                rtThumb.anchoredPosition = new Vector2(20f, 0f);
+                rtThumb.sizeDelta = new Vector2(240f, 260f);
                 Image thumbImg = thumbObj.AddComponent<Image>();
                 thumbImg.sprite = GetOrCreateWorldPreviewSprite(worldId);
 
-                // World Number + Name
-                Text tWNum = CreateLabel(cardObj.transform, "WorldNumber", $"WORLD {worldId}", 20, FontStyle.Bold, new Color(0.96f, 0.78f, 0.32f), new Vector2(-95f, 64f), new Vector2(400f, 30f), TextAnchor.MiddleLeft);
-                Text tWName = CreateLabel(cardObj.transform, "WorldName", cfg != null ? cfg.displayName : $"REALM {worldId}", 30, FontStyle.Bold, Color.white, new Vector2(55f, 24f), new Vector2(650f, 40f), TextAnchor.MiddleLeft);
-
-                // Difficulty Badge (Top-Right of card)
-                Text tDiff = CreateLabel(cardObj.transform, "DifficultyBadge", cfg != null ? cfg.difficultyTier : "NORMAL", 22, FontStyle.Bold, GetTierColor(cfg != null ? cfg.difficultyTier : ""), new Vector2(310f, 64f), new Vector2(260f, 30f), TextAnchor.MiddleRight);
-
-                // Waves & Boss Milestones Summary
-                string bossMilestones = (cfg != null && cfg.totalWaves == 10)
-                    ? "Final Boss: Wave 10"
-                    : $"Mid-Boss: W10  •  Final Boss: W{(cfg != null ? cfg.totalWaves : 10)}";
-                Text tWaveBoss = CreateLabel(cardObj.transform, "WaveBossSummary", $"{(cfg != null ? cfg.totalWaves : 10)} Waves  •  {bossMilestones}", 20, FontStyle.Normal, new Color(0.84f, 0.80f, 0.74f), new Vector2(55f, -22f), new Vector2(650f, 32f), TextAnchor.MiddleLeft);
-
-                // Unlock / Completion Status Badge
-                Text tStat = CreateLabel(cardObj.transform, "StatusBadge", worldId == 1 ? "UNLOCKED" : $"LOCKED (Complete W{worldId - 1})", 21, FontStyle.Bold, worldId == 1 ? new Color(1f, 0.85f, 0.25f) : new Color(0.85f, 0.35f, 0.35f), new Vector2(55f, -64f), new Vector2(650f, 32f), TextAnchor.MiddleLeft);
+                // World details labels
+                Text tWNum = CreateLabel(cardObj.transform, "WorldNumber", $"WORLD {worldId}", 24, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 96f), new Vector2(400f, 32f), TextAnchor.MiddleLeft);
+                Text tWName = CreateLabel(cardObj.transform, "WorldName", cfg != null ? cfg.displayName : $"WORLD {worldId}", 34, FontStyle.Bold, ColTextPrimary, new Vector2(100f, 44f), new Vector2(600f, 44f), TextAnchor.MiddleLeft);
+                Text tDiff = CreateLabel(cardObj.transform, "DifficultyBadge", cfg != null ? cfg.difficultyTier : "NORMAL", 24, FontStyle.Bold, GetTierColor(cfg != null ? cfg.difficultyTier : ""), new Vector2(340f, 96f), new Vector2(240f, 32f), TextAnchor.MiddleRight);
+                Text tArenas = CreateLabel(cardObj.transform, "ArenaSummary", "5 Unique Arenas  •  Wave 5 Boss Encounter", 22, FontStyle.Normal, ColTextMuted, new Vector2(100f, -14f), new Vector2(600f, 34f), TextAnchor.MiddleLeft);
+                Text tStat = CreateLabel(cardObj.transform, "StatusBadge", worldId == 1 ? "★ UNLOCKED — TAP TO CHOOSE ARENA" : $"LOCKED (Complete World {worldId - 1})", 22, FontStyle.Bold, worldId == 1 ? ColHarvestGold : ColDanger, new Vector2(100f, -76f), new Vector2(600f, 34f), TextAnchor.MiddleLeft);
 
                 WorldCardUIElements elem = new WorldCardUIElements
                 {
@@ -1199,7 +993,7 @@ namespace CursedHarvest
                     worldNumberText = tWNum,
                     worldNameText = tWName,
                     difficultyBadgeText = tDiff,
-                    waveAndBossSummaryText = tWaveBoss,
+                    arenaSummaryText = tArenas,
                     statusBadgeText = tStat,
                     highlightBorder = borderImg,
                     background = cardBg,
@@ -1207,28 +1001,98 @@ namespace CursedHarvest
                 };
                 worldCards.Add(elem);
             }
+        }
 
-            // Selected World Summary Panel (y = -520, height = 310)
-            GameObject detailsObj = new GameObject("WorldDetailsPanel");
+        private void BuildArenaSelectScreenContent(Transform parent)
+        {
+            arenaCards.Clear();
+
+            Image screenBg = parent.gameObject.AddComponent<Image>();
+            screenBg.color = ColBackground;
+
+            arenaSelectBackButton = CreateMenuButton(parent, "BackButton", "← WORLDS", new Vector2(-360f, 865f), new Vector2(240f, 84f), ColElevated, 26);
+
+            arenaSelectTitleText = CreateLabel(parent, "ArenaSelectTitle", "THE CURSED REALMS", 44, FontStyle.Bold, ColHarvestGold, new Vector2(95f, 878f), new Vector2(660f, 56f));
+            arenaSelectSubtitleText = CreateLabel(parent, "ArenaSelectSubtitle", "WORLD 1 ARENAS  •  CHOOSE YOUR BATTLEGROUND", 21, FontStyle.Normal, ColTextMuted, new Vector2(95f, 834f), new Vector2(680f, 32f));
+
+            float cardWidth = 960f;
+            float cardHeight = 160f;
+            float cardSpacing = 16f;
+            float startY = 460f;
+
+            for (int i = 0; i < 5; i++)
+            {
+                int arenaSlot = i + 1;
+                GameObject cardObj = new GameObject($"ArenaCard_{arenaSlot}");
+                cardObj.transform.SetParent(parent, false);
+                RectTransform rtCard = cardObj.AddComponent<RectTransform>();
+                rtCard.anchorMin = new Vector2(0.5f, 0.5f);
+                rtCard.anchorMax = new Vector2(0.5f, 0.5f);
+                rtCard.sizeDelta = new Vector2(cardWidth, cardHeight);
+                float yPos = startY - i * (cardHeight + cardSpacing);
+                rtCard.anchoredPosition = new Vector2(0f, yPos);
+
+                Image cardBg = cardObj.AddComponent<Image>();
+                cardBg.color = ColDarkPanel;
+
+                GameObject borderObj = new GameObject("Border");
+                borderObj.transform.SetParent(cardObj.transform, false);
+                RectTransform rtBorder = borderObj.AddComponent<RectTransform>();
+                rtBorder.anchorMin = Vector2.zero;
+                rtBorder.anchorMax = Vector2.one;
+                rtBorder.sizeDelta = Vector2.zero;
+                Image borderImg = borderObj.AddComponent<Image>();
+                borderImg.color = new Color(0.42f, 0.36f, 0.26f, 0.55f);
+
+                GameObject innerBgObj = new GameObject("InnerCardBg");
+                innerBgObj.transform.SetParent(cardObj.transform, false);
+                RectTransform rtInner = innerBgObj.AddComponent<RectTransform>();
+                rtInner.anchorMin = Vector2.zero;
+                rtInner.anchorMax = Vector2.one;
+                rtInner.offsetMin = new Vector2(4f, 4f);
+                rtInner.offsetMax = new Vector2(-4f, -4f);
+                Image innerBgImg = innerBgObj.AddComponent<Image>();
+                innerBgImg.color = ColDarkPanel;
+                cardBg = innerBgImg;
+
+                Button btn = cardObj.AddComponent<Button>();
+
+                Text tANum = CreateLabel(cardObj.transform, "ArenaNumber", $"ARENA 1-{arenaSlot}", 22, FontStyle.Bold, ColHarvestGold, new Vector2(-280f, 36f), new Vector2(340f, 32f), TextAnchor.MiddleLeft);
+                Text tAName = CreateLabel(cardObj.transform, "ArenaName", "Arena Name", 30, FontStyle.Bold, ColTextPrimary, new Vector2(-120f, -14f), new Vector2(660f, 40f), TextAnchor.MiddleLeft);
+                Text tDiff = CreateLabel(cardObj.transform, "DifficultyBadge", "NORMAL", 22, FontStyle.Bold, ColCursedGreen, new Vector2(340f, 36f), new Vector2(220f, 32f), TextAnchor.MiddleRight);
+                Text tStat = CreateLabel(cardObj.transform, "StatusBadge", "UNLOCKED", 20, FontStyle.Bold, ColHarvestGold, new Vector2(340f, -18f), new Vector2(220f, 32f), TextAnchor.MiddleRight);
+
+                ArenaCardUIElements elem = new ArenaCardUIElements
+                {
+                    globalArenaId = arenaSlot,
+                    arenaIndexInWorld = arenaSlot,
+                    cardRoot = cardObj,
+                    selectButton = btn,
+                    arenaNumberText = tANum,
+                    arenaNameText = tAName,
+                    difficultyBadgeText = tDiff,
+                    statusBadgeText = tStat,
+                    highlightBorder = borderImg,
+                    background = cardBg
+                };
+                arenaCards.Add(elem);
+            }
+
+            // Bottom Details Panel & Launch Button
+            GameObject detailsObj = new GameObject("ArenaDetailsPanel");
             detailsObj.transform.SetParent(parent, false);
             RectTransform rtDetails = detailsObj.AddComponent<RectTransform>();
             rtDetails.anchorMin = new Vector2(0.5f, 0.5f);
             rtDetails.anchorMax = new Vector2(0.5f, 0.5f);
-            rtDetails.anchoredPosition = new Vector2(0f, -525f);
-            rtDetails.sizeDelta = new Vector2(980f, 310f);
+            rtDetails.anchoredPosition = new Vector2(0f, -460f);
+            rtDetails.sizeDelta = new Vector2(960f, 180f);
             Image detailsBg = detailsObj.AddComponent<Image>();
-            detailsBg.color = new Color(0.10f, 0.08f, 0.12f, 0.96f);
+            detailsBg.color = ColDarkPanel;
 
-            selectedWorldTitleText = CreateLabel(detailsObj.transform, "DetailTitle", "WORLD 1 — THE CURSED FARM", 30, FontStyle.Bold, new Color(0.95f, 0.65f, 0.20f), new Vector2(-120f, 112f), new Vector2(680f, 40f), TextAnchor.MiddleLeft);
-            selectedWorldTierText = CreateLabel(detailsObj.transform, "DetailTier", "EASY  •  10 WAVES", 22, FontStyle.Bold, new Color(0.4f, 0.95f, 0.45f), new Vector2(310f, 112f), new Vector2(300f, 36f), TextAnchor.MiddleRight);
-            selectedWorldSubtitleText = CreateLabel(detailsObj.transform, "DetailSubtitle", "World 1 — The Blighted Homestead", 20, FontStyle.Italic, new Color(0.82f, 0.76f, 0.68f), new Vector2(-150f, 72f), new Vector2(620f, 30f), TextAnchor.MiddleLeft);
-            selectedWorldStatusBadgeText = CreateLabel(detailsObj.transform, "DetailStatus", "★ UNLOCKED & READY", 20, FontStyle.Bold, new Color(1.0f, 0.85f, 0.25f), new Vector2(280f, 72f), new Vector2(360f, 30f), TextAnchor.MiddleRight);
-            selectedWorldDescText = CreateLabel(detailsObj.transform, "DetailDesc", "", 20, FontStyle.Normal, new Color(0.88f, 0.86f, 0.84f), new Vector2(0f, 12f), new Vector2(920f, 68f), TextAnchor.MiddleLeft);
-            selectedWorldBossText = CreateLabel(detailsObj.transform, "DetailBossSummary", "", 20, FontStyle.Bold, new Color(0.98f, 0.72f, 0.48f), new Vector2(0f, -56f), new Vector2(920f, 36f), TextAnchor.MiddleLeft);
-            selectedWorldModifiersText = CreateLabel(detailsObj.transform, "DetailModifiers", "", 19, FontStyle.Normal, new Color(0.75f, 0.72f, 0.68f), new Vector2(0f, -104f), new Vector2(920f, 32f), TextAnchor.MiddleLeft);
+            selectedArenaDescText = CreateLabel(detailsObj.transform, "ArenaDesc", "A moonlit rural farm under eerie quietude.", 22, FontStyle.Normal, ColTextPrimary, new Vector2(0f, 38f), new Vector2(900f, 60f), TextAnchor.MiddleLeft);
+            selectedArenaBossSummaryText = CreateLabel(detailsObj.transform, "BossSummary", "WAVE 5 BOSS: THE LAST HARVEST", 24, FontStyle.Bold, ColDanger, new Vector2(0f, -32f), new Vector2(900f, 40f), TextAnchor.MiddleLeft);
 
-            // Primary Bottom Action Button: START WORLD
-            startRunButton = CreateMenuButton(parent, "StartRunButton", "START WORLD", new Vector2(0f, -805f), new Vector2(920f, 124f), new Color(0.88f, 0.54f, 0.14f), 38);
+            startRunButton = CreateMenuButton(parent, "StartRunButton", "ENTER ARENA", new Vector2(0f, -720f), new Vector2(940f, 126f), ColHarvestGold, 38);
             startRunButtonText = startRunButton.GetComponentInChildren<Text>();
         }
 
@@ -1237,23 +1101,19 @@ namespace CursedHarvest
             upgradeBranchCards.Clear();
             for (int i = parent.childCount - 1; i >= 0; i--)
             {
-                if (Application.isPlaying)
-                    Destroy(parent.GetChild(i).gameObject);
-                else
-                    DestroyImmediate(parent.GetChild(i).gameObject);
+                if (Application.isPlaying) Destroy(parent.GetChild(i).gameObject);
+                else DestroyImmediate(parent.GetChild(i).gameObject);
             }
 
             Image screenBg = parent.GetComponent<Image>();
             if (screenBg == null) screenBg = parent.gameObject.AddComponent<Image>();
-            screenBg.color = new Color(0.05f, 0.04f, 0.07f, 0.96f);
+            screenBg.color = ColBackground;
 
-            // Top Header with ← BACK Button
-            upgradesBackButton = CreateMenuButton(parent, "UpgradesBackButton", "← BACK", new Vector2(-370f, 865f), new Vector2(220f, 84f), new Color(0.22f, 0.20f, 0.26f), 26);
+            upgradesBackButton = CreateMenuButton(parent, "UpgradesBackButton", "← BACK", new Vector2(-370f, 865f), new Vector2(220f, 84f), ColElevated, 26);
 
-            CreateLabel(parent, "UpgradesTitle", "OCCULT UPGRADES", 42, FontStyle.Bold, new Color(1.0f, 0.80f, 0.25f), new Vector2(95f, 878f), new Vector2(660f, 54f));
-            CreateLabel(parent, "UpgradesSubtitle", "Permanent blessings across all realms", 21, FontStyle.Normal, new Color(0.82f, 0.78f, 0.72f), new Vector2(95f, 834f), new Vector2(660f, 32f));
+            CreateLabel(parent, "UpgradesTitle", "OCCULT UPGRADES", 42, FontStyle.Bold, ColHarvestGold, new Vector2(95f, 878f), new Vector2(660f, 54f));
+            CreateLabel(parent, "UpgradesSubtitle", "Permanent blessings across all realms", 21, FontStyle.Normal, ColTextMuted, new Vector2(95f, 834f), new Vector2(660f, 32f));
 
-            // Harvest Essence Balance Banner
             GameObject essBadgeObj = new GameObject("EssenceBalanceBadge");
             essBadgeObj.transform.SetParent(parent, false);
             RectTransform rtEss = essBadgeObj.AddComponent<RectTransform>();
@@ -1262,11 +1122,10 @@ namespace CursedHarvest
             rtEss.anchoredPosition = new Vector2(0f, 735f);
             rtEss.sizeDelta = new Vector2(960f, 76f);
             Image essBg = essBadgeObj.AddComponent<Image>();
-            essBg.color = new Color(0.11f, 0.09f, 0.14f, 0.98f);
+            essBg.color = ColDarkPanel;
 
-            essenceBalanceText = CreateLabel(essBadgeObj.transform, "EssenceText", "✦ HARVEST ESSENCE: 0", 30, FontStyle.Bold, new Color(1.0f, 0.86f, 0.28f), Vector2.zero, new Vector2(920f, 64f));
+            essenceBalanceText = CreateLabel(essBadgeObj.transform, "EssenceText", "✦ HARVEST ESSENCE: 0", 30, FontStyle.Bold, ColHarvestGold, Vector2.zero, new Vector2(920f, 64f));
 
-            // 8 Upgrades in a 2 Columns x 4 Rows Portrait Grid
             MetaUpgradeBranch[] branches = (MetaUpgradeBranch[])Enum.GetValues(typeof(MetaUpgradeBranch));
             float cardWidth = 468f;
             float cardHeight = 340f;
@@ -1289,19 +1148,13 @@ namespace CursedHarvest
                 rt.anchoredPosition = new Vector2(colX[col], rowY[row]);
 
                 Image bg = cObj.AddComponent<Image>();
-                bg.color = new Color(0.12f, 0.10f, 0.15f, 0.96f);
+                bg.color = ColDarkPanel;
 
-                // Card Title & Glyph
-                Text tN = CreateLabel(cObj.transform, "Title", $"{def.iconGlyph}  {def.displayName.ToUpper()}", 26, FontStyle.Bold, new Color(1.0f, 0.82f, 0.32f), new Vector2(0f, 118f), new Vector2(430f, 42f));
+                Text tN = CreateLabel(cObj.transform, "Title", $"{def.iconGlyph}  {def.displayName.ToUpper()}", 26, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 118f), new Vector2(430f, 42f));
+                Text tR = CreateLabel(cObj.transform, "Rank", "LEVEL: [□ □ □ □ □] 0/5", 20, FontStyle.Bold, ColCursedGreen, new Vector2(0f, 68f), new Vector2(430f, 32f));
+                Text tD = CreateLabel(cObj.transform, "Desc", "", 19, FontStyle.Normal, ColTextPrimary, new Vector2(0f, -6f), new Vector2(424f, 96f));
 
-                // Rank Indicator [■ ■ □ □ □] Lv X/5
-                Text tR = CreateLabel(cObj.transform, "Rank", "LEVEL: [□ □ □ □ □] 0/5", 20, FontStyle.Bold, new Color(0.42f, 0.96f, 0.56f), new Vector2(0f, 68f), new Vector2(430f, 32f));
-
-                // Effect Description (Current + Next)
-                Text tD = CreateLabel(cObj.transform, "Desc", "", 19, FontStyle.Normal, new Color(0.90f, 0.88f, 0.86f), new Vector2(0f, -6f), new Vector2(424f, 96f));
-
-                // Large Touch-Friendly Upgrade Button
-                Button uBtn = CreateMenuButton(cObj.transform, "UpgradeButton", "UPGRADE", new Vector2(0f, -112f), new Vector2(420f, 78f), new Color(0.82f, 0.50f, 0.14f), 22);
+                Button uBtn = CreateMenuButton(cObj.transform, "UpgradeButton", "UPGRADE", new Vector2(0f, -112f), new Vector2(420f, 78f), ColHarvestGold, 22);
                 Text btnText = uBtn.GetComponentInChildren<Text>();
 
                 uBtn.onClick.RemoveAllListeners();
@@ -1335,14 +1188,8 @@ namespace CursedHarvest
             if (MetaProgressionManager.Instance == null) return;
 
             int essence = MetaProgressionManager.Instance.HarvestEssence;
-            if (essenceBalanceText != null)
-            {
-                essenceBalanceText.text = $"✦ HARVEST ESSENCE: {essence}";
-            }
-            if (homeEssenceBadgeText != null)
-            {
-                homeEssenceBadgeText.text = $"✦ HARVEST ESSENCE: {essence}";
-            }
+            if (essenceBalanceText != null) essenceBalanceText.text = $"✦ HARVEST ESSENCE: {essence}";
+            if (homeEssenceBadgeText != null) homeEssenceBadgeText.text = $"✦ HARVEST ESSENCE: {essence}";
 
             for (int i = 0; i < upgradeBranchCards.Count; i++)
             {
@@ -1357,10 +1204,7 @@ namespace CursedHarvest
                 {
                     boxes += (b < rank) ? "■ " : "□ ";
                 }
-                if (card.rankText != null)
-                {
-                    card.rankText.text = $"Lv {rank}/5  [{boxes.Trim()}]";
-                }
+                if (card.rankText != null) card.rankText.text = $"Lv {rank}/5  [{boxes.Trim()}]";
 
                 if (card.descText != null)
                 {
@@ -1378,7 +1222,7 @@ namespace CursedHarvest
                     {
                         card.upgradeButton.interactable = false;
                         card.buttonText.text = "MAX LEVEL";
-                        card.buttonText.color = new Color(0.65f, 0.65f, 0.65f);
+                        card.buttonText.color = ColTextMuted;
                     }
                     else
                     {
@@ -1386,7 +1230,7 @@ namespace CursedHarvest
                         bool canAfford = essence >= cost;
                         card.upgradeButton.interactable = canAfford;
                         card.buttonText.text = $"UPGRADE ({cost} ✦)";
-                        card.buttonText.color = canAfford ? new Color(1f, 0.95f, 0.4f) : new Color(0.85f, 0.45f, 0.45f);
+                        card.buttonText.color = canAfford ? ColTextPrimary : ColDanger;
                     }
                 }
             }
@@ -1404,21 +1248,21 @@ namespace CursedHarvest
             rtCard.anchorMax = new Vector2(0.5f, 0.5f);
             rtCard.sizeDelta = new Vector2(860f, 860f);
             Image cardBg = cardObj.AddComponent<Image>();
-            cardBg.color = new Color(0.10f, 0.08f, 0.13f, 0.98f);
+            cardBg.color = ColDarkPanel;
 
-            CreateLabel(cardObj.transform, "SettingsTitle", "SETTINGS", 48, FontStyle.Bold, new Color(1.0f, 0.80f, 0.25f), new Vector2(0f, 320f), new Vector2(760f, 64f));
-            CreateLabel(cardObj.transform, "SettingsSub", "Audio & Touch Haptics Preferences", 22, FontStyle.Normal, new Color(0.80f, 0.76f, 0.72f), new Vector2(0f, 260f), new Vector2(760f, 36f));
+            CreateLabel(cardObj.transform, "SettingsTitle", "SETTINGS", 48, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 320f), new Vector2(760f, 64f));
+            CreateLabel(cardObj.transform, "SettingsSub", "Audio & Touch Haptics Preferences", 22, FontStyle.Normal, ColTextMuted, new Vector2(0f, 260f), new Vector2(760f, 36f));
 
-            settingsMusicToggleButton = CreateMenuButton(cardObj.transform, "MusicToggleBtn", "MUSIC: ON", new Vector2(0f, 130f), new Vector2(680f, 108f), new Color(0.18f, 0.16f, 0.22f), 32);
+            settingsMusicToggleButton = CreateMenuButton(cardObj.transform, "MusicToggleBtn", "MUSIC: ON", new Vector2(0f, 130f), new Vector2(680f, 108f), ColElevated, 32);
             settingsMusicToggleText = settingsMusicToggleButton.GetComponentInChildren<Text>();
 
-            settingsSfxToggleButton = CreateMenuButton(cardObj.transform, "SfxToggleBtn", "SFX: ON", new Vector2(0f, -10f), new Vector2(680f, 108f), new Color(0.18f, 0.16f, 0.22f), 32);
+            settingsSfxToggleButton = CreateMenuButton(cardObj.transform, "SfxToggleBtn", "SFX: ON", new Vector2(0f, -10f), new Vector2(680f, 108f), ColElevated, 32);
             settingsSfxToggleText = settingsSfxToggleButton.GetComponentInChildren<Text>();
 
-            settingsHapticsToggleButton = CreateMenuButton(cardObj.transform, "HapticsToggleBtn", "HAPTICS: ON", new Vector2(0f, -150f), new Vector2(680f, 108f), new Color(0.18f, 0.16f, 0.22f), 32);
+            settingsHapticsToggleButton = CreateMenuButton(cardObj.transform, "HapticsToggleBtn", "HAPTICS: ON", new Vector2(0f, -150f), new Vector2(680f, 108f), ColElevated, 32);
             settingsHapticsToggleText = settingsHapticsToggleButton.GetComponentInChildren<Text>();
 
-            settingsCloseButton = CreateMenuButton(cardObj.transform, "CloseSettingsBtn", "DONE", new Vector2(0f, -310f), new Vector2(520f, 98f), new Color(0.85f, 0.52f, 0.14f), 32);
+            settingsCloseButton = CreateMenuButton(cardObj.transform, "CloseSettingsBtn", "CLOSE", new Vector2(0f, -300f), new Vector2(460f, 92f), ColHarvestGold, 30);
         }
 
         private void BuildExitConfirmationContent(Transform parent)
@@ -1426,156 +1270,96 @@ namespace CursedHarvest
             Image dimBg = parent.gameObject.AddComponent<Image>();
             dimBg.color = new Color(0.02f, 0.02f, 0.03f, 0.90f);
 
-            GameObject cardObj = new GameObject("ExitConfirmCard");
+            GameObject cardObj = new GameObject("ExitCard");
             cardObj.transform.SetParent(parent, false);
             RectTransform rtCard = cardObj.AddComponent<RectTransform>();
             rtCard.anchorMin = new Vector2(0.5f, 0.5f);
             rtCard.anchorMax = new Vector2(0.5f, 0.5f);
-            rtCard.sizeDelta = new Vector2(820f, 520f);
+            rtCard.sizeDelta = new Vector2(800f, 520f);
             Image cardBg = cardObj.AddComponent<Image>();
-            cardBg.color = new Color(0.11f, 0.08f, 0.12f, 0.98f);
+            cardBg.color = ColDarkPanel;
 
-            CreateLabel(cardObj.transform, "ExitTitle", "EXIT CURSED HARVEST.?", 40, FontStyle.Bold, new Color(1.0f, 0.80f, 0.25f), new Vector2(0f, 140f), new Vector2(740f, 56f));
-            CreateLabel(cardObj.transform, "ExitSub", "Your Harvest Essence, unlocked realms, and consecrated upgrades are saved.", 23, FontStyle.Normal, new Color(0.85f, 0.82f, 0.78f), new Vector2(0f, 45f), new Vector2(720f, 80f));
+            CreateLabel(cardObj.transform, "ExitTitle", "ABANDON HARVEST?", 44, FontStyle.Bold, ColDanger, new Vector2(0f, 160f), new Vector2(720f, 60f));
+            CreateLabel(cardObj.transform, "ExitMessage", "Are you sure you wish to exit to device?", 24, FontStyle.Normal, ColTextPrimary, new Vector2(0f, 75f), new Vector2(720f, 50f));
 
-            exitConfirmCancelButton = CreateMenuButton(cardObj.transform, "CancelExitBtn", "STAY IN REALM", new Vector2(-185f, -130f), new Vector2(340f, 98f), new Color(0.24f, 0.22f, 0.28f), 26);
-            exitConfirmYesButton = CreateMenuButton(cardObj.transform, "ConfirmExitBtn", "EXIT GAME", new Vector2(185f, -130f), new Vector2(340f, 98f), new Color(0.72f, 0.20f, 0.20f), 26);
+            exitConfirmYesButton = CreateMenuButton(cardObj.transform, "YesButton", "QUIT TO DEVICE", new Vector2(0f, -30f), new Vector2(640f, 96f), ColDanger, 30);
+            exitConfirmCancelButton = CreateMenuButton(cardObj.transform, "CancelButton", "STAY IN HARVEST", new Vector2(0f, -145f), new Vector2(640f, 96f), ColElevated, 30);
         }
 
         private void BuildCreditsScreenContent(Transform parent)
         {
             Image screenBg = parent.gameObject.AddComponent<Image>();
-            screenBg.color = new Color(0.05f, 0.04f, 0.07f, 0.96f);
+            screenBg.color = ColBackground;
 
-            creditsBackButton = CreateMenuButton(parent, "CreditsBackButton", "← BACK", new Vector2(-370f, 865f), new Vector2(220f, 84f), new Color(0.22f, 0.20f, 0.26f), 26);
+            creditsBackButton = CreateMenuButton(parent, "CreditsBackButton", "← BACK", new Vector2(-370f, 865f), new Vector2(220f, 84f), ColElevated, 26);
 
-            CreateLabel(parent, "CreditsTitle", "CREDITS", 46, FontStyle.Bold, new Color(1.0f, 0.80f, 0.25f), new Vector2(95f, 875f), new Vector2(640f, 56f));
+            CreateLabel(parent, "CreditsTitle", "CREDITS", 48, FontStyle.Bold, ColHarvestGold, new Vector2(95f, 878f), new Vector2(660f, 56f));
+            CreateLabel(parent, "CreditsSubtitle", "The artisans behind the cursed harvest", 22, FontStyle.Normal, ColTextMuted, new Vector2(95f, 834f), new Vector2(680f, 32f));
 
             GameObject cardObj = new GameObject("CreditsCard");
             cardObj.transform.SetParent(parent, false);
             RectTransform rtCard = cardObj.AddComponent<RectTransform>();
             rtCard.anchorMin = new Vector2(0.5f, 0.5f);
             rtCard.anchorMax = new Vector2(0.5f, 0.5f);
-            rtCard.anchoredPosition = new Vector2(0f, -20f);
-            rtCard.sizeDelta = new Vector2(920f, 1320f);
+            rtCard.sizeDelta = new Vector2(960f, 1400f);
+            rtCard.anchoredPosition = new Vector2(0f, -60f);
             Image cardBg = cardObj.AddComponent<Image>();
-            cardBg.color = new Color(0.10f, 0.08f, 0.12f, 0.96f);
+            cardBg.color = ColDarkPanel;
 
-            string body =
-                "CURSED HARVEST.\n" +
-                "Definitive Mobile Portrait Edition\n\n" +
-                "STUDIO & PUBLISHER\n" +
+            string creditsText =
+                "CURSED HARVEST. — MOBILE v1.1.0\n" +
+                "RELEASE EDITION\n\n" +
+                "DEVELOPED & PUBLISHED BY\n" +
                 "LOGMAT\n\n" +
-                "GAME DESIGN & ENGINEERING\n" +
-                "LOGMAT  •  Cursed Harvest Team\n\n" +
-                "3D ENVIRONMENTS, CHARACTERS & PROPS\n" +
-                "Synty Studios (POLYGON Modular Assets)\n\n" +
-                "AUDIO & SOUNDTRACK ARCHITECTURE\n" +
-                "100% Procedural C# PCM Synthesis\n\n" +
-                "ANDROID PACKAGE\n" +
-                "com.logmat.cursedharvest\n\n" +
-                "May the Harvest grant you mercy in the Blighted Realms.";
+                "CORE GAME ARCHITECTURE\n" +
+                "LOGMAT Interactive Systems\n\n" +
+                "3D ASSETS & ARTISTRY\n" +
+                "Synty Studios (Polygon Generic, Halloween Masks)\n" +
+                "Original Dark Folk-Horror Mobile Branding\n\n" +
+                "AUDIO & ATMOSPHERE\n" +
+                "Folk Horror Drone & Procedural Synthesizer\n\n" +
+                "MOBILE CONVERSION & ADS\n" +
+                "Native Android Portrait Pipeline\n" +
+                "Yodo1 MAS Integration (AppKey: uJcp43j4h4)\n\n" +
+                "DEDICATED TO ALL OCCULT ROGUELIKE HARVESTERS";
 
-            Text tBody = CreateLabel(cardObj.transform, "CreditsBody", body, 26, FontStyle.Normal, new Color(0.90f, 0.86f, 0.80f), Vector2.zero, new Vector2(820f, 1180f));
-            tBody.lineSpacing = 1.28f;
+            Text tCredits = CreateLabel(cardObj.transform, "CreditsBody", creditsText, 24, FontStyle.Normal, ColTextPrimary, Vector2.zero, new Vector2(880f, 1300f), TextAnchor.MiddleCenter);
+            tCredits.lineSpacing = 1.35f;
         }
 
-        // ==================== PROCEDURAL WORLD BIOME PREVIEW THUMBNAILS ====================
-
-        private static Sprite GetOrCreateWorldPreviewSprite(int worldId)
+        private Sprite GetOrCreateWorldPreviewSprite(int worldId)
         {
-            if (_worldThumbnailCache.TryGetValue(worldId, out Sprite cached) && cached != null)
-            {
-                return cached;
-            }
+            if (_worldThumbnailCache.TryGetValue(worldId, out Sprite cached) && cached != null) return cached;
 
-            int w = 160;
-            int h = 124;
+            int w = 240;
+            int h = 180;
             Texture2D tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
-            tex.wrapMode = TextureWrapMode.Clamp;
 
-            Color skyTop;
-            Color skyBottom;
-            Color groundCol;
-            Color accentGlow;
+            Color skyTop = new Color(0.05f, 0.05f, 0.08f);
+            Color skyBottom = new Color(0.12f, 0.10f, 0.14f);
+            Color groundCol = new Color(0.16f, 0.14f, 0.12f);
+            Color accentGlow = ColHarvestGold;
 
-            switch (worldId)
+            if (worldId == 2)
             {
-                case 1: // THE CURSED FARM
-                    skyTop = new Color(0.08f, 0.09f, 0.18f);
-                    skyBottom = new Color(0.24f, 0.16f, 0.12f);
-                    groundCol = new Color(0.14f, 0.10f, 0.06f);
-                    accentGlow = new Color(1.0f, 0.72f, 0.18f);
-                    break;
-                case 2: // THE ASHEN ORCHARDS
-                    skyTop = new Color(0.14f, 0.06f, 0.05f);
-                    skyBottom = new Color(0.38f, 0.16f, 0.08f);
-                    groundCol = new Color(0.15f, 0.09f, 0.08f);
-                    accentGlow = new Color(1.0f, 0.45f, 0.12f);
-                    break;
-                case 3: // THE BLACKENED MIRE
-                    skyTop = new Color(0.04f, 0.12f, 0.10f);
-                    skyBottom = new Color(0.10f, 0.26f, 0.18f);
-                    groundCol = new Color(0.06f, 0.11f, 0.08f);
-                    accentGlow = new Color(0.35f, 0.95f, 0.48f);
-                    break;
-                case 4: // THE BLOODWOOD TIMBER
-                    skyTop = new Color(0.12f, 0.03f, 0.05f);
-                    skyBottom = new Color(0.34f, 0.06f, 0.10f);
-                    groundCol = new Color(0.11f, 0.04f, 0.05f);
-                    accentGlow = new Color(0.96f, 0.20f, 0.25f);
-                    break;
-                default: // WORLD 5: THE ETERNAL ECLIPSE
-                    skyTop = new Color(0.05f, 0.02f, 0.12f);
-                    skyBottom = new Color(0.22f, 0.08f, 0.34f);
-                    groundCol = new Color(0.07f, 0.04f, 0.11f);
-                    accentGlow = new Color(0.88f, 0.32f, 1.0f);
-                    break;
+                skyBottom = new Color(0.14f, 0.16f, 0.18f);
+                groundCol = new Color(0.12f, 0.14f, 0.16f);
+                accentGlow = new Color(0.60f, 0.70f, 0.85f);
+            }
+            else if (worldId == 3)
+            {
+                skyBottom = new Color(0.18f, 0.08f, 0.22f);
+                groundCol = new Color(0.10f, 0.06f, 0.14f);
+                accentGlow = new Color(0.85f, 0.35f, 0.95f);
             }
 
             Color[] pixels = new Color[w * h];
-            Vector2 moonCenter = new Vector2(w * 0.5f, h * 0.64f);
-            float moonRadius = 24f;
-
             for (int y = 0; y < h; y++)
             {
                 float ny = y / (float)(h - 1);
                 for (int x = 0; x < w; x++)
                 {
-                    Color c;
-                    float hillHeight = 0.28f + 0.04f * Mathf.Sin(x * 0.06f + worldId);
-                    if (ny < hillHeight)
-                    {
-                        c = Color.Lerp(groundCol * 0.7f, groundCol, ny / hillHeight);
-                    }
-                    else
-                    {
-                        float skyT = (ny - hillHeight) / (1f - hillHeight);
-                        c = Color.Lerp(skyBottom, skyTop, skyT);
-                    }
-
-                    // Moon / Eclipse / Beacon silhouette
-                    float distMoon = Vector2.Distance(new Vector2(x, y), moonCenter);
-                    if (worldId == 5)
-                    {
-                        // Eclipse ring
-                        if (distMoon < moonRadius && distMoon > moonRadius - 4.5f)
-                            c = Color.Lerp(c, accentGlow, 0.92f);
-                        else if (distMoon <= moonRadius - 4.5f)
-                            c = new Color(0.03f, 0.01f, 0.05f);
-                    }
-                    else if (distMoon < moonRadius)
-                    {
-                        float glowT = 1f - (distMoon / moonRadius);
-                        c = Color.Lerp(c, accentGlow, glowT * 0.85f);
-                    }
-
-                    // Stylized trees / monolith silhouettes on horizon
-                    if (ny >= hillHeight && ny < hillHeight + 0.32f && ((x + worldId * 13) % 28 < 5))
-                    {
-                        c = groundCol * 0.65f;
-                    }
-
+                    Color c = ny < 0.35f ? groundCol : Color.Lerp(skyBottom, skyTop, (ny - 0.35f) / 0.65f);
                     pixels[y * w + x] = c;
                 }
             }
@@ -1644,7 +1428,7 @@ namespace CursedHarvest
             t.fontStyle = FontStyle.Bold;
             t.alignment = TextAnchor.MiddleCenter;
             t.text = label;
-            t.color = Color.white;
+            t.color = (bgColor == ColHarvestGold) ? new Color(0.12f, 0.08f, 0.04f) : ColTextPrimary;
 
             return btn;
         }

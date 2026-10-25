@@ -275,6 +275,16 @@ namespace CursedHarvest
             return true;
         }
 
+        public void DoubleRunEssence()
+        {
+            if (runEssenceEarned <= 0) return;
+            int bonus = runEssenceEarned;
+            harvestEssence += bonus;
+            runEssenceEarned += bonus;
+            SaveProgression();
+            OnEssenceChanged?.Invoke(harvestEssence);
+        }
+
         public void AddEssence(int amount, bool applyFortune = true)
         {
             if (amount <= 0) return;

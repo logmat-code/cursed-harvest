@@ -568,10 +568,10 @@ namespace CursedHarvest
 
             if (isFinal)
             {
-                // Final Boss defeated! Complete world!
+                // Final Boss defeated! Complete arena & world!
                 if (GameSession.Instance != null)
                 {
-                    GameSession.Instance.CompleteWorld(activeConfig.worldId);
+                    GameSession.Instance.CompleteArena(GameSession.Instance.SelectedArenaId);
                 }
 
                 if (UIManager.Instance != null)

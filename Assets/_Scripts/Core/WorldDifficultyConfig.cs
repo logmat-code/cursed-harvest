@@ -4,21 +4,21 @@ using UnityEngine;
 namespace CursedHarvest
 {
     /// <summary>
-    /// Centralized difficulty configuration for World 1 (and future worlds).
-    /// Avoids scattering magic numbers across multiple scripts and prefabs.
+    /// Centralized difficulty configuration for World and Arena progression.
+    /// Adapted for 15 Arenas across 3 Worlds with 5 waves per arena and boss encounter on wave 5.
     /// </summary>
     [Serializable]
     public class WorldDifficultyConfig
     {
         [Header("World Identity")]
         public int worldId = 1;
-        public string worldName = "World 1 — Cursed Harvest";
+        public string worldName = "World 1 — The Cursed Realms";
 
-        [Header("Wave 1–9 Enemy Counts")]
-        public int[] waveCounts = new int[] { 8, 11, 14, 18, 22, 27, 33, 40, 48 };
+        [Header("Wave Enemy Counts")]
+        public int[] waveCounts = new int[] { 8, 12, 16, 22, 16 };
 
-        [Header("Boss Wave 10 Configuration")]
-        public int bossAddCount = 18;
+        [Header("Boss Wave Configuration")]
+        public int bossAddCount = 16;
         public int bossGruntQuota = 6;
         public int bossChaserQuota = 4;
         public int bossWalkerQuota = 3;
@@ -27,12 +27,12 @@ namespace CursedHarvest
         public int bossMaxConcurrentAdds = 8;
         public float bossAddSpawnInterval = 2.1f;
 
-        [Header("One Last Night (Endless Wave 11+)")]
-        public int postWave10BaseCount = 84;
-        public float postWave10Growth = 1.12f;
+        [Header("Endless Wave (Wave 6+)")]
+        public int postWave5BaseCount = 35;
+        public float postWave5Growth = 1.15f;
 
         [Header("Damage Multipliers")]
-        public float enemyDamageMultiplier = 0.82f;
+        public float enemyDamageMultiplier = 0.85f;
         public float bossDamageMultiplier = 0.90f;
 
         [Header("Player Survivability & Mobility")]
@@ -40,7 +40,7 @@ namespace CursedHarvest
         public float dashBaseCooldown = 1.90f;
 
         [Header("Enemy Speed Adjustments")]
-        public float chargerSpeedMultiplier = 0.90f;
+        public float chargerSpeedMultiplier = 1.0f;
 
         [Header("Health Restore Drop Chances")]
         public float commonHealthDropChance = 0.04f;
@@ -54,8 +54,8 @@ namespace CursedHarvest
         public float luckyLastMinimumHP = 15f;
 
         [Header("Intermission Supply Drops & Pre-Boss Recovery")]
-        public int[] supplyDropWaves = new int[] { 2, 4, 6, 8, 9 };
-        public int preBossWave = 9;
+        public int[] supplyDropWaves = new int[] { 2, 4 };
+        public int preBossWave = 4;
         public float preBossLowHpThreshold = 0.50f;
         public int preBossLowHpDropCount = 2;
         public int preBossNormalDropCount = 1;
@@ -127,7 +127,7 @@ namespace CursedHarvest
         public int GetEnemyCountForWave(int wave, float? customGrowth = null)
         {
             if (wave <= 0) return waveCounts != null && waveCounts.Length > 0 ? waveCounts[0] : 8;
-            if (wave < 10)
+            if (wave <= 4)
             {
                 if (waveCounts != null && wave - 1 < waveCounts.Length)
                 {
@@ -135,20 +135,20 @@ namespace CursedHarvest
                 }
                 return 8;
             }
-            if (wave == 10)
+            if (wave == 5)
             {
                 return bossAddCount;
             }
 
-            float g = customGrowth ?? postWave10Growth;
-            return Mathf.RoundToInt(postWave10BaseCount * Mathf.Pow(g, wave - 11));
+            float g = customGrowth ?? postWave5Growth;
+            return Mathf.RoundToInt(postWave5BaseCount * Mathf.Pow(g, wave - 6));
         }
 
         public bool IsSupplyDropWave(int completedWave)
         {
-            if (completedWave <= 0 || completedWave == 10) return false;
+            if (completedWave <= 0 || completedWave == 5) return false;
 
-            if (completedWave <= 9)
+            if (completedWave <= 4)
             {
                 if (supplyDropWaves != null)
                 {
@@ -160,7 +160,6 @@ namespace CursedHarvest
                 return false;
             }
 
-            // Endless mode (Wave 11+): every 3 waves (12, 15, 18...)
             return completedWave % 3 == 0;
         }
 

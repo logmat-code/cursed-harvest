@@ -83,6 +83,8 @@ namespace CursedHarvest
         [Header("Game Over Modal")]
         [SerializeField] private GameObject gameOverModal;
         [SerializeField] private Text gameOverStatsText;
+        [SerializeField] private Button doubleEssenceAdButton;
+        [SerializeField] private Text doubleEssenceAdButtonText;
         [SerializeField] private Button retryButton;
         [SerializeField] private Button gameOverWorldSelectButton;
         [SerializeField] private Button gameOverHomeButton;
@@ -185,6 +187,7 @@ namespace CursedHarvest
             if (settingsCloseButton != null) { settingsCloseButton.onClick.RemoveAllListeners(); settingsCloseButton.onClick.AddListener(CloseSettingsModal); }
 
             if (retryButton != null) { retryButton.onClick.RemoveAllListeners(); retryButton.onClick.AddListener(RestartRun); }
+            if (doubleEssenceAdButton != null) { doubleEssenceAdButton.onClick.RemoveAllListeners(); doubleEssenceAdButton.onClick.AddListener(OnDoubleEssenceAdClicked); }
             if (gameOverWorldSelectButton != null) { gameOverWorldSelectButton.onClick.RemoveAllListeners(); gameOverWorldSelectButton.onClick.AddListener(ReturnToWorldSelect); }
             if (gameOverHomeButton != null) { gameOverHomeButton.onClick.RemoveAllListeners(); gameOverHomeButton.onClick.AddListener(ReturnToHome); }
 
@@ -934,6 +937,11 @@ namespace CursedHarvest
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             Time.timeScale = 1f;
+
+            // Notify AdsManager of run end and evaluate frequency-capped interstitial transition
+            AdsManager.Instance?.NotifyRunCompleted();
+            AdsManager.Instance?.TryShowInterstitial("RunEnd_WorldSelect");
+
             if (GameSession.Instance != null)
             {
                 GameSession.Instance.ReturnToWorldSelect();
@@ -948,6 +956,11 @@ namespace CursedHarvest
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             Time.timeScale = 1f;
+
+            // Notify AdsManager of run end and evaluate frequency-capped interstitial transition
+            AdsManager.Instance?.NotifyRunCompleted();
+            AdsManager.Instance?.TryShowInterstitial("RunEnd_Home");
+
             if (GameSession.Instance != null)
             {
                 GameSession.Instance.ReturnToHome();
@@ -966,60 +979,118 @@ namespace CursedHarvest
             {
                 gameOverModal.SetActive(true);
                 UpdateTouchControlsVisibility();
-                if (gameOverStatsText != null)
+                RefreshGameOverStatsText();
+
+                // Reset double essence ad button state
+                if (doubleEssenceAdButton != null)
                 {
-                    int kills = GameManager.Instance != null ? GameManager.Instance.EnemiesKilled : 0;
-                    float time = FindFirstObjectByType<SpawnDirector>() != null ? FindFirstObjectByType<SpawnDirector>().RunTime : 0f;
-                    int mins = (int)(time / 60f);
-                    int secs = (int)(time % 60f);
-                    int lvl = 1;
-                    GameObject player = GameObject.FindWithTag("Player");
-                    if (player != null && player.GetComponent<ExperienceManager>() != null)
+                    int runEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEssenceEarned : 0;
+                    bool canDouble = runEssence > 0;
+                    doubleEssenceAdButton.gameObject.SetActive(canDouble);
+                    doubleEssenceAdButton.interactable = canDouble;
+                    if (doubleEssenceAdButtonText != null)
                     {
-                        lvl = player.GetComponent<ExperienceManager>().CurrentLevel;
+                        doubleEssenceAdButtonText.text = $"✦ DOUBLE ESSENCE (+{runEssence}) [AD] ✦";
                     }
-
-                    int score = kills * 100 + (int)time * 10 + lvl * 250;
-                    WorldConfig activeConfig = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
-                    int wave = FindFirstObjectByType<SpawnDirector>() != null ? FindFirstObjectByType<SpawnDirector>().CurrentWave : 1;
-
-                    int essenceEarned = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEssenceEarned : 0;
-                    int totalEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.HarvestEssence : 0;
-                    int enemiesSlain = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEnemiesSlain : kills;
-                    int harvests = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunHarvestsCompleted : 0;
-
-                    gameOverStatsText.text =
-                        $"{activeConfig.displayName}\n" +
-                        $"SURVIVED UNTIL WAVE {wave}\n\n" +
-                        $"TIME: {mins:00}:{secs:00}   •   KILLS: {enemiesSlain}   •   LVL {lvl}\n" +
-                        $"HARVESTS CONSECRATED: {harvests}\n\n" +
-                        $"✦ HARVEST ESSENCE +{essenceEarned} ✦\n" +
-                        $"TOTAL ESSENCE: {totalEssence} ✦\n\n" +
-                        $"SCORE: {score}";
                 }
             }
+        }
+
+        private void RefreshGameOverStatsText()
+        {
+            if (gameOverStatsText == null) return;
+
+            int kills = GameManager.Instance != null ? GameManager.Instance.EnemiesKilled : 0;
+            float time = FindFirstObjectByType<SpawnDirector>() != null ? FindFirstObjectByType<SpawnDirector>().RunTime : 0f;
+            int mins = (int)(time / 60f);
+            int secs = (int)(time % 60f);
+            int lvl = 1;
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null && player.GetComponent<ExperienceManager>() != null)
+            {
+                lvl = player.GetComponent<ExperienceManager>().CurrentLevel;
+            }
+
+            int score = kills * 100 + (int)time * 10 + lvl * 250;
+            ArenaConfig arena = (GameSession.Instance != null && GameSession.Instance.CurrentArenaConfig != null)
+                ? GameSession.Instance.CurrentArenaConfig
+                : WorldConfig.GetArenaConfig(1);
+            string arenaTitle = arena != null ? $"{arena.arenaName} (W{arena.worldId}-A{arena.arenaIndexInWorld})" : "ARENA TRIAL";
+            int wave = FindFirstObjectByType<SpawnDirector>() != null ? FindFirstObjectByType<SpawnDirector>().CurrentWave : 1;
+
+            int essenceEarned = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEssenceEarned : 0;
+            int totalEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.HarvestEssence : 0;
+            int enemiesSlain = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEnemiesSlain : kills;
+            int harvests = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunHarvestsCompleted : 0;
+
+            gameOverStatsText.text =
+                $"{arenaTitle}\n" +
+                $"SURVIVED UNTIL WAVE {wave}\n\n" +
+                $"TIME: {mins:00}:{secs:00}   •   KILLS: {enemiesSlain}   •   LVL {lvl}\n" +
+                $"HARVESTS CONSECRATED: {harvests}\n\n" +
+                $"✦ HARVEST ESSENCE +{essenceEarned} ✦\n" +
+                $"TOTAL ESSENCE: {totalEssence} ✦\n\n" +
+                $"SCORE: {score}";
+        }
+
+        private void OnDoubleEssenceAdClicked()
+        {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            if (AdsManager.Instance == null) return;
+
+            if (doubleEssenceAdButton != null) doubleEssenceAdButton.interactable = false;
+
+            AdsManager.Instance.ShowRewardedAd("GameOver_DoubleEssence", (rewardGranted) =>
+            {
+                if (rewardGranted)
+                {
+                    if (MetaProgressionManager.Instance != null)
+                    {
+                        MetaProgressionManager.Instance.DoubleRunEssence();
+                    }
+                    RefreshGameOverStatsText();
+                    if (doubleEssenceAdButtonText != null)
+                    {
+                        doubleEssenceAdButtonText.text = "✦ ESSENCE DOUBLED! ✦";
+                    }
+                    if (doubleEssenceAdButton != null)
+                    {
+                        doubleEssenceAdButton.interactable = false;
+                    }
+                    ShowToast("HARVEST CONSECRATED!", "Run essence doubled via reward!", 3.0f, new Color(0.98f, 0.85f, 0.28f));
+                }
+                else
+                {
+                    if (doubleEssenceAdButton != null) doubleEssenceAdButton.interactable = true;
+                    ShowToast("REWARD FAILED", "Video ad not completed or unavailable.", 2.5f, new Color(0.9f, 0.4f, 0.4f));
+                }
+            });
         }
 
         public void ShowVictoryModal()
         {
             if (victoryModal != null)
             {
-                WorldConfig activeConfig = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
+                WorldConfig activeWorld = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
+                ArenaConfig activeArena = (GameSession.Instance != null && GameSession.Instance.CurrentArenaConfig != null) ? GameSession.Instance.CurrentArenaConfig : WorldConfig.GetArenaConfig(1);
 
                 if (victoryTitleText != null)
                 {
-                    if (activeConfig.worldId == 1)
-                        victoryTitleText.text = "YOU GOT LUCKY.";
-                    else if (activeConfig.worldId == 2)
-                        victoryTitleText.text = "ASHEN ORCHARDS CLEANSED";
-                    else if (activeConfig.worldId == 3)
-                        victoryTitleText.text = "BLACKENED MIRE PURGED";
-                    else if (activeConfig.worldId == 4)
-                        victoryTitleText.text = "BLOODWOOD TIMBER PURGED";
-                    else if (activeConfig.worldId == 5)
-                        victoryTitleText.text = "THE ECLIPSE IS BROKEN";
+                    if (activeArena.arenaIndexInWorld == 5)
+                    {
+                        if (activeWorld.worldId == 1)
+                            victoryTitleText.text = "THE CONSECRATED CLEARING PURGED";
+                        else if (activeWorld.worldId == 2)
+                            victoryTitleText.text = "THE OSSUARY THRONE PURGED";
+                        else if (activeWorld.worldId == 3)
+                            victoryTitleText.text = "THE ECLIPSE IS BROKEN";
+                        else
+                            victoryTitleText.text = "WORLD CONQUERED!";
+                    }
                     else
-                        victoryTitleText.text = "WORLD COMPLETE!";
+                    {
+                        victoryTitleText.text = $"{activeArena.arenaName.ToUpperInvariant()} PURGED";
+                    }
                 }
 
                 int essenceEarned = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEssenceEarned : 0;
@@ -1029,22 +1100,23 @@ namespace CursedHarvest
 
                 if (victorySubtitleText != null)
                 {
-                    string worldStory;
-                    if (activeConfig.worldId == 1)
-                        worldStory = "THE LAST HARVEST HAS FALLEN!\nWORLD 1 COMPLETE\nWORLD 2 UNLOCKED";
-                    else if (activeConfig.worldId == 2)
-                        worldStory = "THE ASHEN REAPER HAS FALLEN!\nWORLD 2 COMPLETE\nWORLD 3 UNLOCKED";
-                    else if (activeConfig.worldId == 3)
-                        worldStory = "THE MIRE MOTHER HAS PERISHED!\nWORLD 3 COMPLETE\nWORLD 4 UNLOCKED";
-                    else if (activeConfig.worldId == 4)
-                        worldStory = "THE BLOODWOOD SOVEREIGN HAS FALLEN!\nWORLD 4 COMPLETE\nWORLD 5 UNLOCKED";
-                    else if (activeConfig.worldId == 5)
-                        worldStory = "THE PRIMEVAL HORROR IS VANQUISHED!\n\n★ CAMPAIGN COMPLETE ★\n★ ENDLESS UNLOCKED ★";
+                    string arenaStory;
+                    if (activeArena.arenaIndexInWorld == 5)
+                    {
+                        if (activeWorld.worldId == 1)
+                            arenaStory = "THE LAST HARVEST HAS FALLEN!\nWORLD 1 COMPLETE • WORLD 2 UNLOCKED";
+                        else if (activeWorld.worldId == 2)
+                            arenaStory = "THE GRAVE KING HAS FALLEN!\nWORLD 2 COMPLETE • WORLD 3 UNLOCKED";
+                        else
+                            arenaStory = "THE PRIMEVAL HORROR IS VANQUISHED!\n\n★ CAMPAIGN COMPLETE ★\n★ ALL 15 ARENAS CONSECRATED ★";
+                    }
                     else
-                        worldStory = $"{activeConfig.displayName} PURGED!";
+                    {
+                        arenaStory = $"{activeArena.arenaName} (W{activeArena.worldId}-A{activeArena.arenaIndexInWorld}) CONSECRATED!\nNEXT ARENA UNLOCKED";
+                    }
 
                     victorySubtitleText.text =
-                        $"{worldStory}\n\n" +
+                        $"{arenaStory}\n\n" +
                         $"Enemies Slain: {enemiesSlain}   •   Harvests: {harvests}\n" +
                         $"✦ HARVEST ESSENCE +{essenceEarned} ✦\n" +
                         $"Total Essence: {totalEssence} ✦";
@@ -1054,10 +1126,8 @@ namespace CursedHarvest
                     Text btnTxt = continueEndlessButton.GetComponentInChildren<Text>();
                     if (btnTxt != null)
                     {
-                        if (activeConfig.worldId == 1)
-                            btnTxt.text = "CONTINUE: ONE LAST NIGHT";
-                        else if (activeConfig.worldId < 5)
-                            btnTxt.text = $"START WORLD {activeConfig.worldId + 1}";
+                        if (activeArena.arenaId < 15)
+                            btnTxt.text = $"NEXT ARENA ({activeArena.arenaId + 1}/15)";
                         else
                             btnTxt.text = "ENTER ENDLESS HORDE";
                     }
@@ -1065,7 +1135,7 @@ namespace CursedHarvest
                 if (victoryWorldSelectButton != null)
                 {
                     Text btnTxt = victoryWorldSelectButton.GetComponentInChildren<Text>();
-                    if (btnTxt != null) btnTxt.text = "WORLD SELECT";
+                    if (btnTxt != null) btnTxt.text = "WORLD / ARENA SELECT";
                 }
                 victoryModal.SetActive(true);
                 UpdateTouchControlsVisibility();
@@ -1079,25 +1149,21 @@ namespace CursedHarvest
             Time.timeScale = 1f;
             UpdateTouchControlsVisibility();
 
-            WorldConfig activeConfig = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null) ? GameSession.Instance.CurrentWorldConfig : WorldConfig.GetConfig(1);
-            if (activeConfig.worldId == 1 || activeConfig.worldId == 5)
+            ArenaConfig activeArena = (GameSession.Instance != null && GameSession.Instance.CurrentArenaConfig != null) ? GameSession.Instance.CurrentArenaConfig : null;
+            int nextArenaId = activeArena != null ? activeArena.arenaId + 1 : 2;
+
+            if (nextArenaId <= 15 && GameSession.Instance != null)
             {
-                SpawnDirector sd = FindFirstObjectByType<SpawnDirector>();
-                if (sd != null)
-                {
-                    sd.EnterEndlessMode();
-                    sd.StartIntermissionAfterBoss();
-                }
-                else if (GameSession.Instance != null)
-                {
-                    GameSession.Instance.ReturnToWorldSelect();
-                }
+                GameSession.Instance.StartRun(nextArenaId);
             }
             else
             {
-                if (activeConfig.worldId < 5 && GameSession.Instance != null)
+                // Endless or completed campaign
+                SpawnDirector sd = FindFirstObjectByType<SpawnDirector>();
+                if (sd != null && activeArena != null && activeArena.arenaId == 15)
                 {
-                    GameSession.Instance.StartRun(activeConfig.worldId + 1);
+                    sd.EnterEndlessMode();
+                    sd.StartIntermissionAfterBoss();
                 }
                 else if (GameSession.Instance != null)
                 {
@@ -1553,7 +1619,7 @@ namespace CursedHarvest
 
             GameObject panel = CreateBox(modal.transform, "Panel",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(880, 1020), Vector2.zero,
+                new Vector2(900, 1140), Vector2.zero,
                 new Color(0.60f, 0.18f, 0.18f, 1f));
 
             GameObject body = CreateBox(panel.transform, "Body",
@@ -1562,25 +1628,34 @@ namespace CursedHarvest
                 new Color(0.08f, 0.06f, 0.08f, 0.98f));
 
             Text title = CreateLabel(body.transform, "Title", "HARVEST CLAIMED YOU", 50, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(0.98f, 0.24f, 0.22f), font);
-            SetRect(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(820, 70), new Vector2(0, 385));
+            SetRect(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(840, 70), new Vector2(0, 440));
 
-            gameOverStatsText = CreateLabel(body.transform, "StatsText", "WORLD 1\nSURVIVED UNTIL WAVE 1\nTIME: 00:00", 26, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(0.95f, 0.92f, 0.86f), font);
+            gameOverStatsText = CreateLabel(body.transform, "StatsText", "ARENA TRIAL\nSURVIVED UNTIL WAVE 1\nTIME: 00:00", 25, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(0.95f, 0.92f, 0.86f), font);
             gameOverStatsText.lineSpacing = 1.25f;
-            SetRect(gameOverStatsText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(780, 410), new Vector2(0, 95));
+            SetRect(gameOverStatsText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(800, 390), new Vector2(0, 175));
+
+            // Rewarded Ad Button: Double Essence
+            GameObject adBtnObj = CreateSimpleButton(body.transform, "DoubleEssenceAdButton", "✦ DOUBLE ESSENCE (WATCH AD) ✦",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(700, 96), new Vector2(0, -90),
+                new Color(0.85f, 0.60f, 0.16f), Color.white, 28, font);
+            AddBorder(adBtnObj.transform, new Color(1f, 0.85f, 0.35f, 0.9f));
+            doubleEssenceAdButton = adBtnObj.GetComponent<Button>();
+            doubleEssenceAdButtonText = adBtnObj.GetComponentInChildren<Text>();
 
             retryButton = CreateSimpleButton(body.transform, "RetryButton", "RETRY TRIAL",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(660, 94), new Vector2(0, -175),
+                new Vector2(700, 90), new Vector2(0, -205),
                 new Color(0.22f, 0.60f, 0.30f), Color.white, 30, font).GetComponent<Button>();
 
             gameOverWorldSelectButton = CreateSimpleButton(body.transform, "GameOverWorldSelectButton", "WORLD SELECT",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(660, 88), new Vector2(0, -290),
+                new Vector2(700, 86), new Vector2(0, -315),
                 new Color(0.24f, 0.32f, 0.48f), Color.white, 28, font).GetComponent<Button>();
 
             gameOverHomeButton = CreateSimpleButton(body.transform, "GameOverHomeButton", "HOME",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(660, 88), new Vector2(0, -400),
+                new Vector2(700, 86), new Vector2(0, -420),
                 new Color(0.48f, 0.20f, 0.20f), Color.white, 28, font).GetComponent<Button>();
 
             modal.SetActive(false);

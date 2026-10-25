@@ -23,11 +23,11 @@ namespace CursedHarvest.Editor
         public const string AuthoritativeCompanyName = "LOGMAT";
         public const string AuthoritativeProductName = "CURSED HARVEST.";
         public const string AuthoritativePackageName = "com.logmat.cursedharvest";
-        public const string AuthoritativeBundleVersion = "1.0.0";
-        public const int AuthoritativeVersionCode = 1;
+        public const string AuthoritativeBundleVersion = "1.1.0";
+        public const int AuthoritativeVersionCode = 2;
 
         public const string AndroidBuildOutputDir = "Builds/Android/Release";
-        public const string AndroidAabOutputPath = "Builds/Android/Release/CursedHarvest_Android_1.0.0_vc1_RELEASE.aab";
+        public const string AndroidAabOutputPath = "Builds/Android/Release/CursedHarvest_Android_1.1.0_vc2_RELEASE.aab";
         public const string MobileScreenshotsDir = "Assets/_Documentation/Screenshots/MobilePortrait";
         public const string PlayStoreIconsDir = "Assets/_Documentation/Branding/Mobile/PlayStore";
         public const string ArtifactsDir = "/Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b";
@@ -171,14 +171,9 @@ namespace CursedHarvest.Editor
                 log("  ✓ Assigned NEW Android Adaptive Icon (Background + Foreground) and Master 1024 Icon.");
             }
 
-            // 6. Assign Portrait Splash Screen
-            Sprite splashSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_Documentation/Branding/Mobile/MobileSplash_Portrait_1080x1920.png");
-            if (splashSprite != null)
-            {
-                PlayerSettings.SplashScreen.show = true;
-                PlayerSettings.SplashScreen.backgroundColor = new Color(0.035f, 0.028f, 0.048f, 1f);
-                PlayerSettings.SplashScreen.backgroundPortrait = splashSprite;
-            }
+            // 6. Disable Custom Splash Screen (Parte 8: eliminar splash para arranque directo)
+            PlayerSettings.SplashScreen.show = false;
+            log("  ✓ Disabled Custom Splash Screen for instant mobile launch to Home.");
 
             // 7. Configure Custom Upload Keystore Release Signing
             if (File.Exists(KeystorePath) && File.Exists(CredentialsPath))
@@ -427,6 +422,40 @@ namespace CursedHarvest.Editor
                 log("  [PASS] QA 5: Meta Upgrades real stat application & PlayerPrefs persistence verified in Portrait.");
             }
 
+            // QA 6: 3 Worlds & 15 Arenas Structure Verification
+            if (WorldConfig.AllWorlds == null || WorldConfig.AllWorlds.Length != 3)
+            {
+                logErr($"QA 6 FAILED: Expected 3 Worlds, got {WorldConfig.AllWorlds?.Length ?? 0}");
+                allPassed = false;
+            }
+            else if (WorldConfig.AllArenas == null || WorldConfig.AllArenas.Length != 15)
+            {
+                logErr($"QA 6 FAILED: Expected 15 Arenas, got {WorldConfig.AllArenas?.Length ?? 0}");
+                allPassed = false;
+            }
+            else
+            {
+                bool arenasValid = true;
+                for (int i = 0; i < 15; i++)
+                {
+                    var arena = WorldConfig.AllArenas[i];
+                    if (arena.arenaId != i + 1 || arena.totalWaves != 5)
+                    {
+                        arenasValid = false;
+                        logErr($"QA 6 FAILED: Arena {i+1} misconfigured (id={arena.arenaId}, waves={arena.totalWaves})");
+                        break;
+                    }
+                }
+                if (arenasValid)
+                {
+                    log("  [PASS] QA 6: 3 Worlds and 15 Arenas (5 waves per arena) verified with boss wave 5.");
+                }
+                else
+                {
+                    allPassed = false;
+                }
+            }
+
             // Reset progression to clean state after QA
             meta.ResetAllProgression();
             GameSession.Instance.ResetProgress();
@@ -476,8 +505,12 @@ namespace CursedHarvest.Editor
 
                 // 2. WorldSelect_Portrait.png
                 mmc.ShowScreen(MainMenuScreen.WorldSelect);
-                mmc.SelectWorld(3);
+                mmc.SelectWorld(2);
                 CaptureSceneWithCanvas("WorldSelect_Portrait", width, height, log);
+
+                // 2b. ArenaSelect_Portrait.png
+                mmc.ShowScreen(MainMenuScreen.ArenaSelect);
+                CaptureSceneWithCanvas("ArenaSelect_Portrait", width, height, log);
 
                 // 3. Upgrades_Portrait.png
                 mmc.OpenUpgrades();

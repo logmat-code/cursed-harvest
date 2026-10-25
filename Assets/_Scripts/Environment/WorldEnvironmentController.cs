@@ -82,13 +82,17 @@ namespace CursedHarvest
 
         private void Start()
         {
-            int selectedWorld = 1;
-            if (GameSession.Instance != null)
+            int visualIndex = 1;
+            if (GameSession.Instance != null && GameSession.Instance.CurrentArenaConfig != null)
             {
-                selectedWorld = GameSession.Instance.SelectedWorldId;
+                visualIndex = GameSession.Instance.CurrentArenaConfig.environmentVisualIndex;
+            }
+            else if (GameSession.Instance != null)
+            {
+                visualIndex = GameSession.Instance.SelectedWorldId;
             }
 
-            ApplyEnvironment(selectedWorld);
+            ApplyEnvironment(visualIndex);
         }
 
         public void FindReferencesIfMissing()

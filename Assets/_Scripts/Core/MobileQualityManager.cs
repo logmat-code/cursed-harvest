@@ -5,13 +5,15 @@ namespace CursedHarvest
 {
     public enum MobileQualityTier
     {
-        MobileHigh,         // Native full resolution (1.0x), 4x MSAA, full shadows, anisotropic textures
-        MobilePerformance   // 0.80x internal render scale, 2x MSAA, balanced shadows, stable 60 FPS
+        MobileBalanced,     // Default for modern Android: 1.0x native render scale, 2x MSAA, 30m shadows (1 cascade), 60 FPS
+        MobileHigh,         // 1.0x native, 4x MSAA, 45m shadows (2 cascades), full resolution
+        MobilePerformance   // 0.80x internal render scale, 0x MSAA / 2x MSAA, 22m shadows, optimized for low-end / thermal stability
     }
 
     /// <summary>
     /// Manages authoritative mobile visual resolution and performance quality tiers for Android Portrait.
     /// Ensures 1080p and 1440p displays maintain crystal clear 3D rendering and sharp UI without blurry downsampling.
+    /// Default tier is MobileBalanced to eliminate thermal throttling and frame spikes while preserving full 1080p native clarity.
     /// </summary>
     public class MobileQualityManager : MonoBehaviour
     {
@@ -35,7 +37,7 @@ namespace CursedHarvest
         }
 
         private const string PrefsQualityTierKey = "CH_MobileQualityTier";
-        private MobileQualityTier currentTier = MobileQualityTier.MobileHigh;
+        private MobileQualityTier currentTier = MobileQualityTier.MobileBalanced;
 
         public MobileQualityTier CurrentTier => currentTier;
         public static event Action<MobileQualityTier> OnQualityTierChanged;
@@ -55,7 +57,7 @@ namespace CursedHarvest
 
         public void LoadAndApplyQuality()
         {
-            int saved = PlayerPrefs.GetInt(PrefsQualityTierKey, (int)MobileQualityTier.MobileHigh);
+            int saved = PlayerPrefs.GetInt(PrefsQualityTierKey, (int)MobileQualityTier.MobileBalanced);
             currentTier = (MobileQualityTier)saved;
             ApplyQualityTier(currentTier, false);
         }
@@ -70,38 +72,53 @@ namespace CursedHarvest
 
         public void ToggleQualityTier()
         {
-            SetQualityTier(currentTier == MobileQualityTier.MobileHigh ? MobileQualityTier.MobilePerformance : MobileQualityTier.MobileHigh);
+            MobileQualityTier nextTier = currentTier switch
+            {
+                MobileQualityTier.MobileBalanced => MobileQualityTier.MobileHigh,
+                MobileQualityTier.MobileHigh => MobileQualityTier.MobilePerformance,
+                _ => MobileQualityTier.MobileBalanced
+            };
+            SetQualityTier(nextTier);
         }
 
         private void ApplyQualityTier(MobileQualityTier tier, bool notify)
         {
-            // Target stable 60 FPS on mobile
+            // Target rock-solid 60 FPS on Android mobile
             Application.targetFrameRate = 60;
             QualitySettings.vSyncCount = 0; // Disable vsync so 60 FPS cap is authoritative
 
-            if (tier == MobileQualityTier.MobileHigh)
+            switch (tier)
             {
-                // MOBILE HIGH: Prioritize absolute sharpness on 1080p/1440p AMOLED displays
-                QualitySettings.antiAliasing = 4; // 4x MSAA for crisp polygonal edges
-                QualitySettings.shadowDistance = 45f;
-                QualitySettings.shadowResolution = ShadowResolution.High;
-                QualitySettings.shadowCascades = 2;
-                QualitySettings.globalTextureMipmapLimit = 0; // Full texture resolution, no downsampling
+                case MobileQualityTier.MobileHigh:
+                    // MOBILE HIGH: 4x MSAA, 45m shadows (2 cascades), 1.0x native
+                    QualitySettings.antiAliasing = 4;
+                    QualitySettings.shadowDistance = 45f;
+                    QualitySettings.shadowResolution = ShadowResolution.High;
+                    QualitySettings.shadowCascades = 2;
+                    QualitySettings.globalTextureMipmapLimit = 0;
+                    ScalableBufferManager.ResizeBuffers(1.0f, 1.0f);
+                    break;
 
-                // Native full render scale
-                ScalableBufferManager.ResizeBuffers(1.0f, 1.0f);
-            }
-            else
-            {
-                // MOBILE PERFORMANCE: Optimized for sustained low-thermal 60 FPS
-                QualitySettings.antiAliasing = 2; // 2x MSAA
-                QualitySettings.shadowDistance = 28f;
-                QualitySettings.shadowResolution = ShadowResolution.Medium;
-                QualitySettings.shadowCascades = 1;
-                QualitySettings.globalTextureMipmapLimit = 0;
+                case MobileQualityTier.MobilePerformance:
+                    // MOBILE PERFORMANCE: 0.80x render scale, 22m shadows, no cascades
+                    QualitySettings.antiAliasing = 0;
+                    QualitySettings.shadowDistance = 22f;
+                    QualitySettings.shadowResolution = ShadowResolution.Low;
+                    QualitySettings.shadowCascades = 1;
+                    QualitySettings.globalTextureMipmapLimit = 0;
+                    ScalableBufferManager.ResizeBuffers(0.80f, 0.80f);
+                    break;
 
-                // 0.80x internal render scale for 3D world (UI Canvas remains full 1080p/1440p native)
-                ScalableBufferManager.ResizeBuffers(0.80f, 0.80f);
+                case MobileQualityTier.MobileBalanced:
+                default:
+                    // MOBILE BALANCED (DEFAULT): 1.0x full native render, 2x MSAA, 30m shadows (1 cascade)
+                    QualitySettings.antiAliasing = 2;
+                    QualitySettings.shadowDistance = 30f;
+                    QualitySettings.shadowResolution = ShadowResolution.Medium;
+                    QualitySettings.shadowCascades = 1;
+                    QualitySettings.globalTextureMipmapLimit = 0;
+                    ScalableBufferManager.ResizeBuffers(1.0f, 1.0f);
+                    break;
             }
 
             if (notify)

@@ -60,6 +60,8 @@ namespace CursedHarvest
         private float interruptedFeedbackTimer;
         private TextMesh promptTextMesh;
         private Transform cameraTransform;
+        private float lastPromptUpdateTimer;
+        private string cachedPromptText = "";
 
         public PlotState State => currentState;
         public float BaseLuckyChance => baseLuckyChance;
@@ -320,29 +322,47 @@ namespace CursedHarvest
             }
         }
 
+        private void SetPromptTextIfChanged(string text, Color color)
+        {
+            if (promptTextMesh == null) return;
+            if (cachedPromptText != text)
+            {
+                cachedPromptText = text;
+                promptTextMesh.text = text;
+            }
+            promptTextMesh.color = color;
+        }
+
         private void UpdatePromptText()
         {
             if (promptTextMesh == null) return;
             if (playerTransform == null)
             {
-                promptTextMesh.text = "";
+                SetPromptTextIfChanged("", Color.white);
                 return;
             }
 
             if (interruptedFeedbackTimer > 0f)
             {
                 interruptedFeedbackTimer -= Time.deltaTime;
-                promptTextMesh.text = "★ HARVEST INTERRUPTED ★\nStay inside the zone!";
-                promptTextMesh.color = new Color(0.95f, 0.20f, 0.20f);
+                SetPromptTextIfChanged("★ HARVEST INTERRUPTED ★\nStay inside the zone!", new Color(0.95f, 0.20f, 0.20f));
                 return;
             }
 
             float dist = Vector3.Distance(transform.position, playerTransform.position);
             if (dist > interactionRadius + 3.5f && currentState != PlotState.Growing)
             {
-                promptTextMesh.text = "";
+                SetPromptTextIfChanged("", Color.white);
                 return;
             }
+
+            // Throttle string regeneration to ~10 Hz during continuous states
+            lastPromptUpdateTimer += Time.deltaTime;
+            if (lastPromptUpdateTimer < 0.08f && currentState == PlotState.Growing)
+            {
+                return;
+            }
+            lastPromptUpdateTimer = 0f;
 
             switch (currentState)
             {
@@ -353,18 +373,15 @@ namespace CursedHarvest
                         bool isTouchOrPortrait = Application.isMobilePlatform || Screen.height >= Screen.width ||
                                                  (Camera.main != null && Camera.main.aspect <= 1.0f) ||
                                                  (camFollow != null && camFollow.IsPortrait);
-                        promptTextMesh.text = isTouchOrPortrait ? "ENTER CIRCLE TO PLANT SEED" : "[E] PLANT CURSED SEED";
-                        promptTextMesh.color = new Color(1f, 0.85f, 0.2f);
+                        SetPromptTextIfChanged(isTouchOrPortrait ? "ENTER CIRCLE TO PLANT SEED" : "[E] PLANT CURSED SEED", new Color(1f, 0.85f, 0.2f));
                     }
                     else
                     {
-                        promptTextMesh.text = "NEED A CURSED SEED";
-                        promptTextMesh.color = new Color(0.95f, 0.35f, 0.3f);
+                        SetPromptTextIfChanged("NEED A CURSED SEED", new Color(0.95f, 0.35f, 0.3f));
                     }
                     break;
                 case PlotState.Planting:
-                    promptTextMesh.text = "★ PLANTING SEED... ★";
-                    promptTextMesh.color = new Color(1f, 0.85f, 0.25f);
+                    SetPromptTextIfChanged("★ PLANTING SEED... ★", new Color(1f, 0.85f, 0.25f));
                     break;
                 case PlotState.Growing:
                     float progress = Mathf.Clamp01(growTimer / EffectiveGrowDuration);
@@ -372,21 +389,18 @@ namespace CursedHarvest
                     if (isHarvestPaused)
                     {
                         float graceRemaining = Mathf.Max(0f, HarvestGraceDuration - harvestGraceTimer);
-                        promptTextMesh.text = $"HARVEST PAUSED\nRETURN TO HARVEST ({graceRemaining:0.0}s)\n[{bar}] {Mathf.RoundToInt(progress * 100)}%";
-                        promptTextMesh.color = new Color(1f, 0.35f, 0.20f);
+                        SetPromptTextIfChanged($"HARVEST PAUSED\nRETURN TO HARVEST ({graceRemaining:0.0}s)\n[{bar}] {Mathf.RoundToInt(progress * 100)}%", new Color(1f, 0.35f, 0.20f));
                     }
                     else
                     {
-                        promptTextMesh.text = $"HARVESTING...\n[{bar}] {Mathf.RoundToInt(progress * 100)}%";
-                        promptTextMesh.color = new Color(1f, 0.75f, 0.18f);
+                        SetPromptTextIfChanged($"HARVESTING...\n[{bar}] {Mathf.RoundToInt(progress * 100)}%", new Color(1f, 0.75f, 0.18f));
                     }
                     break;
                 case PlotState.Cooldown:
-                    promptTextMesh.text = $"RECHARGING ({cooldownTimer:0.0}s)";
-                    promptTextMesh.color = new Color(0.7f, 0.7f, 0.7f);
+                    SetPromptTextIfChanged($"RECHARGING ({cooldownTimer:0.0}s)", new Color(0.7f, 0.7f, 0.7f));
                     break;
                 default:
-                    promptTextMesh.text = "";
+                    SetPromptTextIfChanged("", Color.white);
                     break;
             }
         }
