@@ -1,0 +1,23 @@
+# ninja log v5
+3	60	1792957872779223905	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	160d53af825199e9
+419	450	1792957873168500371	/Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3h13c2h4/obj/arm64-v8a/libgame.so	2b803d2b2da98f8f
+61	121	1792957872826836519	/Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3h13c2h4/obj/arm64-v8a/libswappywrapper.so	331a105c7d5deec8
+3	289	1792957873007705720	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	d441428c451b5d8e
+3	280	1792957872999226543	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	5fd8ec477c60da4c
+3	289	1792957873007226180	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	2c2f562fad8370e9
+3	280	1792957872997982965	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	3fb7a432245eb251
+3	308	1792957873027087398	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	aa2b124cf561bcda
+3	328	1792957873046934157	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	9bcd38134660efce
+3	381	1792957873099603045	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	984638855d3d7e3b
+2	419	1792957873137118321	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	d19aa7946feb2783
+3	63	1792968582824631675	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	160d53af825199e9
+64	127	1792968582875037935	/Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3h13c2h4/obj/arm64-v8a/libswappywrapper.so	331a105c7d5deec8
+3	293	1792968583053135451	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	3fb7a432245eb251
+3	295	1792968583054982786	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	5fd8ec477c60da4c
+3	304	1792968583064353212	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	2c2f562fad8370e9
+3	307	1792968583065605505	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	d441428c451b5d8e
+3	326	1792968583085673609	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	aa2b124cf561bcda
+3	348	1792968583106696672	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	9bcd38134660efce
+3	405	1792968583164430273	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	984638855d3d7e3b
+2	450	1792968583208412777	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	d19aa7946feb2783
+450	485	1792968583244474814	/Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3h13c2h4/obj/arm64-v8a/libgame.so	2b803d2b2da98f8f

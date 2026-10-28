@@ -417,7 +417,7 @@ namespace CursedHarvest
                 bossFarmersRemaining = bossEnc.bossFarmerQuota;
                 bossChargersRemaining = bossEnc.bossChargerQuota;
 
-                string badge = bossEnc.isFinalBoss ? "BOSS WAVE" : "MID-BOSS WAVE";
+                string badge = bossEnc.isFinalBoss ? "FINAL BOSS INCOMING" : "MID-BOSS INCOMING";
                 if (UIManager.Instance != null)
                 {
                     UIManager.Instance.ShowToast(badge, bossEnc.bossName, 3.5f, new Color(1f, 0.25f, 0.25f));
@@ -433,7 +433,7 @@ namespace CursedHarvest
 
                 if (UIManager.Instance != null)
                 {
-                    UIManager.Instance.ShowToast("BOSS WAVE", "THE LAST HARVEST", 3.5f, new Color(1f, 0.25f, 0.25f));
+                    UIManager.Instance.ShowToast("FINAL BOSS INCOMING", "THE LAST HARVEST", 3.5f, new Color(1f, 0.25f, 0.25f));
                 }
             }
 
@@ -586,11 +586,13 @@ namespace CursedHarvest
             }
             else
             {
-                // Mid-Boss defeated!
+                // Mid-Boss defeated! Transition to second phase (Waves 11–15)
                 if (UIManager.Instance != null)
                 {
-                    UIManager.Instance.ShowToast("MID-BOSS DEFEATED", "The horde gathers again...", 3.5f, new Color(1f, 0.75f, 0.2f));
+                    UIManager.Instance.HideBossBar();
+                    UIManager.Instance.ShowToast("PHASE II: CATACLYSM AWAKENS", "The Mid-Boss has fallen! Waves 11-15 incoming!", 4.0f, new Color(0.95f, 0.35f, 0.90f));
                 }
+                AudioManager.Instance?.PlaySound(SoundType.BombExplode);
                 StartIntermission();
             }
         }

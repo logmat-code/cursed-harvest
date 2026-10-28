@@ -83,6 +83,8 @@ namespace CursedHarvest
         [Header("Game Over Modal")]
         [SerializeField] private GameObject gameOverModal;
         [SerializeField] private Text gameOverStatsText;
+        [SerializeField] private Button doubleEssenceAdButton;
+        [SerializeField] private Text doubleEssenceAdButtonText;
         [SerializeField] private Button retryButton;
         [SerializeField] private Button gameOverWorldSelectButton;
         [SerializeField] private Button gameOverHomeButton;
@@ -185,6 +187,7 @@ namespace CursedHarvest
             if (settingsCloseButton != null) { settingsCloseButton.onClick.RemoveAllListeners(); settingsCloseButton.onClick.AddListener(CloseSettingsModal); }
 
             if (retryButton != null) { retryButton.onClick.RemoveAllListeners(); retryButton.onClick.AddListener(RestartRun); }
+            if (doubleEssenceAdButton != null) { doubleEssenceAdButton.onClick.RemoveAllListeners(); doubleEssenceAdButton.onClick.AddListener(OnDoubleEssenceAdClicked); }
             if (gameOverWorldSelectButton != null) { gameOverWorldSelectButton.onClick.RemoveAllListeners(); gameOverWorldSelectButton.onClick.AddListener(ReturnToWorldSelect); }
             if (gameOverHomeButton != null) { gameOverHomeButton.onClick.RemoveAllListeners(); gameOverHomeButton.onClick.AddListener(ReturnToHome); }
 
@@ -748,11 +751,13 @@ namespace CursedHarvest
             {
                 var enc = cfg.GetBossEncounter(wave);
                 string bName = enc != null ? enc.bossName : "THE LAST HARVEST";
-                ShowToast(enc != null && !enc.isFinalBoss ? "MID-BOSS WAVE" : "BOSS WAVE", bName, 3.5f, new Color(1f, 0.25f, 0.25f));
+                string warningBadge = enc != null && !enc.isFinalBoss ? "MID-BOSS INCOMING" : "FINAL BOSS INCOMING";
+                ShowToast(warningBadge, bName, 3.5f, new Color(1f, 0.25f, 0.25f));
             }
             else
             {
-                ShowToast($"WAVE {wave}", "Survive the harvest horde!", 2.2f, new Color(1f, 0.65f, 0.15f));
+                int totalWaves = (cfg != null && cfg.activeArena != null) ? cfg.activeArena.totalWaves : 10;
+                ShowToast($"WAVE {wave} / {totalWaves}", "Survive the harvest horde!", 2.2f, new Color(1f, 0.65f, 0.15f));
             }
         }
 
@@ -785,20 +790,22 @@ namespace CursedHarvest
 
         public void UpdateWaveHUD(int wave, int remaining, int total)
         {
+            WorldConfig cfg = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null)
+                ? GameSession.Instance.CurrentWorldConfig
+                : WorldConfig.GetConfig(1);
+            int totalArenaWaves = (cfg != null && cfg.activeArena != null) ? cfg.activeArena.totalWaves : ((cfg != null) ? cfg.totalWaves : 10);
+
             if (waveText != null)
             {
-                waveText.text = $"WAVE {wave}";
+                waveText.text = $"WAVE {wave} / {totalArenaWaves}";
             }
             if (waveRemainingText != null)
             {
-                WorldConfig cfg = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null)
-                    ? GameSession.Instance.CurrentWorldConfig
-                    : WorldConfig.GetConfig(1);
-
                 if (cfg != null && cfg.IsBossWave(wave))
                 {
                     var enc = cfg.GetBossEncounter(wave);
-                    waveRemainingText.text = enc != null ? enc.bossName : "BOSS ENCOUNTER";
+                    string bTitle = enc != null ? (enc.isFinalBoss ? $"FINAL BOSS: {enc.bossName}" : $"MID-BOSS: {enc.bossName}") : "BOSS ENCOUNTER";
+                    waveRemainingText.text = bTitle;
                     waveRemainingText.color = new Color(1f, 0.38f, 0.28f);
                 }
                 else
@@ -935,6 +942,21 @@ namespace CursedHarvest
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             Time.timeScale = 1f;
 
+            if (AdsManager.Instance != null && AdsManager.Instance.CanShowInterstitial)
+            {
+                AdsManager.Instance.TryShowInterstitial("ReturnToWorldSelect", () =>
+                {
+                    ExecuteReturnToWorldSelect();
+                });
+            }
+            else
+            {
+                ExecuteReturnToWorldSelect();
+            }
+        }
+
+        private void ExecuteReturnToWorldSelect()
+        {
             if (GameSession.Instance != null)
             {
                 GameSession.Instance.ReturnToWorldSelect();
@@ -950,6 +972,21 @@ namespace CursedHarvest
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             Time.timeScale = 1f;
 
+            if (AdsManager.Instance != null && AdsManager.Instance.CanShowInterstitial)
+            {
+                AdsManager.Instance.TryShowInterstitial("ReturnToHome", () =>
+                {
+                    ExecuteReturnToHome();
+                });
+            }
+            else
+            {
+                ExecuteReturnToHome();
+            }
+        }
+
+        private void ExecuteReturnToHome()
+        {
             if (GameSession.Instance != null)
             {
                 GameSession.Instance.ReturnToHome();
@@ -969,7 +1006,54 @@ namespace CursedHarvest
                 gameOverModal.SetActive(true);
                 UpdateTouchControlsVisibility();
                 RefreshGameOverStatsText();
+
+                // Reset double essence ad button state
+                if (doubleEssenceAdButton != null)
+                {
+                    int runEssence = MetaProgressionManager.Instance != null ? MetaProgressionManager.Instance.RunEssenceEarned : 0;
+                    bool canDouble = runEssence > 0;
+                    doubleEssenceAdButton.gameObject.SetActive(canDouble);
+                    doubleEssenceAdButton.interactable = canDouble;
+                    if (doubleEssenceAdButtonText != null)
+                    {
+                        doubleEssenceAdButtonText.text = $"✦ DOUBLE ESSENCE (+{runEssence}) [AD] ✦";
+                    }
+                }
             }
+        }
+
+        private void OnDoubleEssenceAdClicked()
+        {
+            if (AdsManager.Instance == null) return;
+
+            if (doubleEssenceAdButton != null) doubleEssenceAdButton.interactable = false;
+
+            AdsManager.Instance.ShowRewardedAd("GameOver_DoubleEssence", (rewardGranted) =>
+            {
+                if (rewardGranted)
+                {
+                    if (MetaProgressionManager.Instance != null)
+                    {
+                        int runEssence = MetaProgressionManager.Instance.RunEssenceEarned;
+                        MetaProgressionManager.Instance.AddEssence(runEssence, true);
+                    }
+                    RefreshGameOverStatsText();
+                    if (doubleEssenceAdButtonText != null)
+                    {
+                        doubleEssenceAdButtonText.text = "✦ ESSENCE DOUBLED! ✦";
+                    }
+                    if (doubleEssenceAdButton != null)
+                    {
+                        doubleEssenceAdButton.interactable = false;
+                    }
+                    ShowToast("HARVEST CONSECRATED!", "Run essence doubled via reward!", 3.0f, new Color(0.98f, 0.85f, 0.28f));
+                }
+                else
+                {
+                    if (doubleEssenceAdButton != null) doubleEssenceAdButton.interactable = true;
+                    ShowToast("REWARD FAILED", "Video ad not completed or unavailable.", 2.5f, new Color(0.9f, 0.4f, 0.4f));
+                }
+            });
         }
 
         private void RefreshGameOverStatsText()
@@ -1596,21 +1680,29 @@ namespace CursedHarvest
 
             gameOverStatsText = CreateLabel(body.transform, "StatsText", "ARENA TRIAL\nSURVIVED UNTIL WAVE 1\nTIME: 00:00", 25, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(0.95f, 0.92f, 0.86f), font);
             gameOverStatsText.lineSpacing = 1.25f;
-            SetRect(gameOverStatsText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(800, 390), new Vector2(0, 115));
+            SetRect(gameOverStatsText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(800, 390), new Vector2(0, 150));
+
+            GameObject adBtnObj = CreateSimpleButton(body.transform, "DoubleEssenceAdButton", "✦ DOUBLE ESSENCE (+0) [AD] ✦",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(700, 94), new Vector2(0, -90),
+                new Color(0.85f, 0.55f, 0.15f), Color.white, 28, font);
+            AddBorder(adBtnObj.transform, new Color(1f, 0.85f, 0.35f, 0.9f));
+            doubleEssenceAdButton = adBtnObj.GetComponent<Button>();
+            doubleEssenceAdButtonText = adBtnObj.GetComponentInChildren<Text>();
 
             retryButton = CreateSimpleButton(body.transform, "RetryButton", "RETRY TRIAL",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(700, 94), new Vector2(0, -165),
+                new Vector2(700, 88), new Vector2(0, -195),
                 new Color(0.22f, 0.60f, 0.30f), Color.white, 30, font).GetComponent<Button>();
 
             gameOverWorldSelectButton = CreateSimpleButton(body.transform, "GameOverWorldSelectButton", "WORLD SELECT",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(700, 88), new Vector2(0, -280),
+                new Vector2(700, 84), new Vector2(0, -295),
                 new Color(0.24f, 0.32f, 0.48f), Color.white, 28, font).GetComponent<Button>();
 
             gameOverHomeButton = CreateSimpleButton(body.transform, "GameOverHomeButton", "HOME",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(700, 88), new Vector2(0, -390),
+                new Vector2(700, 84), new Vector2(0, -390),
                 new Color(0.48f, 0.20f, 0.20f), Color.white, 28, font).GetComponent<Button>();
 
             modal.SetActive(false);

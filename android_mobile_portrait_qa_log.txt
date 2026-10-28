@@ -9,7 +9,7 @@
   ✓ Company Name: 'LOGMAT'
   ✓ Product Name: 'CURSED HARVEST.'
   ✓ Package ID:   'com.logmat.cursedharvest'
-  ✓ Version:      '1.0.0' (bundleVersionCode=2)
+  ✓ Version:      '1.1.1' (bundleVersionCode=3)
   ✓ Orientation:  Portrait (Portrait-Only Locked)
   ✓ Backend/Arch: IL2CPP / ARM64
   ✓ SDK Levels:   Min=AndroidApiLevel26, Target=AndroidApiLevel36
@@ -28,10 +28,10 @@
   [PASS] QA 2 (19.5:9 Portrait (1290p) 1290x2796): Player Viewport Y=46.7% | Ground Vis=±7.5m x ±16.6m
   [PASS] QA 2 (20:9 Portrait (WQHD+) 1440x3200): Player Viewport Y=46.8% | Ground Vis=±7.4m x ±16.9m
   [PASS] QA 2 (Tablet Portrait (16:10) 1600x2560): Player Viewport Y=46.6% | Ground Vis=±8.3m x ±13.5m
-  [PASS] QA 3: Portrait Viewport-Aware Spawn verified (15/20 samples outside inner viewport) + DemonCharger/TimberGoliath visibility gate active.
+  [PASS] QA 3: Portrait Viewport-Aware Spawn verified (14/20 samples outside inner viewport) + DemonCharger/TimberGoliath visibility gate active.
   [PASS] QA 4: VirtualJoystickUI (bottom-left 360°) & DashTouchButtonUI (bottom-right radial cooldown) verified and auto-hidden during modals.
   [PASS] QA 5: Meta Upgrades real stat application & PlayerPrefs persistence verified in Portrait.
-  [PASS] QA 6: 3 Worlds and 15 Arenas (5 waves per arena) verified with boss wave 5.
+  [PASS] QA 6: 3 Worlds and 15 Arenas (W1: 10w, W2: 10w, W3: 15w with Mid-Boss W10 & Final Boss W15) verified.
 [ANDROID PORTRAIT PIPELINE] QA Suite Status: ALL PASSED
 
 --- [STEP 4] CAPTURING ALL 12 OFFICIAL PORTRAIT SCREENSHOTS (1080 x 1920) ---
@@ -71,15 +71,15 @@
   ✓ Company Name: 'LOGMAT'
   ✓ Product Name: 'CURSED HARVEST.'
   ✓ Package ID:   'com.logmat.cursedharvest'
-  ✓ Version:      '1.0.0' (bundleVersionCode=2)
+  ✓ Version:      '1.1.1' (bundleVersionCode=3)
   ✓ Orientation:  Portrait (Portrait-Only Locked)
   ✓ Backend/Arch: IL2CPP / ARM64
   ✓ SDK Levels:   Min=AndroidApiLevel26, Target=AndroidApiLevel36
   • Signing Configuration: useCustomKeystore=True (/Users/logmat/Documents/LOGMAT_Signing/CursedHarvest/cursedharvest-upload-key.jks)
 =========================================================================
-  ✓ [AAB BUILD SUCCEEDED] Path: Builds/Android/Release/CursedHarvest_Android_1.0.0_vc2_TEST.aab
-  ✓ Bundle Size: 57.39 MB (60,173,590 bytes)
-  ✓ Build Time:  26.7 seconds
+  ✓ [AAB BUILD SUCCEEDED] Path: Builds/Android/Release/CursedHarvest_Android_1.1.1_vc3_RELEASE.aab
+  ✓ Bundle Size: 57.39 MB (60,180,345 bytes)
+  ✓ Build Time:  28.0 seconds
 =========================================================================
 =========================================================================
 [ANDROID PORTRAIT PIPELINE] Complete!

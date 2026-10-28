@@ -264,7 +264,7 @@ namespace CursedHarvest
                 subtitle = "World 1 — The Ancient Blight",
                 description = "5 perilous rural arenas. Reclaim the blighted farm, ash orchards, and murky mires.",
                 difficultyTier = "NORMAL",
-                totalWaves = 5,
+                totalWaves = 10,
                 unlockRequirement = 0,
                 themeColor = new Color(0.95f, 0.65f, 0.20f),
                 activeArenaIndex = 1,
@@ -278,7 +278,7 @@ namespace CursedHarvest
                 subtitle = "World 2 — Dominion of Bones",
                 description = "5 grim cemetery and chapel arenas. Overthrow The Grave King in his ossuary throne.",
                 difficultyTier = "HARD",
-                totalWaves = 5,
+                totalWaves = 10,
                 unlockRequirement = 1,
                 themeColor = new Color(0.60f, 0.68f, 0.78f),
                 activeArenaIndex = 1,
@@ -292,7 +292,7 @@ namespace CursedHarvest
                 subtitle = "World 3 — The Sunless Abyss",
                 description = "5 nightmare void arenas. Conquer the Ashen Gate and defeat The Primeval Horror.",
                 difficultyTier = "NIGHTMARE",
-                totalWaves = 5,
+                totalWaves = 15,
                 unlockRequirement = 2,
                 themeColor = new Color(0.75f, 0.30f, 0.90f),
                 activeArenaIndex = 1,
@@ -305,6 +305,93 @@ namespace CursedHarvest
             string tier, int reqId, float dmgMult, float bossDmgMult, float spdMult, float hpMult,
             int visualIdx, string bossName, string bossPrefab, Color color)
         {
+            int totalWaves = (worldId == 3) ? 15 : 10;
+            int[] waveCounts;
+            int[] bossWaves;
+            BossEncounterConfig[] encounters;
+
+            if (worldId == 3)
+            {
+                // 15 Waves: Waves 1-9 progression, Wave 10 MID-BOSS, Waves 11-14 second difficulty phase, Wave 15 FINAL BOSS
+                waveCounts = new int[]
+                {
+                    10 + indexInWorld * 2, 14 + indexInWorld * 2, 18 + indexInWorld * 3, 22 + indexInWorld * 3, 26 + indexInWorld * 4,
+                    30 + indexInWorld * 4, 34 + indexInWorld * 4, 38 + indexInWorld * 5, 42 + indexInWorld * 5, 20 + indexInWorld * 2, // Wave 10 Mid-boss adds
+                    32 + indexInWorld * 4, 36 + indexInWorld * 5, 42 + indexInWorld * 5, 48 + indexInWorld * 6, 24 + indexInWorld * 3  // Wave 15 Final boss adds
+                };
+                bossWaves = new int[] { 10, 15 };
+                encounters = new BossEncounterConfig[]
+                {
+                    new BossEncounterConfig
+                    {
+                        waveNumber = 10,
+                        isFinalBoss = false,
+                        bossName = (indexInWorld == 5) ? "ECLIPSE HERALD" : "CORRUPTED SENTINEL",
+                        bossTitle = $"Mid-Boss of {name}",
+                        bossAddCount = 18 + indexInWorld * 2,
+                        bossGruntQuota = 6,
+                        bossChaserQuota = 5,
+                        bossWalkerQuota = 4,
+                        bossFarmerQuota = 3,
+                        bossChargerQuota = 2,
+                        bossMaxConcurrentAdds = 10,
+                        bossAddSpawnInterval = 1.8f,
+                        bossScale = 1.10f,
+                        bossHealthMultiplier = 0.90f + indexInWorld * 0.10f,
+                        bossPrefabPath = "Assets/_Prefabs/Boss_EclipseHerald.prefab"
+                    },
+                    new BossEncounterConfig
+                    {
+                        waveNumber = 15,
+                        isFinalBoss = true,
+                        bossName = bossName,
+                        bossTitle = $"Final Guardian of {name}",
+                        bossAddCount = 22 + indexInWorld * 2,
+                        bossGruntQuota = 7,
+                        bossChaserQuota = 6,
+                        bossWalkerQuota = 5,
+                        bossFarmerQuota = 4,
+                        bossChargerQuota = 3,
+                        bossMaxConcurrentAdds = 12,
+                        bossAddSpawnInterval = 1.7f,
+                        bossScale = 1.25f,
+                        bossHealthMultiplier = 1.20f + indexInWorld * 0.15f,
+                        bossPrefabPath = bossPrefab
+                    }
+                };
+            }
+            else
+            {
+                // World 1 & 2: 10 Waves (Waves 1-9 progression, Wave 10 FINAL BOSS)
+                waveCounts = new int[]
+                {
+                    8 + indexInWorld * 2, 12 + indexInWorld * 2, 16 + indexInWorld * 3, 20 + indexInWorld * 3, 24 + indexInWorld * 4,
+                    28 + indexInWorld * 4, 32 + indexInWorld * 4, 36 + indexInWorld * 5, 40 + indexInWorld * 5, 18 + indexInWorld * 2  // Wave 10 Final boss adds
+                };
+                bossWaves = new int[] { 10 };
+                encounters = new BossEncounterConfig[]
+                {
+                    new BossEncounterConfig
+                    {
+                        waveNumber = 10,
+                        isFinalBoss = true,
+                        bossName = bossName,
+                        bossTitle = $"Guardian of {name}",
+                        bossAddCount = 18 + indexInWorld * 2,
+                        bossGruntQuota = 6,
+                        bossChaserQuota = 5,
+                        bossWalkerQuota = 4,
+                        bossFarmerQuota = 3,
+                        bossChargerQuota = 2,
+                        bossMaxConcurrentAdds = 10,
+                        bossAddSpawnInterval = 1.8f,
+                        bossScale = 1.20f,
+                        bossHealthMultiplier = 1.0f + indexInWorld * 0.12f,
+                        bossPrefabPath = bossPrefab
+                    }
+                };
+            }
+
             return new ArenaConfig
             {
                 arenaId = arenaId,
@@ -314,7 +401,7 @@ namespace CursedHarvest
                 subtitle = subtitle,
                 description = desc,
                 difficultyTier = tier,
-                totalWaves = 5,
+                totalWaves = totalWaves,
                 unlockRequirementArenaId = reqId,
                 enemyDamageMultiplier = dmgMult,
                 bossDamageMultiplier = bossDmgMult,
@@ -329,34 +416,14 @@ namespace CursedHarvest
                 normalHealAmount = 20f,
                 luckyLastHealAmount = 25f,
                 luckyLastMinimumHP = 15f,
-                waveEnemyCounts = new int[] { 8 + indexInWorld * 2, 12 + indexInWorld * 3, 16 + indexInWorld * 4, 22 + indexInWorld * 5, 16 + indexInWorld * 2 },
+                waveEnemyCounts = waveCounts,
                 maxConcurrentEnemies = 70,
-                spawnInterval = 0.50f,
-                intermissionDuration = 10.0f,
-                supplyDropWaves = new int[] { 2, 4 },
-                preBossWave = 4,
-                bossWaves = new int[] { 5 },
-                bossEncounters = new BossEncounterConfig[]
-                {
-                    new BossEncounterConfig
-                    {
-                        waveNumber = 5,
-                        isFinalBoss = true,
-                        bossName = bossName,
-                        bossTitle = $"Guardian of {name}",
-                        bossAddCount = 14 + indexInWorld * 2,
-                        bossGruntQuota = 5,
-                        bossChaserQuota = 4,
-                        bossWalkerQuota = 3,
-                        bossFarmerQuota = 3,
-                        bossChargerQuota = 2,
-                        bossMaxConcurrentAdds = 8,
-                        bossAddSpawnInterval = 1.9f,
-                        bossScale = 1.15f,
-                        bossHealthMultiplier = 1.0f + indexInWorld * 0.12f,
-                        bossPrefabPath = bossPrefab
-                    }
-                },
+                spawnInterval = 0.48f,
+                intermissionDuration = 8.0f,
+                supplyDropWaves = (worldId == 3) ? new int[] { 3, 7, 12 } : new int[] { 3, 7 },
+                preBossWave = (worldId == 3) ? 14 : 9,
+                bossWaves = bossWaves,
+                bossEncounters = encounters,
                 environmentIdentifier = $"Env_Arena_{arenaId}",
                 musicIdentifier = $"Music_World{worldId}",
                 themeColor = color,

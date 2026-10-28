@@ -23,11 +23,11 @@ namespace CursedHarvest.Editor
         public const string AuthoritativeCompanyName = "LOGMAT";
         public const string AuthoritativeProductName = "CURSED HARVEST.";
         public const string AuthoritativePackageName = "com.logmat.cursedharvest";
-        public const string AuthoritativeBundleVersion = "1.0.0";
-        public const int AuthoritativeVersionCode = 2;
+        public const string AuthoritativeBundleVersion = "1.1.1";
+        public const int AuthoritativeVersionCode = 3;
 
         public const string AndroidBuildOutputDir = "Builds/Android/Release";
-        public const string AndroidAabOutputPath = "Builds/Android/Release/CursedHarvest_Android_1.0.0_vc2_TEST.aab";
+        public const string AndroidAabOutputPath = "Builds/Android/Release/CursedHarvest_Android_1.1.1_vc3_RELEASE.aab";
         public const string MobileScreenshotsDir = "Assets/_Documentation/Screenshots/MobilePortrait";
         public const string PlayStoreIconsDir = "Assets/_Documentation/Branding/Mobile/PlayStore";
         public const string ArtifactsDir = "/Users/logmat/.gemini/antigravity/brain/da9b4771-589a-4d93-9ba9-83bb63f9ad9b";
@@ -422,7 +422,7 @@ namespace CursedHarvest.Editor
                 log("  [PASS] QA 5: Meta Upgrades real stat application & PlayerPrefs persistence verified in Portrait.");
             }
 
-            // QA 6: 3 Worlds & 15 Arenas Structure Verification
+            // QA 6: 3 Worlds & 15 Arenas Structure Verification (W1: 10 waves, W2: 10 waves, W3: 15 waves)
             if (WorldConfig.AllWorlds == null || WorldConfig.AllWorlds.Length != 3)
             {
                 logErr($"QA 6 FAILED: Expected 3 Worlds, got {WorldConfig.AllWorlds?.Length ?? 0}");
@@ -439,16 +439,36 @@ namespace CursedHarvest.Editor
                 for (int i = 0; i < 15; i++)
                 {
                     var arena = WorldConfig.AllArenas[i];
-                    if (arena.arenaId != i + 1 || arena.totalWaves != 5)
+                    int expectedWaves = (arena.worldId == 3) ? 15 : 10;
+                    if (arena.arenaId != i + 1 || arena.totalWaves != expectedWaves)
                     {
                         arenasValid = false;
-                        logErr($"QA 6 FAILED: Arena {i+1} misconfigured (id={arena.arenaId}, waves={arena.totalWaves})");
+                        logErr($"QA 6 FAILED: Arena {i+1} misconfigured (id={arena.arenaId}, waves={arena.totalWaves}, expected={expectedWaves})");
                         break;
+                    }
+
+                    if (arena.worldId == 3)
+                    {
+                        if (arena.bossWaves == null || arena.bossWaves.Length != 2 || arena.bossWaves[0] != 10 || arena.bossWaves[1] != 15)
+                        {
+                            arenasValid = false;
+                            logErr($"QA 6 FAILED: World 3 Arena {i+1} boss waves misconfigured (expected 10 and 15)");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (arena.bossWaves == null || arena.bossWaves.Length != 1 || arena.bossWaves[0] != 10)
+                        {
+                            arenasValid = false;
+                            logErr($"QA 6 FAILED: World {arena.worldId} Arena {i+1} boss waves misconfigured (expected 10)");
+                            break;
+                        }
                     }
                 }
                 if (arenasValid)
                 {
-                    log("  [PASS] QA 6: 3 Worlds and 15 Arenas (5 waves per arena) verified with boss wave 5.");
+                    log("  [PASS] QA 6: 3 Worlds and 15 Arenas (W1: 10w, W2: 10w, W3: 15w with Mid-Boss W10 & Final Boss W15) verified.");
                 }
                 else
                 {
