@@ -1,0 +1,11 @@
+-------------------
+Folder Name: Prefabs
+-------------------
+Prefab Name: SM_Prop_Pumpkin_Lanturn_01
+    Mesh Name: SM_Prop_Pumpkin_Lanturn_01
+        Slot: PolygonPumpkins_Mat_01 (POLYGON_Pumpkin_Tex)
+
+Prefab Name: SM_Prop_Pumpkin_Lanturn_02
+    Mesh Name: SM_Prop_Pumpkin_Lanturn_02
+        Slot: PolygonPumpkins_Mat_01 (POLYGON_Pumpkin_Tex)
+

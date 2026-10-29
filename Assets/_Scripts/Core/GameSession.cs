@@ -302,6 +302,15 @@ namespace CursedHarvest
             }
         }
 
+        /// <summary>v1.1.2: return straight to the Arena Select of the current World.</summary>
+        public void ReturnToArenaSelect()
+        {
+            initialMenuScreen = MainMenuScreen.ArenaSelect;
+            Time.timeScale = 1f;
+            if (Application.CanStreamedLevelBeLoaded("MainMenu")) SceneManager.LoadScene("MainMenu");
+            else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
         public void ReturnToWorldSelect()
         {
             Debug.Log("[GameSession] Returning to World Select...");

@@ -1,0 +1,518 @@
+Unity Editor version:    6000.6.2f1 (770e33f6875c)
+Branch:                  6000.6/staging
+Build type:              Release
+Batch mode:              YES
+macOS version:           Version 15.6.1 (Build 24G90)
+Darwin version:          24.6.0
+Architecture:            arm64
+Running under Rosetta:   NO
+Available memory:        49152 MB
+Date:                    2026-10-15T09:39:50Z
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetCoreRuntime/dotnet
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 44401)
+VBCSCompiler prewarm took 1.77 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-logmat" at "2026-10-15T09:39:50.308358Z"
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/PackageManager/Server/UnityPackageManager
+
+COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/MacOS/Unity
+-batchmode
+-quit
+-projectPath
+/Users/logmat/Desktop/CLAUDE/CursedHarvest
+-executeMethod
+CursedHarvest.Editor.RigInspector.InspectRig
+-logFile
+/Users/logmat/Desktop/CLAUDE/CursedHarvest/rig_inspection.log
+Successfully changed project path to: /Users/logmat/Desktop/CLAUDE/CursedHarvest
+/Users/logmat/Desktop/CLAUDE/CursedHarvest
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [8640618688]  Target information:
+
+Player connection [8640618688]  * "[IP] 192.168.1.12 [Port] 55504 [Flags] 2 [Guid] 1047074737 [EditorId] 1047074737 [Version] 1048832 [Id] OSXEditor(0,MacBook-Pro-de-Matias.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" 
+
+Player connection [8640618688] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [8640618688] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-44400" after 0.1 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              500e1da480fd41bd96e08583ed35cb30
+  Correlation Id:          b9c7231150aa75ed8ddead81b194ebef
+  External correlation Id: 2458021762539614822
+  Machine Id:              4qLDUGMRa+xgv/WJd8yMsCb+6N0=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-logmat" (connect: 0.00s, validation: 0.00s, handshake: 0.20s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-logmat-notifications" at "2026-10-15T09:39:50.512866Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 4674256553018-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.22s
+[Licensing::Module] Licensing is initialized (took 0.03s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Initialising UDS system complete:
+  - System type: Client
+  - Resource namespace: 60d222254b46c9871b7f737c8b571d9e
+  - Shared memory size: 1073741824
+  - Command buffer id: 1052672
+  - Command buffer size: 8192
+  - Hashmap size: 4194304
+  - Service connected: false
+Launching Unity Data Store - /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/Unity.DataStore 
+Unity Data Store artifact dir = Library/DataStore, working dir = /Users/logmat/Desktop/CLAUDE/CursedHarvest[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Unity Data Store running and initialised
+Initialize engine version: 6000.6.2f1 (770e33f6875c)
+[EntityIdStore] init: VM path (explicit commit), pageSize=16384, blockCount=262144, entitiesPerBlock=1024, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+ preferred device: Apple M4 Max (high power)
+Metal devices available: 1
+0: Apple M4 Max (high power)
+Using device Apple M4 Max (high power)
+Initializing Metal device caps: Apple M4 Max
+Mac GPU Family: 2
+Apple GPU Family: 9
+MSL Version: 3.0
+Has Float MSAA: 1
+Has Float Filtering: 1
+ReadWrite Texture Tier: 2
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/MonoBleedingEdge/lib/mono/unityjit-macos'
+Mono config path = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56400
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+[Licensing::Client] Successfully resolved entitlement details
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Registered in 0.001714 seconds.
+Native extension for Android target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.286 seconds
+Domain Reload Profiling: 515ms
+	BeginReloadAssembly (50ms)
+		CreateAndSetChildDomain (16ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (24ms)
+	LoadAllAssembliesAndSetupDomain (144ms)
+		LoadAssemblies (34ms)
+		TypeCache.Refresh (100ms)
+			TypeCache.ScanAssembly (93ms)
+		AnalyzeDomain (0ms)
+	FinalizeReload (287ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (51ms)
+			ProcessInitializeOnLoadAttributes (42ms)
+			ProcessInitializeOnLoadMethodAttributes (100ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 52 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ide.visualstudio@a99d56dec63f)
+    com.unity.searcher@4.9.5 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.searcher@a463122f2c00)
+    com.unity.profiling.core@1.0.3 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.profiling.core@8a49f7027d06)
+    com.unity.nuget.mono-cecil@1.11.6 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.nuget.mono-cecil@ecb9724e46ff)
+  Built-in packages:
+    com.unity.shadergraph@17.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.shadergraph@96a7923f6bed)
+    com.unity.ugui@2.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ugui@0f30cee369f3)
+    com.unity.modules.accessibility@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.hierarchycore)
+    com.unity.render-pipelines.core@17.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.render-pipelines.core@a14850be21a6)
+    com.unity.graph-authoring@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.graph-authoring@cfd2588851ee)
+    com.unity.test-framework@1.8.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.test-framework@7a3849e09bd0)
+    com.unity.ext.nunit@2.1.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ext.nunit@0198eae3b53e)
+    com.unity.burst@2.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.burst@626e66ab421b)
+    com.unity.collections@6.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.collections@10fff0607388)
+    com.unity.test-framework.performance@6.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.test-framework.performance@0a60b857a52e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/BuildPipeline/bee_backend --ipc --defer-dag-verification --dagfile="Library/Bee/200b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: /Users/logmat/Desktop/CLAUDE/CursedHarvest
+DisplayProgressbar: Compiling Scripts
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetStandard/Extensions/2.0.0/System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/UnityReferenceAssemblies/unity-4.8-api/System.ComponentModel.Composition.dll" in favor of "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetStandard/compat/2.1.0/shims/netfx/System.ComponentModel.Composition.dll"
+ExitCode: 0 Duration: 0s421ms
+[469/591    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[587/591    0s] Csc Library/Bee/artifacts/200b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets/_Scripts/Editor/Phase1TestRunner.cs(74,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(53,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(151,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(160,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(192,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(220,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/_Scripts/Editor/CoreSetup.cs(1002,17): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+[588/591    0s] ILPostProcess Library/Bee/artifacts/200b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/200b0aE.dag/Assembly-CSharp-Editor.dll, with 140 defines and 341 references
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+1 processor(s) skipped this assembly
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+[589/591    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+[590/591    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+*** Tundra build success (0.41 seconds), 5 items updated, 591 evaluated
+Assets/_Scripts/Editor/Phase1TestRunner.cs(74,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(53,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(151,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(160,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(192,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(220,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/_Scripts/Editor/CoreSetup.cs(1002,17): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+AssetDatabase: script compilation time: 0.704211s
+Begin MonoManager ReloadAssembly
+Total cache size 268348225
+Total cache size after purge 268348225, took 00:00:00.0771470
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Native extension for Android target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.245 seconds
+Domain Reload Profiling: 550ms
+	BeginReloadAssembly (113ms)
+		DisableScriptedObjects (9ms)
+		CreateAndSetChildDomain (42ms)
+	RebuildCommonClasses (4ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (17ms)
+	LoadAllAssembliesAndSetupDomain (162ms)
+		LoadAssemblies (86ms)
+		TypeCache.Refresh (35ms)
+			TypeCache.ScanAssembly (29ms)
+		AnalyzeDomain (13ms)
+			BuildScriptInfoCaches (12ms)
+	FinalizeReload (245ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (50ms)
+			ProcessInitializeOnLoadAttributes (58ms)
+			ProcessInitializeOnLoadMethodAttributes (25ms)
+		AwakeInstancesAfterBackupRestoration (9ms)
+Starting new worker id: 0 with log in /Users/logmat/Desktop/CLAUDE/CursedHarvest/Logs/AssetImportWorkerHW0.log
+
+Asset Pipeline Refresh (id=be28938e328af427d85aeef75447eb0c): Total: 1.681 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=548 ms
+		Asset DB Callback time: managed=87 ms, native=11 ms
+		Scripting: domain reloads=1, domain reload time=316 ms, compile time=705 ms, other=12 ms
+		Project Asset Count: scripts=832, non-scripts=3987
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 1
+	InvokePackagesCallback: 8.101ms
+	ApplyChangesToAssetFolders: 0.171ms
+	Scan: 218.554ms
+	Collect global state as custom dependencies: 3.333ms
+	OnSourceAssetsModified: 0.292ms
+	CategorizeScriptCompilationAssets: 7.897ms
+	ProcessAssetsWithTransientArtifactChanges: 12.349ms
+	CategorizeAssets: 28.788ms
+	CompileScripts: 705.299ms
+	ImportOutOfDateAssets: 247.744ms (246.215ms without children)
+		UnloadImportedAssets: 0.114ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.343ms
+		ImportSchedulerStart: 1.071ms
+	PostProcessAllAssets: 88.048ms
+		VCAutoAddAssetPostprocess 0.460ms
+		MonoPostProcessAllAssets: 87.389ms
+			AssetPostprocessor.OnPostprocessAllAssets 62.941ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 6.280ms
+			SyncVS.PostprocessSyncProject 5.578ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 3.433ms
+			AssetChangedListener.OnPostprocessAllAssets 0.790ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 0.736ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.694ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 0.609ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 0.378ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 0.331ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.250ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.242ms
+			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.221ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.145ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.131ms
+			PostProcessor.OnPostprocessAllAssets 0.128ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.115ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.114ms
+			AssetEvents.OnPostprocessAllAssets 0.105ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.093ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.061ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.059ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.056ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.053ms
+	PostAssetChangesProfiler: 2.851ms
+	UnloadStreamsBegin: 0.800ms
+	PersistCurrentRevisions: 0.098ms
+	GenerateScriptTypeHashes: 0.866ms
+	GenerateScriptTypeSerializationHashes: 1.544ms
+	Untracked: 354.577ms
+
+Application.AssetDatabase Initial Refresh End
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.01 seconds
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Scanning for USB devices : 0.023ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-CursedHarvest
+2026-10-15 06:39:53.156 Unity[44400:8896694] NSEventModifierFlagFunction specified to -setKeyEquivalentModifierMask: for item <NSMenuItem: 0x60000232fdb0 SDF, ke='Command-F12'>, but is only supported for system-provided menu items; will not be used
+Unloading 53 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 2714 unused Assets / (6.8 MB). Loaded Objects now: 3439.
+Memory consumption went from 196.6 MB to 189.8 MB.
+Total: 5.052875 ms (FindLiveObjects: 0.188917 ms CreateObjectMapping: 0.039916 ms MarkObjects: 3.783750 ms  DeleteObjects: 0.975792 ms)
+
+2026-10-15 06:39:53.189 Unity[44400:8896694] NSEventModifierFlagFunction specified to -setKeyEquivalentModifierMask: for item <NSMenuItem: 0x600002329880 SDF, ke='Command-F12'>, but is only supported for system-provided menu items; will not be used
+=== RIG INSPECTION ===
+--- PEASANT BONES ---
+SM_Gen_Chr_Peasent_Male_01(Clone): pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  Root: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+    Hips: pos=(0.00, 0.88, 0.00), rot=(0.00, 270.00, 278.59), scale=(1.00, 1.00, 1.00)
+      Spine_01: pos=(-0.10, 0.00, 0.00), rot=(0.00, 180.00, 191.44), scale=(1.00, 1.00, 1.00)
+        Spine_02: pos=(-0.18, 0.00, 0.00), rot=(0.00, 180.00, 191.25), scale=(1.00, 1.00, 1.00)
+          Spine_03: pos=(-0.18, 0.00, 0.00), rot=(0.00, 180.00, 192.76), scale=(1.00, 1.00, 1.00)
+            Clavicle_L: pos=(-0.06, -0.04, -0.07), rot=(61.69, 188.13, 279.96), scale=(1.00, 1.00, 1.00)
+              Shoulder_L: pos=(-0.13, 0.00, 0.00), rot=(0.34, 27.43, 4.07), scale=(1.00, 1.00, 1.00)
+                Elbow_L: pos=(-0.34, 0.00, 0.00), rot=(0.39, 4.66, 355.28), scale=(1.00, 1.00, 1.00)
+                  Hand_L: pos=(-0.27, 0.00, 0.00), rot=(0.00, 355.89, 0.00), scale=(1.00, 1.00, 1.00)
+                    Finger_01_L: pos=(-0.10, 0.00, -0.03), rot=(0.00, 354.96, 6.49), scale=(1.00, 1.00, 1.00)
+                      Finger_02_L: pos=(-0.04, 0.00, 0.00), rot=(0.25, 2.24, 2.44), scale=(1.00, 1.00, 1.00)
+                        Finger_03_L: pos=(-0.04, 0.00, 0.00), rot=(358.69, 351.64, 10.74), scale=(1.00, 1.00, 1.00)
+                          Finger_04_L: pos=(-0.03, 0.00, 0.00), rot=(3.74, 10.61, 340.78), scale=(1.00, 1.00, 1.00)
+                    IndexFinger_01_L: pos=(-0.10, 0.00, 0.03), rot=(0.00, 7.55, 0.49), scale=(1.00, 1.00, 1.00)
+                      IndexFinger_02_L: pos=(-0.04, 0.00, 0.00), rot=(359.99, 358.76, 11.29), scale=(1.00, 1.00, 1.00)
+                        IndexFinger_03_L: pos=(-0.04, 0.00, 0.00), rot=(359.38, 357.01, 6.55), scale=(1.00, 1.00, 1.00)
+                          IndexFinger_04_L: pos=(-0.04, 0.00, 0.00), rot=(358.98, 356.91, 341.71), scale=(1.00, 1.00, 1.00)
+                    Thumb_01_L: pos=(-0.04, -0.01, 0.05), rot=(0.00, 32.28, 10.52), scale=(1.00, 1.00, 1.00)
+                      Thumb_02_L: pos=(-0.06, 0.00, 0.00), rot=(357.42, 345.94, 16.73), scale=(1.00, 1.00, 1.00)
+                        Thumb_03_L: pos=(-0.06, 0.00, 0.00), rot=(351.96, 343.86, 334.21), scale=(1.00, 1.00, 1.00)
+            Clavicle_R: pos=(-0.06, -0.04, 0.07), rot=(298.31, 171.87, 99.96), scale=(1.00, 1.00, 1.00)
+              Shoulder_R: pos=(0.13, 0.00, 0.00), rot=(0.34, 27.43, 4.07), scale=(1.00, 1.00, 1.00)
+                Elbow_R: pos=(0.34, 0.00, 0.00), rot=(0.39, 4.66, 355.28), scale=(1.00, 1.00, 1.00)
+                  Hand_R: pos=(0.27, 0.00, 0.00), rot=(0.00, 355.89, 0.00), scale=(1.00, 1.00, 1.00)
+                    Finger_01_R: pos=(0.10, 0.00, 0.03), rot=(0.00, 354.96, 6.49), scale=(1.00, 1.00, 1.00)
+                      Finger_02_R: pos=(0.04, 0.00, 0.00), rot=(0.25, 2.24, 2.44), scale=(1.00, 1.00, 1.00)
+                        Finger_03_R: pos=(0.04, 0.00, 0.00), rot=(358.69, 351.64, 10.74), scale=(1.00, 1.00, 1.00)
+                          Finger_04_R: pos=(0.03, 0.00, 0.00), rot=(3.74, 10.61, 340.78), scale=(1.00, 1.00, 1.00)
+                    IndexFinger_01_R: pos=(0.10, 0.00, -0.03), rot=(0.00, 7.55, 0.49), scale=(1.00, 1.00, 1.00)
+                      IndexFinger_02_R: pos=(0.04, 0.00, 0.00), rot=(359.99, 358.76, 11.29), scale=(1.00, 1.00, 1.00)
+                        IndexFinger_03_R: pos=(0.04, 0.00, 0.00), rot=(359.38, 357.01, 6.55), scale=(1.00, 1.00, 1.00)
+                          IndexFinger_04_R: pos=(0.04, 0.00, 0.00), rot=(358.98, 356.91, 341.71), scale=(1.00, 1.00, 1.00)
+                    Thumb_01_R: pos=(0.04, 0.01, -0.05), rot=(0.00, 32.28, 10.52), scale=(1.00, 1.00, 1.00)
+                      Thumb_02_R: pos=(0.06, 0.00, 0.00), rot=(357.42, 345.94, 16.73), scale=(1.00, 1.00, 1.00)
+                        Thumb_03_R: pos=(0.06, 0.00, 0.00), rot=(351.96, 343.86, 334.21), scale=(1.00, 1.00, 1.00)
+            Neck: pos=(-0.11, 0.00, 0.00), rot=(0.00, 0.00, 4.78), scale=(1.00, 1.00, 1.00)
+              Head: pos=(-0.12, 0.00, 0.00), rot=(80.86, 270.00, 0.00), scale=(1.00, 1.00, 1.00)
+                Eyebrows: pos=(0.00, 0.13, 0.12), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+                Eyes: pos=(0.00, 0.09, 0.12), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+                Jaw: pos=(0.00, 0.06, 0.02), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+                SM_Gen_Chr_Attach_Chops_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+                SM_Gen_Chr_Attach_Hair_08: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+      UpperLeg_L: pos=(0.04, -0.03, 0.10), rot=(278.59, 90.00, 268.18), scale=(1.00, 1.00, 1.00)
+        LowerLeg_L: pos=(0.40, 0.00, 0.00), rot=(80.14, 10.53, 8.15), scale=(1.00, 1.00, 1.00)
+          Ankle_L: pos=(0.38, 0.00, 0.00), rot=(350.32, 180.43, 118.76), scale=(1.00, 1.00, 1.00)
+            Ball_L: pos=(0.11, 0.00, 0.00), rot=(0.00, 0.00, 328.67), scale=(1.00, 1.00, 1.00)
+              Toes_L: pos=(0.07, 0.00, 0.00), rot=(0.00, 270.00, 0.00), scale=(1.00, 1.00, 1.00)
+      UpperLeg_R: pos=(0.04, -0.03, -0.10), rot=(81.41, 270.00, 88.18), scale=(1.00, 1.00, 1.00)
+        LowerLeg_R: pos=(-0.40, 0.00, 0.00), rot=(80.14, 10.53, 8.15), scale=(1.00, 1.00, 1.00)
+          Ankle_R: pos=(-0.38, 0.00, 0.00), rot=(350.32, 180.43, 118.76), scale=(1.00, 1.00, 1.00)
+            Ball_R: pos=(-0.11, 0.00, 0.00), rot=(0.00, 0.00, 328.67), scale=(1.00, 1.00, 1.00)
+              Toes_R: pos=(-0.07, 0.00, 0.00), rot=(0.00, 270.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Attach_Hair_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Attach_Hair_01_alt: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Attach_Hair_02: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Attach_Hair_03: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Attach_Hood_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Business_Female_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Business_Male_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Charred_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Peasent_Female_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Peasent_Male_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Prisoner_Female_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Prisoner_Male_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Robot_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Skeleton_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Space_Male_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Street_Female_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Street_Female_02: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Street_Female_03: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Street_Female_04: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Street_Male_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Street_Male_02: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Street_Male_03: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  SM_Gen_Chr_Street_Male_04: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+--- BOW MESH & BONES ---
+SM_Wep_Rigged_CrossBow_01(Clone): pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+  Root: pos=(0.00, 0.00, 0.00), rot=(0.00, 270.00, 341.97), scale=(1.00, 1.00, 1.00)
+    Bow_L_1: pos=(-0.01, 0.01, 0.17), rot=(342.63, 73.95, 358.75), scale=(1.00, 1.00, 1.00)
+      Bow_L_2: pos=(-0.11, 0.00, 0.00), rot=(1.85, 342.59, 4.85), scale=(1.00, 1.00, 1.00)
+        Bow_L_3: pos=(-0.17, 0.00, 0.00), rot=(0.21, 348.45, 1.01), scale=(1.00, 1.00, 1.00)
+    Bow_R_1: pos=(-0.01, 0.01, -0.17), rot=(17.37, 286.05, 358.75), scale=(1.00, 1.00, 1.00)
+      Bow_R_2: pos=(-0.11, 0.00, 0.00), rot=(358.15, 17.41, 4.85), scale=(1.00, 1.00, 1.00)
+        Bow_R_3: pos=(-0.17, 0.00, 0.00), rot=(359.79, 11.55, 1.01), scale=(1.00, 1.00, 1.00)
+    String: pos=(-0.14, 0.00, 0.00), rot=(0.00, 0.00, 18.03), scale=(1.00, 1.00, 1.00)
+  SM_Wep_Crossbow_01: pos=(0.00, 0.00, 0.00), rot=(0.00, 0.00, 0.00), scale=(1.00, 1.00, 1.00)
+Renderer: SM_Wep_Crossbow_01, bounds center=(0.00, 0.01, -0.45), extents=(0.45, 0.34, 0.58), min=(-0.45, -0.33, -1.04), max=(0.45, 0.35, 0.13)
+Mesh bounds: X=[-0.444, 0.444], Y=[-0.090, 0.060], Z=[-1.027, 0.094]
+--- REST BONE POSITIONS (WORLD) ---
+Shoulder_R: (0.19, 1.39, -0.05)
+Hand_R: (0.80, 1.36, -0.03)
+Shoulder_L: (-0.19, 1.39, -0.05)
+Hand_L: (-0.80, 1.36, -0.03)
+Spine_03: (0.00, 1.34, -0.03)
+--- PLAYER COMBAT POSE VERIFICATION ---
+Hand_R world pos: (0.03, 1.28, 0.43)
+Hand_L world pos: (-0.22, 1.08, 0.42)
+WeaponSocket pos: (0.10, 1.08, 0.38), rot: (0.00, 0.00, 0.00)
+FirePoint pos: (0.10, 1.12, 0.96), forward: (0.00, 0.00, 1.00)
+VisualBow pos: (0.10, 1.06, 0.84), forward: (0.00, 0.00, 1.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.RigInspector:InspectRig () (at Assets/_Scripts/Editor/RigInspector.cs:122)
+
+(Filename: Assets/_Scripts/Editor/RigInspector.cs Line: 122)
+
+Thread 0xc8f49b000 may have been prematurely finalized
+Thread 0xca5887000 may have been prematurely finalized
+Batchmode quit successfully invoked - shutting down!
+Curl error 23: Failure writing output to destination, passed 13 returned 0
+Killing ADB server in 0.023866 seconds.
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+Apagando Servidor de MSBuild...
+Apagando Servidor del compilador de VB o C#...
+Servidor del compilador de VB o C# se apagó correctamente.
+Worker ready: AssetImportWorkerHW0 0
+Servidor de MSBuild se apagó correctamente.
+Thread 0x17929f000 may have been prematurely finalized
+Thread 0x17932b000 may have been prematurely finalized
+Thread 0x179443000 may have been prematurely finalized
+Thread 0x1793b7000 may have been prematurely finalized
+Thread 0x179213000 may have been prematurely finalized
+Thread 0x1794cf000 may have been prematurely finalized
+Thread 0x17955b000 may have been prematurely finalized
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+[Licensing::IpcConnector] LicenseClient-logmat-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-logmat channel disconnected successfully.
+Shut down UDS service system complete
+debugger-agent: Unable to listen on 47
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0
+[Package Manager] Server process was shutdown

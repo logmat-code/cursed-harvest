@@ -1,57 +1,42 @@
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
-/[Mm]emoryCaptures/
-/[Rr]ecordings/
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+Recordings/
 
-# Visual Studio / Rider / VSCode
-.vs/
-.idea/
-.vscode/
+# Unity generated
 *.csproj
-*.unityproj
 *.sln
-*.slnx
 *.suo
 *.user
 *.userprefs
 *.pidb
 *.booproj
 *.svd
-*.pdb
-*.mdb
-*.opendb
-*.VC.db
 
-# OS generated
+# IDE
+.vscode/
+.idea/
+.vs/
+
+# macOS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-[Tt]humbs.db
 
-# Android Signing / Keystore Security (Never commit keys or credentials)
-*.jks
+# Android / builds
+.gradle/
+*.apk
+*.aab
+
+# Signing
 *.keystore
-*.key
-*signing*
-*credentials*
-*Credentials*
-LOGMAT_Signing/
+*.jks
 
-# Large raw archive files
-Assets/*.unitypackage
-Assets/*.unitypackage.meta
-Assets/SourceFiles*
-Assets/POLYGON*_SourceFiles*
-*.log
-wave_verify_log.txt
-world2_qa_log.txt
-icon_render_log.txt
-*.marker
+# Secrets
+.env
+.env.*
+*.unitypackage

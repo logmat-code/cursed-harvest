@@ -1,0 +1,725 @@
+Unity Editor version:    6000.6.2f1 (770e33f6875c)
+Branch:                  6000.6/staging
+Build type:              Release
+Batch mode:              YES
+macOS version:           Version 15.6.1 (Build 24G90)
+Darwin version:          24.6.0
+Architecture:            arm64
+Running under Rosetta:   NO
+Available memory:        49152 MB
+Date:                    2026-10-15T16:19:28Z
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetCoreRuntime/dotnet
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 54418)
+VBCSCompiler prewarm took 1.84 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-logmat" at "2026-10-15T16:19:28.845172Z"
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/PackageManager/Server/UnityPackageManager
+
+COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/MacOS/Unity
+-quit
+-batchmode
+-projectPath
+/Users/logmat/Desktop/CLAUDE/CursedHarvest
+-executeMethod
+CursedHarvest.Editor.FullGameVerificationRunner.RunTests
+-logFile
+test_run.log
+Successfully changed project path to: /Users/logmat/Desktop/CLAUDE/CursedHarvest
+/Users/logmat/Desktop/CLAUDE/CursedHarvest
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [8640618688]  Target information:
+
+Player connection [8640618688]  * "[IP] 192.168.1.64 [Port] 55504 [Flags] 2 [Guid] 1374916464 [EditorId] 1374916464 [Version] 1048832 [Id] OSXEditor(0,MacBook-Pro-de-Matias.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" 
+
+Player connection [8640618688] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [8640618688] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialising UDS system complete:
+  - System type: Client
+  - Resource namespace: 60d222254b46c9871b7f737c8b571d9e
+  - Shared memory size: 1073741824
+  - Command buffer id: 1052672
+  - Command buffer size: 8192
+  - Hashmap size: 4194304
+  - Service connected: false
+[Package Manager] Connected to IPC stream "Upm-54416" after 0.1 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              69cc49002b654f8188ee1dab186a55d3
+  Correlation Id:          b9c7231150aa75ed8ddead81b194ebef
+  External correlation Id: 275435850838360591
+  Machine Id:              4qLDUGMRa+xgv/WJd8yMsCb+6N0=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-logmat" (connect: 0.00s, validation: 0.00s, handshake: 0.20s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-logmat-notifications" at "2026-10-15T16:19:29.048493Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 4674256553018-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.21s
+[Licensing::Module] Licensing is initialized (took 0.02s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/Unity.DataStore 
+Unity Data Store artifact dir = Library/DataStore, working dir = /Users/logmat/Desktop/CLAUDE/CursedHarvest[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Unity Data Store running and initialised
+Initialize engine version: 6000.6.2f1 (770e33f6875c)
+[EntityIdStore] init: VM path (explicit commit), pageSize=16384, blockCount=262144, entitiesPerBlock=1024, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+ preferred device: Apple M4 Max (high power)
+Metal devices available: 1
+0: Apple M4 Max (high power)
+Using device Apple M4 Max (high power)
+Initializing Metal device caps: Apple M4 Max
+Mac GPU Family: 2
+Apple GPU Family: 9
+MSL Version: 3.0
+Has Float MSAA: 1
+Has Float Filtering: 1
+ReadWrite Texture Tier: 2
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/MonoBleedingEdge/lib/mono/unityjit-macos'
+Mono config path = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56416
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+[Licensing::Client] Successfully resolved entitlement details
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Registered in 0.001880 seconds.
+Native extension for Android target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.397 seconds
+Domain Reload Profiling: 620ms
+	BeginReloadAssembly (43ms)
+		CreateAndSetChildDomain (10ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (23ms)
+	LoadAllAssembliesAndSetupDomain (146ms)
+		LoadAssemblies (33ms)
+		TypeCache.Refresh (102ms)
+			TypeCache.ScanAssembly (95ms)
+		AnalyzeDomain (0ms)
+	FinalizeReload (398ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (51ms)
+			ProcessInitializeOnLoadAttributes (44ms)
+			ProcessInitializeOnLoadMethodAttributes (208ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 52 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ide.visualstudio@a99d56dec63f)
+    com.unity.searcher@4.9.5 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.searcher@a463122f2c00)
+    com.unity.profiling.core@1.0.3 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.profiling.core@8a49f7027d06)
+    com.unity.nuget.mono-cecil@1.11.6 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.nuget.mono-cecil@ecb9724e46ff)
+  Built-in packages:
+    com.unity.shadergraph@17.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.shadergraph@96a7923f6bed)
+    com.unity.ugui@2.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ugui@0f30cee369f3)
+    com.unity.modules.accessibility@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.hierarchycore)
+    com.unity.render-pipelines.core@17.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.render-pipelines.core@a14850be21a6)
+    com.unity.graph-authoring@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.graph-authoring@cfd2588851ee)
+    com.unity.test-framework@1.8.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.test-framework@7a3849e09bd0)
+    com.unity.ext.nunit@2.1.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ext.nunit@0198eae3b53e)
+    com.unity.burst@2.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.burst@626e66ab421b)
+    com.unity.collections@6.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.collections@10fff0607388)
+    com.unity.test-framework.performance@6.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.test-framework.performance@0a60b857a52e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/BuildPipeline/bee_backend --ipc --defer-dag-verification --dagfile="Library/Bee/200b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: /Users/logmat/Desktop/CLAUDE/CursedHarvest
+DisplayProgressbar: Compiling Scripts
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetStandard/Extensions/2.0.0/System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/UnityReferenceAssemblies/unity-4.8-api/System.ComponentModel.Composition.dll" in favor of "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetStandard/compat/2.1.0/shims/netfx/System.ComponentModel.Composition.dll"
+ExitCode: 0 Duration: 0s445ms
+[469/591    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[587/591    0s] Csc Library/Bee/artifacts/200b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets/_Scripts/Editor/Phase1TestRunner.cs(74,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(53,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(151,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(160,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(192,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(220,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/_Scripts/Editor/CoreSetup.cs(1053,17): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+[588/591    0s] ILPostProcess Library/Bee/artifacts/200b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/200b0aE.dag/Assembly-CSharp-Editor.dll, with 140 defines and 341 references
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+1 processor(s) skipped this assembly
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+[589/591    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[590/591    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (0.43 seconds), 5 items updated, 591 evaluated
+Assets/_Scripts/Editor/Phase1TestRunner.cs(74,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(53,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(151,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(160,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(192,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(220,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/_Scripts/Editor/CoreSetup.cs(1053,17): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+AssetDatabase: script compilation time: 0.734893s
+Begin MonoManager ReloadAssembly
+Total cache size 268002746
+Total cache size after purge 268002746, took 00:00:00.0765977
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Native extension for Android target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.247 seconds
+Domain Reload Profiling: 540ms
+	BeginReloadAssembly (99ms)
+		DisableScriptedObjects (9ms)
+		CreateAndSetChildDomain (28ms)
+	RebuildCommonClasses (4ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (17ms)
+	LoadAllAssembliesAndSetupDomain (163ms)
+		LoadAssemblies (86ms)
+		TypeCache.Refresh (35ms)
+			TypeCache.ScanAssembly (30ms)
+		AnalyzeDomain (12ms)
+			BuildScriptInfoCaches (11ms)
+	FinalizeReload (247ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (51ms)
+			ProcessInitializeOnLoadAttributes (57ms)
+			ProcessInitializeOnLoadMethodAttributes (28ms)
+		AwakeInstancesAfterBackupRestoration (9ms)
+Starting new worker id: 0 with log in /Users/logmat/Desktop/CLAUDE/CursedHarvest/Logs/AssetImportWorkerHW0.log
+
+Asset Pipeline Refresh (id=82758ff0a4edc45d8af30dfe90955085): Total: 1.672 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=518 ms
+		Asset DB Callback time: managed=88 ms, native=11 ms
+		Scripting: domain reloads=1, domain reload time=303 ms, compile time=736 ms, other=14 ms
+		Project Asset Count: scripts=836, non-scripts=3995
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 1
+	InvokePackagesCallback: 7.760ms
+	ApplyChangesToAssetFolders: 0.171ms
+	Scan: 186.555ms
+	Collect global state as custom dependencies: 3.003ms
+	OnSourceAssetsModified: 0.250ms
+	CategorizeScriptCompilationAssets: 7.322ms
+	ProcessAssetsWithTransientArtifactChanges: 12.227ms
+	CategorizeAssets: 28.613ms
+	CompileScripts: 736.000ms
+	ImportOutOfDateAssets: 249.889ms (248.321ms without children)
+		UnloadImportedAssets: 0.104ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.330ms
+		ImportSchedulerStart: 1.133ms
+	PostProcessAllAssets: 88.607ms
+		VCAutoAddAssetPostprocess 0.420ms
+		MonoPostProcessAllAssets: 87.984ms
+			AssetPostprocessor.OnPostprocessAllAssets 63.466ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 7.205ms
+			SyncVS.PostprocessSyncProject 4.459ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 3.438ms
+			AssetChangedListener.OnPostprocessAllAssets 0.921ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 0.733ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.720ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 0.623ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 0.369ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 0.329ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.243ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.236ms
+			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.227ms
+			PostProcessor.OnPostprocessAllAssets 0.181ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.141ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.130ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.124ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.119ms
+			AssetEvents.OnPostprocessAllAssets 0.119ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.091ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.061ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.060ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.057ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.051ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.050ms
+	PostAssetChangesProfiler: 3.207ms
+	UnloadStreamsBegin: 0.856ms
+	PersistCurrentRevisions: 0.099ms
+	GenerateScriptTypeHashes: 0.925ms
+	GenerateScriptTypeSerializationHashes: 1.615ms
+	Untracked: 346.268ms
+
+Application.AssetDatabase Initial Refresh End
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.01 seconds
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Scanning for USB devices : 0.022ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-CursedHarvest
+2026-10-15 13:19:31.836 Unity[54416:9437412] NSEventModifierFlagFunction specified to -setKeyEquivalentModifierMask: for item <NSMenuItem: 0x600001bc5810 SDF, ke='Command-F12'>, but is only supported for system-provided menu items; will not be used
+Unloading 53 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 2716 unused Assets / (6.7 MB). Loaded Objects now: 3441.
+Memory consumption went from 196.6 MB to 189.9 MB.
+Total: 5.026209 ms (FindLiveObjects: 0.185834 ms CreateObjectMapping: 0.039458 ms MarkObjects: 3.827125 ms  DeleteObjects: 0.914583 ms)
+
+2026-10-15 13:19:31.871 Unity[54416:9437412] NSEventModifierFlagFunction specified to -setKeyEquivalentModifierMask: for item <NSMenuItem: 0x600001bc4310 SDF, ke='Command-F12'>, but is only supported for system-provided menu items; will not be used
+=================================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:15)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 15)
+
+[FULL GAME VERIFICATION] Starting End-to-End Verification...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:16)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 16)
+
+=================================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:17)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 17)
+
+Asset Pipeline Refresh (id=d7113dec3dff44312972b3821df2cb02): Total: 0.004 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a522d4f919d864e29b6f7db0e01b8e77): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4746af9a983c54cf5a4958e9297ae854): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=60aab4e5f5385493abe297190bb19e11): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1180bee5e46e548a595b43186a632036): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=07ee9cd0768294a48b4a08e28e844377): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=aef58e9e384814720b8f84293c74f3c6): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=785016b733b9e447d9f1b9c6c176669e): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=372505cb5094741f3bf926bd2606f2fe): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=a738e60dd06f641cebbb8c33cac478c7): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=9f210408c73424665831d0a39f09602e): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=63040f2e09c0542c9acc4ef6c30e2314): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c5d65c75c02864618862140e62f8613a): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=1be392329756a4c5ab367b545b603784): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4914975dfd69f42e48362b23f1ad7637): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=7c986f582737b4d00b06693f574d64af): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=6018b1d3dd18f465dbf7558902b1d099): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=ad399bbc7130547e1b651a244cd68576): Total: 0.002 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 2830 unused Assets / (9.8 MB). Loaded Objects now: 3444.
+Memory consumption went from 196.2 MB to 186.3 MB.
+Total: 4.415542 ms (FindLiveObjects: 0.146458 ms CreateObjectMapping: 0.039875 ms MarkObjects: 3.542167 ms  DeleteObjects: 0.617625 ms)
+
+Importing 'GUID: 11c76e98a75e040088acdc8b82343628 - Path: Assets/_Scenes/MainGame.unity' with importer (DefaultImporter)
+Imported 'GUID: 11c76e98a75e040088acdc8b82343628' -> (Import Result ID: '8e95971a7e167ec0d73d06c8c51561cd') in 0.002 seconds [static dependencies only]. Details - ImportResultOutputID=a80e084da98de1eb26bfd77dba950449 DependenciesID=bcd2743070552a841305e2e986bef6bd StaticDependenciesID=35026359095065f0966ddb794974f4ab 
+Asset Pipeline Refresh (id=78154726773884e53b0c59eb4a60f8d4): Total: 0.019 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[CursedHarvest] Complete Game Build (Phases 1-6) Finished Successfully!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.CoreSetup:BuildCompleteGame () (at Assets/_Scripts/Editor/CoreSetup.cs:119)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:20)
+
+(Filename: Assets/_Scripts/Editor/CoreSetup.cs Line: 119)
+
+Opening scene 'Assets/_Scenes/MainGame.unity'
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/_Scenes/MainGame.unity'
+	Deserialize:            9.966 ms
+	Integration:            8.203 ms
+	Integration of assets:  0.141 ms
+	Thread Wait Time:       0.002 ms
+	Total Operation Time:   18.312 ms
+Unloading 61 unused Assets / (341.2 KB). Loaded Objects now: 7424.
+Memory consumption went from 204.9 MB to 204.6 MB.
+Total: 4.315125 ms (FindLiveObjects: 0.230500 ms CreateObjectMapping: 0.048292 ms MarkObjects: 3.906959 ms  DeleteObjects: 0.043042 ms)
+
+[1/8] MainGame.unity built and loaded successfully.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:29)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 29)
+
+[2/8] Player and Core Subsystems verified (Health, Dash, Weapons, Upgrades, XP, Lucky Last).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:52)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 52)
+
+[3/8] Weapons (4/4) and Upgrades Database (18/18) fully verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:82)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 82)
+
+[4/8] Procedural Audio System (16 SoundTypes + Ambient Spooky Drone) verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:96)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 96)
+
+[4b/8] Critical Readability verified: Clean player body, bolt trail/spark, visible perimeter walls.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:119)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 119)
+
+[4c/8] Player Combat Pose (two-handed forward stance, WeaponSocket forward +Z) & 3-Tier Clean Explosions verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:170)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 170)
+
+[5/8] Floating Damage Numbers Manager verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:180)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 180)
+
+[6/8] UIManager, HUD elements, Title & Game Modals verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:191)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 191)
+
+[7/8] Harvest Gamble system (4 Arena Quadrants, Lucky/Cursed mechanics) verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:208)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 208)
+
+[8/12] Boss 'THE LAST HARVEST' and Endless Mode transition verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:244)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 244)
+
+[9/12] Persistent UI Assets and LevelUpModal visual integrity verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:267)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 267)
+
+[10/12] Music Tracks verified: Gameplay (Echoes_of_Time_v2), Boss (Grave_Blow).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:278)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 278)
+
+[11/12] Credits Modal and Jam/Audio Attributions verified.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:299)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 299)
+
+[FULL GAME VERIFICATION] Running Performance Benchmark (50, 100, 150 enemies)...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:302)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 302)
+
+[BENCHMARK] 50 Active Enemies: 0.29 ms/tick (~3477 FPS budget). Threshold: < 16.6 ms (60 FPS).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:332)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 332)
+
+[BENCHMARK] 100 Active Enemies: 0.73 ms/tick (~1371 FPS budget). Threshold: < 16.6 ms (60 FPS).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:332)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 332)
+
+[BENCHMARK] 150 Active Enemies: 1.64 ms/tick (~611 FPS budget). Threshold: < 16.6 ms (60 FPS).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:332)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 332)
+
+[12/12] Performance Benchmark completed successfully (target 60+ FPS preserved).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:346)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 346)
+
+=================================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:354)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 354)
+
+★★★ [FULL GAME VERIFICATION] ALL SYSTEMS OPERATIONAL! READY TO PLAY! ★★★
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:355)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 355)
+
+=================================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.FullGameVerificationRunner:RunTests () (at Assets/_Scripts/Editor/FullGameVerificationRunner.cs:356)
+
+(Filename: Assets/_Scripts/Editor/FullGameVerificationRunner.cs Line: 356)
+
+Worker ready: AssetImportWorkerHW0 0
+Thread 0xc99683000 may have been prematurely finalized
+Batchmode quit successfully invoked - shutting down!
+Killing ADB server in 0.02549 seconds.
+Importing 'GUID: 00000000000000007000000000000000 - Path: ProjectSettings/TimeManager.asset' with importer (LibraryAssetImporter)
+Imported 'GUID: 00000000000000007000000000000000' -> (Import Result ID: '7e12a84cd7ab56012d9fa64ef2a5a4da') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=888360dbe4cb337dfbc4897083ee474b DependenciesID=d13400a85efeabf30011f29052cf7157 StaticDependenciesID=9d73b30445d3b0990b0ddb8080a69504 
+Thread 0xc99907000 may have been prematurely finalized
+Asset Pipeline Refresh (id=02841edcdd49d442fba2aa7c86faa2f0): Total: 0.010 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+Apagando Servidor de MSBuild...
+Apagando Servidor del compilador de VB o C#...
+Thread 0x17541b000 may have been prematurely finalized
+Thread 0x1755bf000 may have been prematurely finalized
+Thread 0x1756d7000 may have been prematurely finalized
+Thread 0x175533000 may have been prematurely finalized
+Thread 0x175763000 may have been prematurely finalized
+Thread 0x1757ef000 may have been prematurely finalized
+Thread 0x17564b000 may have been prematurely finalized
+Thread 0x1754a7000 may have been prematurely finalized
+Servidor del compilador de VB o C# se apagó correctamente.
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+[Licensing::IpcConnector] LicenseClient-logmat-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-logmat channel disconnected successfully.
+Servidor de MSBuild se apagó correctamente.
+Shut down UDS service system complete
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+debugger-agent: Unable to listen on 47
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0
+[Package Manager] Server process was shutdown

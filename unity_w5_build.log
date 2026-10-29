@@ -1,0 +1,1399 @@
+Unity Editor version:    6000.6.2f1 (770e33f6875c)
+Branch:                  6000.6/staging
+Build type:              Release
+Batch mode:              YES
+macOS version:           Version 15.6.1 (Build 24G90)
+Darwin version:          24.6.0
+Architecture:            arm64
+Running under Rosetta:   NO
+Available memory:        49152 MB
+Date:                    2026-10-19T07:04:00Z
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetCoreRuntime/dotnet
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 86913)
+VBCSCompiler prewarm took 1.81 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-logmat" at "2026-10-19T07:04:00.79039Z"
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/PackageManager/Server/UnityPackageManager
+
+COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/MacOS/Unity
+-batchmode
+-projectPath
+.
+-executeMethod
+CursedHarvest.Editor.World5SetupAndQA.RunSetupAndQA
+-quit
+-logFile
+unity_w5_build.log
+Successfully changed project path to: /Users/logmat/Desktop/CLAUDE/CursedHarvest
+/Users/logmat/Desktop/CLAUDE/CursedHarvest
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [8640618688]  Target information:
+
+Player connection [8640618688]  * "[IP] 192.168.1.12 [Port] 55505 [Flags] 2 [Guid] 1643275687 [EditorId] 1643275687 [Version] 1048832 [Id] OSXEditor(0,MacBook-Pro-de-Matias.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" 
+
+Player connection [8640618688] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [8640618688] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-86912" after 0.1 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              790d95ce98894be6a231341a9b3ab5c7
+  Correlation Id:          b9c7231150aa75ed8ddead81b194ebef
+  External correlation Id: 3886227103768626698
+  Machine Id:              4qLDUGMRa+xgv/WJd8yMsCb+6N0=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-logmat" (connect: 0.00s, validation: 0.00s, handshake: 0.20s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-logmat-notifications" at "2026-10-19T07:04:00.987003Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 4674256553018-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.20s
+[Licensing::Module] Licensing is initialized (took 0.01s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Initialising UDS system complete:
+  - System type: Client
+  - Resource namespace: 60d222254b46c9871b7f737c8b571d9e
+  - Shared memory size: 1073741824
+  - Command buffer id: 1052672
+  - Command buffer size: 8192
+  - Hashmap size: 4194304
+  - Service connected: false
+Launching Unity Data Store - /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/Unity.DataStore 
+Unity Data Store artifact dir = Library/DataStore, working dir = /Users/logmat/Desktop/CLAUDE/CursedHarvest[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Unity Data Store running and initialised
+Initialize engine version: 6000.6.2f1 (770e33f6875c)
+[EntityIdStore] init: VM path (explicit commit), pageSize=16384, blockCount=262144, entitiesPerBlock=1024, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+ preferred device: Apple M4 Max (high power)
+Metal devices available: 1
+0: Apple M4 Max (high power)
+Using device Apple M4 Max (high power)
+Initializing Metal device caps: Apple M4 Max
+Mac GPU Family: 2
+Apple GPU Family: 9
+MSL Version: 3.0
+Has Float MSAA: 1
+Has Float Filtering: 1
+ReadWrite Texture Tier: 2
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/MonoBleedingEdge/lib/mono/unityjit-macos'
+Mono config path = '/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56912
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+[Licensing::Client] Successfully resolved entitlement details
+Register platform support module: /Applications/Unity/Hub/Editor/6000.6.2f1/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Registered in 0.001597 seconds.
+Native extension for Android target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.282 seconds
+Domain Reload Profiling: 502ms
+	BeginReloadAssembly (42ms)
+		CreateAndSetChildDomain (9ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (23ms)
+	LoadAllAssembliesAndSetupDomain (144ms)
+		LoadAssemblies (33ms)
+		TypeCache.Refresh (102ms)
+			TypeCache.ScanAssembly (95ms)
+		AnalyzeDomain (0ms)
+	FinalizeReload (283ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (48ms)
+			ProcessInitializeOnLoadAttributes (41ms)
+			ProcessInitializeOnLoadMethodAttributes (99ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 52 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ide.visualstudio@a99d56dec63f)
+    com.unity.searcher@4.9.5 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.searcher@a463122f2c00)
+    com.unity.profiling.core@1.0.3 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.profiling.core@8a49f7027d06)
+    com.unity.nuget.mono-cecil@1.11.6 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.nuget.mono-cecil@ecb9724e46ff)
+  Built-in packages:
+    com.unity.shadergraph@17.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.shadergraph@96a7923f6bed)
+    com.unity.ugui@2.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ugui@0f30cee369f3)
+    com.unity.modules.accessibility@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.modules.hierarchycore)
+    com.unity.render-pipelines.core@17.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.render-pipelines.core@a14850be21a6)
+    com.unity.graph-authoring@1.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.graph-authoring@cfd2588851ee)
+    com.unity.test-framework@1.8.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.test-framework@7a3849e09bd0)
+    com.unity.ext.nunit@2.1.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.ext.nunit@0198eae3b53e)
+    com.unity.burst@2.0.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.burst@626e66ab421b)
+    com.unity.collections@6.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.collections@10fff0607388)
+    com.unity.test-framework.performance@6.6.0 (location: /Users/logmat/Desktop/CLAUDE/CursedHarvest/Library/PackageCache/com.unity.test-framework.performance@0a60b857a52e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.00 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/BuildPipeline/bee_backend --ipc --defer-dag-verification --dagfile="Library/Bee/200b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: /Users/logmat/Desktop/CLAUDE/CursedHarvest
+DisplayProgressbar: Compiling Scripts
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetStandard/Extensions/2.0.0/System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/UnityReferenceAssemblies/unity-4.8-api/System.ComponentModel.Composition.dll" in favor of "/Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Resources/Scripting/NetStandard/compat/2.1.0/shims/netfx/System.ComponentModel.Composition.dll"
+ExitCode: 0 Duration: 0s340ms
+[469/591    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[587/591    0s] Csc Library/Bee/artifacts/200b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets/_Scripts/Editor/CursedHarvestDebugMenu.cs(141,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/CursedHarvestDebugMenu.cs(172,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/CursedHarvestDebugMenu.cs(187,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase1TestRunner.cs(74,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(192,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(220,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/_Scripts/Editor/MetaProgressionQAAndScreenshotRunner.cs(344,33): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(53,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(151,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(160,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3ArenaBuilder.cs(48,106): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/World3ArenaBuilder.cs(48,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/World3ArenaBuilder.cs(63,100): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/World3ArenaBuilder.cs(63,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/HealthAndMaskVerificationRunner.cs(472,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(222,67): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(222,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(228,91): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(228,49): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(261,76): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(261,38): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(308,53): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(332,38): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World5SetupAndQA.cs(323,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2ArenaBuilder.cs(249,74): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/World2ArenaBuilder.cs(249,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/World2ArenaBuilder.cs(259,38): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2ArenaBuilder.cs(192,18): warning CS0219: The variable 'sceneOpened' is assigned but its value is never used
+Assets/_Scripts/Editor/World5SetupAndQA.cs(351,46): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(401,53): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(447,81): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(447,36): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/World5SetupAndQA.cs(467,46): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(358,53): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(364,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(410,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(543,38): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(747,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(786,38): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World5ArenaBuilder.cs(603,46): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World5ArenaBuilder.cs(612,21): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World5ArenaBuilder.cs(621,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/CoreSetup.cs(1252,17): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+[588/591    0s] ILPostProcess Library/Bee/artifacts/200b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/200b0aE.dag/Assembly-CSharp-Editor.dll, with 140 defines and 341 references
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+1 processor(s) skipped this assembly
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+[589/591    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[590/591    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (0.33 seconds), 5 items updated, 591 evaluated
+Assets/_Scripts/Editor/CursedHarvestDebugMenu.cs(141,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/CursedHarvestDebugMenu.cs(172,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/CursedHarvestDebugMenu.cs(187,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase1TestRunner.cs(74,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(192,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/Synty/SidekickCharacters/Scripts/Editor/Utility/ToolDownloader.cs(220,21): warning CS0618: 'AssetDatabase.ImportPackage(string, bool)' is obsolete: 'Use UnityEditor.AssetPackage.Package.Import(string packagePath, bool interactive) instead.'
+Assets/_Scripts/Editor/MetaProgressionQAAndScreenshotRunner.cs(344,33): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(53,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(151,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/Phase2TestRunner.cs(160,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3ArenaBuilder.cs(48,106): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/World3ArenaBuilder.cs(48,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/World3ArenaBuilder.cs(63,100): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/World3ArenaBuilder.cs(63,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/HealthAndMaskVerificationRunner.cs(472,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(222,67): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(222,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(228,91): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(228,49): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(261,76): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/ScreenshotHelper.cs(261,38): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(308,53): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(332,38): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World5SetupAndQA.cs(323,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2ArenaBuilder.cs(249,74): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/World2ArenaBuilder.cs(249,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/World2ArenaBuilder.cs(259,38): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2ArenaBuilder.cs(192,18): warning CS0219: The variable 'sceneOpened' is assigned but its value is never used
+Assets/_Scripts/Editor/World5SetupAndQA.cs(351,46): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(401,53): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(447,81): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(447,36): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets/_Scripts/Editor/World5SetupAndQA.cs(467,46): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(358,53): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(364,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(410,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World2SetupAndQA.cs(543,38): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(747,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World3SetupAndQA.cs(786,38): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World5ArenaBuilder.cs(603,46): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World5ArenaBuilder.cs(612,21): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/World5ArenaBuilder.cs(621,32): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets/_Scripts/Editor/CoreSetup.cs(1252,17): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+AssetDatabase: script compilation time: 0.623054s
+Begin MonoManager ReloadAssembly
+Total cache size 268316046
+Total cache size after purge 268316046, took 00:00:00.0690033
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Native extension for Android target not found
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.238 seconds
+Domain Reload Profiling: 537ms
+	BeginReloadAssembly (109ms)
+		DisableScriptedObjects (8ms)
+		CreateAndSetChildDomain (39ms)
+	RebuildCommonClasses (4ms)
+	RebuildNativeTypeToScriptingClass (9ms)
+	initialDomainReloadingComplete (17ms)
+	LoadAllAssembliesAndSetupDomain (159ms)
+		LoadAssemblies (90ms)
+		TypeCache.Refresh (36ms)
+			TypeCache.ScanAssembly (30ms)
+		AnalyzeDomain (12ms)
+			BuildScriptInfoCaches (11ms)
+	FinalizeReload (239ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (51ms)
+			ProcessInitializeOnLoadAttributes (54ms)
+			ProcessInitializeOnLoadMethodAttributes (25ms)
+		AwakeInstancesAfterBackupRestoration (9ms)
+Starting new worker id: 0 with log in /Users/logmat/Desktop/CLAUDE/CursedHarvest/Logs/AssetImportWorkerHW0.log
+Importing 'GUID: 72b805e68311e4f568d29f067993d8de - Path: Assets/_Documentation/Screenshots/World4_LogStorage.png' with importer (TextureImporter)
+Imported 'GUID: 72b805e68311e4f568d29f067993d8de' -> (Import Result ID: '176539067876827f2e1ba8ee6b0f072e') in 0.034 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bbd25a008fcab2f853a5b1c90a1add0f DependenciesID=5d2e6b0569efcce546528ae5a47fc638 StaticDependenciesID=2f21e71bbcd812e51757b3135325de55 
+Importing 'GUID: c63735b41bab74869bd340523bdbe6e3 - Path: Assets/_Documentation/Screenshots/World4_BloodrootGrove.png' with importer (TextureImporter)
+Imported 'GUID: c63735b41bab74869bd340523bdbe6e3' -> (Import Result ID: '5f89f926207bd4b8d910e69c4d5d546a') in 0.026 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=feab01adab840fff5d1cba19b4936d58 DependenciesID=24c0bf364cabacbc580c58a6363356f7 StaticDependenciesID=89ef36b502a187bd25a4a764b4d39ecc 
+Importing 'GUID: c8eea589203f445ce9c90f23f209849e - Path: Assets/_Documentation/Screenshots/World4_Gameplay.png' with importer (TextureImporter)
+Imported 'GUID: c8eea589203f445ce9c90f23f209849e' -> (Import Result ID: '322229e35c00a2b9a91f97ec729e9c6a') in 0.025 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=97bc9346b1a180adee2bb8da5a9466b1 DependenciesID=645b63c7ee1382869514c29e7f6d5a91 StaticDependenciesID=5db816fb0a0c836c150dac70a83a1fe1 
+Importing 'GUID: 0a7adf56a39cf40829d7a6c245c34c91 - Path: Assets/_Documentation/Screenshots/World4_FinalBoss_Sovereign.png' with importer (TextureImporter)
+Imported 'GUID: 0a7adf56a39cf40829d7a6c245c34c91' -> (Import Result ID: '9543f7be26c3cd97a94ee17a174bcef8') in 0.026 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bc1730b1a2e175ea5745894334dea935 DependenciesID=5ced4e633e337098223f453ea601978e StaticDependenciesID=9ce18fdc6eec1e8bf1503e7ba3420dca 
+Importing 'GUID: cadd12106457c46ae8e80ba8dfa754c7 - Path: Assets/_Documentation/Screenshots/World4_ArenaOverview.png' with importer (TextureImporter)
+Imported 'GUID: cadd12106457c46ae8e80ba8dfa754c7' -> (Import Result ID: 'a04032dc0f89d12ccacb0a1026644010') in 0.027 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9dc189398b437a9e787a5809ec906b96 DependenciesID=64cb48bce0d0ed82e995d3b0a0d8a153 StaticDependenciesID=e93eef52fc11837083d29dd064246d47 
+Importing 'GUID: ab285a68df57242c2a966e7a9f7b3685 - Path: Assets/_Documentation/Screenshots/World4_TimberClearing.png' with importer (TextureImporter)
+Imported 'GUID: ab285a68df57242c2a966e7a9f7b3685' -> (Import Result ID: '327f6b0d19db7ad48e5832bbb870dc4b') in 0.027 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=940f02916a067cbda0e60ade7cafa3f7 DependenciesID=60669e88c74c7fcc666f991da4381083 StaticDependenciesID=2b61b7dee4f5fe37155f5307a96ed766 
+Importing 'GUID: bcdc09095d16143f8b909c9ba53f79da - Path: Assets/_Documentation/Screenshots/World4_Sawmill.png' with importer (TextureImporter)
+Imported 'GUID: bcdc09095d16143f8b909c9ba53f79da' -> (Import Result ID: '24169ae496e6acff02955a6d67a5163a') in 0.024 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cf1c80cb20e658f8b4e9071a6619c082 DependenciesID=deb47876e2eefbea32937e54ef6e4f75 StaticDependenciesID=af6f301f4f9884cb648142225aee3d31 
+Importing 'GUID: ddf7b631fb7e74bd19e9d21b805a2b3b - Path: Assets/_Documentation/Screenshots/World4_MidBoss_Goliath.png' with importer (TextureImporter)
+Imported 'GUID: ddf7b631fb7e74bd19e9d21b805a2b3b' -> (Import Result ID: '2b0076b38e6db4b176c4349166908be3') in 0.026 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9dcae342129c1c6afa66ed3edb9eaee7 DependenciesID=7205ded2cca4043f4bc071893458b725 StaticDependenciesID=a831a62c8bcbfbb57fd335eaa3ced9a0 
+Launching external process: /Applications/Unity/Hub/Editor/6000.6.2f1/Unity.app/Contents/Helpers/UnityShaderCompiler
+
+Asset Pipeline Refresh (id=210ee93323fad456abeba1fbb3a4e7ad): Total: 1.807 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=8 (actual=8, local cache=0, cache server=0)
+		Asset DB Process Time: managed=1 ms, native=762 ms
+		Asset DB Callback time: managed=89 ms, native=6 ms
+		Scripting: domain reloads=1, domain reload time=309 ms, compile time=624 ms, other=12 ms
+		Project Asset Count: scripts=838, non-scripts=4088
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 1
+	InvokePackagesCallback: 5.760ms
+	ApplyChangesToAssetFolders: 0.172ms
+	Scan: 222.053ms
+	Collect global state as custom dependencies: 2.730ms
+	OnSourceAssetsModified: 0.230ms
+	CategorizeScriptCompilationAssets: 7.566ms
+	ProcessAssetsWithTransientArtifactChanges: 12.426ms
+	CategorizeAssets: 25.550ms
+	CompileScripts: 624.119ms
+	ImportOutOfDateAssets: 465.575ms (239.715ms without children)
+		ImportManagerImport: 224.403ms (0.779ms without children)
+			UpdateCategorizedAssets: 0.060ms
+		UnloadImportedAssets: 0.100ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.343ms
+		ImportSchedulerStart: 1.010ms
+	PostProcessAllAssets: 90.060ms
+		VCAutoAddAssetPostprocess 0.424ms
+		MonoPostProcessAllAssets: 89.314ms
+			AssetPostprocessor.OnPostprocessAllAssets 63.591ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 7.661ms
+			SyncVS.PostprocessSyncProject 4.678ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 3.126ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.917ms
+			AssetChangedListener.OnPostprocessAllAssets 0.891ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 0.804ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.683ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 0.616ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 0.385ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 0.341ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.282ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.236ms
+			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.230ms
+			PostProcessor.OnPostprocessAllAssets 0.169ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.135ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.126ms
+			AssetEvents.OnPostprocessAllAssets 0.115ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.115ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.086ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.064ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.062ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.058ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.057ms
+	PostAssetChangesProfiler: 0.875ms
+	UnloadStreamsBegin: 0.762ms
+	PersistCurrentRevisions: 0.144ms
+	GenerateScriptTypeHashes: 0.867ms
+	GenerateScriptTypeSerializationHashes: 1.487ms
+	Untracked: 347.596ms
+
+Application.AssetDatabase Initial Refresh End
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Launched and connected shader compiler UnityShaderCompiler after 0.01 seconds
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Scanning for USB devices : 0.024ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-CursedHarvest
+2026-10-19 04:04:03.702 Unity[86912:15282132] NSEventModifierFlagFunction specified to -setKeyEquivalentModifierMask: for item <NSMenuItem: 0x600002660a80 SDF, ke='Command-F12'>, but is only supported for system-provided menu items; will not be used
+Unloading 78 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 2776 unused Assets / (7.5 MB). Loaded Objects now: 3454.
+Memory consumption went from 198.4 MB to 191.0 MB.
+Total: 5.207541 ms (FindLiveObjects: 0.189042 ms CreateObjectMapping: 0.044750 ms MarkObjects: 3.710167 ms  DeleteObjects: 1.201209 ms)
+
+2026-10-19 04:04:03.737 Unity[86912:15282132] NSEventModifierFlagFunction specified to -setKeyEquivalentModifierMask: for item <NSMenuItem: 0x600002616df0 SDF, ke='Command-F12'>, but is only supported for system-provided menu items; will not be used
+=================================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:31)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[WORLD 5 QA SUITE] Starting World 5 — The Eternal Eclipse QA...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:32)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+=================================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:33)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[SETUP] Executing World5ArenaBuilder.BuildWorld5()...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:41)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[World5ArenaBuilder] ==================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:19)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 19)
+
+[World5ArenaBuilder] Building WORLD 5 — THE ETERNAL ECLIPSE...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:20)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 20)
+
+[World5ArenaBuilder] ==================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:21)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 21)
+
+Importing 'GUID: 9286888594e504cd0ab5d39cd1405d73 - Path: Assets/_Prefabs/VoidRiftHazardPool.prefab' with importer (PrefabImporter)
+Imported 'GUID: 9286888594e504cd0ab5d39cd1405d73' -> (Import Result ID: 'f38b90f9ebc504658895e7aae5bd7dc4') in 0.001 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=03f7e1893840440f96fcc08679606bac DependenciesID=4a7805966f11779ba4dca3971c75c23e StaticDependenciesID=360cc1288b1f46f54ae60dd875c128c3 
+Asset Pipeline Refresh (id=f995673f10cd84435867ce9ac8dec217): Total: 0.019 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[World5ArenaBuilder] Saved Assets/_Prefabs/VoidRiftHazardPool.prefab
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:CreateVoidRiftHazardPoolPrefab () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:56)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:27)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 56)
+
+Importing 'GUID: 10a8b45e9ae384bec84b699e958018a5 - Path: Assets/_Prefabs/Boss_EclipseHerald.prefab' with importer (PrefabImporter)
+Imported 'GUID: 10a8b45e9ae384bec84b699e958018a5' -> (Import Result ID: '1da76ee7ae9deed62bbfb278bcf465de') in 0.002 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e784915170b3066c150fd690e41cb015 DependenciesID=af00a05b3b08657acba770385e00ad24 StaticDependenciesID=4f7af1f1c9bc3548ed3ad0f338d9c8d9 
+Asset Pipeline Refresh (id=0b29bfe369ff646bd9c27bca6880f289): Total: 0.016 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[World5ArenaBuilder] Saved Assets/_Prefabs/Boss_EclipseHerald.prefab
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:CreateEclipseHeraldBossPrefab (UnityEngine.GameObject) (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:136)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:30)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 136)
+
+Importing 'GUID: 84e12ced10c1b4447b00992a915fed67 - Path: Assets/_Prefabs/Boss_PrimevalHorror.prefab' with importer (PrefabImporter)
+Imported 'GUID: 84e12ced10c1b4447b00992a915fed67' -> (Import Result ID: '7e82bbeae24eef68c974a149687c5f95') in 0.002 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=38ccf7268bc194f81ca920ac3867a1e6 DependenciesID=79a2ad8f1d64ea99f97d0e5217c4d005 StaticDependenciesID=365f1e258d3cad12c09d1ecceaf2eb75 
+Asset Pipeline Refresh (id=ee691efc9f0de4e389b4b6ff69d49d33): Total: 0.016 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[World5ArenaBuilder] Saved Assets/_Prefabs/Boss_PrimevalHorror.prefab
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:CreatePrimevalHorrorBossPrefab (UnityEngine.GameObject) (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:237)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:33)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 237)
+
+Importing 'GUID: f5585fa1478814abf9f533198ba1f1ac - Path: Assets/_Materials/M_ContinuousBaseGround_W5.mat' with importer (NativeFormatImporter)
+Imported 'GUID: f5585fa1478814abf9f533198ba1f1ac' -> (Import Result ID: 'fec3df2a611ba57f5abdd2d3b7f4bb6e') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=f37d14fafade50c327dbd75cf93a753f DependenciesID=9b75e339072b382565305c9f675ead31 StaticDependenciesID=691d42e59a26c4ca3b105836311e6b06 
+Asset Pipeline Refresh (id=0f7a2e80e2e424551bf0ca4dea17653b): Total: 0.015 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: f5585fa1478814abf9f533198ba1f1ac - Path: Assets/_Materials/M_ContinuousBaseGround_W5.mat' with importer (NativeFormatImporter)
+Imported 'GUID: f5585fa1478814abf9f533198ba1f1ac' -> (Import Result ID: 'f71a466e9a8a257173750b082fd90d26') in 0.000 seconds [static dependencies only]. Details - ImportResultOutputID=f37d14fafade50c327dbd75cf93a753f DependenciesID=13a7aedec5700a82c076de37308d5845 StaticDependenciesID=a3377906113c7e90aa1db95b1609badb 
+Asset Pipeline Refresh (id=d4a8f6224f0fc4745b60e6b0d064f30e): Total: 0.013 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[World5ArenaBuilder] Created/Updated Assets/_Materials/M_ContinuousBaseGround_W5.mat
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:CreateEclipseGroundMaterial () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:261)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:36)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 261)
+
+Opening scene 'Assets/_Scenes/MainGame.unity'
+Unloading 28 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/_Scenes/MainGame.unity'
+	Deserialize:            41.024 ms
+	Integration:            68.956 ms
+	Integration of assets:  4.717 ms
+	Thread Wait Time:       -0.006 ms
+	Total Operation Time:   114.691 ms
+Unloading 503 unused Assets / (0.5 MB). Loaded Objects now: 13236.
+Memory consumption went from 230.5 MB to 230.0 MB.
+Total: 4.613041 ms (FindLiveObjects: 0.323084 ms CreateObjectMapping: 0.076666 ms MarkObjects: 3.933375 ms  DeleteObjects: 0.176042 ms)
+
+Worker ready: AssetImportWorkerHW0 0
+[WorldEnvironmentController] Applied WORLD 1 (The Cursed Farm) environment profile.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.WorldEnvironmentController:ApplyEnvironment (int) (at Assets/_Scripts/Environment/WorldEnvironmentController.cs:413)
+CursedHarvest.Editor.World5ArenaBuilder:AssembleMainGameWorld5 (UnityEngine.GameObject,UnityEngine.GameObject,UnityEngine.Material) (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:636)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:39)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Environment/WorldEnvironmentController.cs Line: 413)
+
+Importing 'GUID: 11c76e98a75e040088acdc8b82343628 - Path: Assets/_Scenes/MainGame.unity' with importer (DefaultImporter)
+Imported 'GUID: 11c76e98a75e040088acdc8b82343628' -> (Import Result ID: 'b5dfd7d6e8198c6ae1662523cb671d81') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=a80e084da98de1eb26bfd77dba950449 DependenciesID=67df96ab647748941c8c847d68f0c353 StaticDependenciesID=65f9f0b0cad15fe66ac3e9915c0cfaec 
+Asset Pipeline Refresh (id=f80b804483039488c885a316b4c64356): Total: 0.016 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[World5ArenaBuilder] Successfully assembled Environment_W5 in MainGame scene!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:AssembleMainGameWorld5 (UnityEngine.GameObject,UnityEngine.GameObject,UnityEngine.Material) (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:643)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:39)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 643)
+
+[World5ArenaBuilder] WORLD 5 Build Complete!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5ArenaBuilder:BuildWorld5 () (at Assets/_Scripts/Editor/World5ArenaBuilder.cs:41)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:42)
+
+(Filename: Assets/_Scripts/Editor/World5ArenaBuilder.cs Line: 41)
+
+
+--- RUNNING WORLD 5 VERIFICATION TESTS ---
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:45)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+
+[TEST 1/6] Verifying World 5 Environment Integrity & Landmarks...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:88)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Landmark verified: 'Landmark_1_CentralEclipseAltar' (8 elements)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:153)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Landmark verified: 'Landmark_2_ObsidianCrater' (7 elements)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:153)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Landmark verified: 'Landmark_3_SunkenCatacombRuins' (4 elements)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:153)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Landmark verified: 'Landmark_4_UmbralShrine' (7 elements)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:153)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Landmark verified: 'Landmark_5_AbyssalGate' (3 elements)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:153)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Perimeter barrier verified (98 barrier elements)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:163)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Eclipse_Void_Particles particle system verified
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:172)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[TEST 1/6 PASSED] World 5 Environment & 5 Landmarks fully intact!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorld5Environment (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:174)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:48)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+
+[TEST 2/6] Verifying Eclipse Herald (Wave 10 Mid-Boss) Prefab...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyEclipseHeraldBossPrefab (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:180)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:51)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Eclipse Herald verified: HP=3400, RayRange=10m, RayDmg=30, ShockwaveRad=7.5m
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyEclipseHeraldBossPrefab (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:222)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:51)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[TEST 2/6 PASSED] Eclipse Herald Mid-Boss fully validated!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyEclipseHeraldBossPrefab (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:223)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:51)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+
+[TEST 3/6] Verifying Primeval Horror (Wave 20 Final Boss) Prefab...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyPrimevalHorrorBossPrefab (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:229)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:54)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Primeval Horror verified: HP=5200, NovaRad=13m, NovaDmg=36, CleaveDmg=42
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyPrimevalHorrorBossPrefab (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:280)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:54)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ VoidRiftHazardPool prefab verified
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyPrimevalHorrorBossPrefab (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:281)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:54)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[TEST 3/6 PASSED] Primeval Horror Final Boss fully validated!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyPrimevalHorrorBossPrefab (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:282)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:54)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+
+[TEST 4/6] Verifying Wave 10 Mid-Boss & Wave 20 Final Boss Wave Routing...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyBossWaveRouting (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:288)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:57)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ SpawnDirector serialized references for Eclipse Herald and Primeval Horror verified!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyBossWaveRouting (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:339)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:57)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Wave 10 routing: Mid-Boss (non-final, run continues)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyBossWaveRouting (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:342)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:57)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Wave 20 routing: Final Boss (final, unlocks world 5 completion & victory)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyBossWaveRouting (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:343)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:57)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[TEST 4/6 PASSED] Dual-Boss wave routing successfully verified!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyBossWaveRouting (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:344)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:57)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+
+[TEST 5/6] Verifying Worlds 1-4 Zero Regression & World 5 Progression...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:350)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[WorldEnvironmentController] Applied WORLD 1 (The Cursed Farm) environment profile.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.WorldEnvironmentController:ApplyEnvironment (int) (at Assets/_Scripts/Environment/WorldEnvironmentController.cs:413)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:359)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Environment/WorldEnvironmentController.cs Line: 413)
+
+  ✓ World 1: 100% active, zero leakage
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:373)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[WorldEnvironmentController] Applied WORLD 4 (The Bloodwood Timber) environment profile.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.WorldEnvironmentController:ApplyEnvironment (int) (at Assets/_Scripts/Environment/WorldEnvironmentController.cs:281)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:376)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Environment/WorldEnvironmentController.cs Line: 281)
+
+  ✓ World 4: 100% active, zero leakage
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:390)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[WorldEnvironmentController] Applied WORLD 5 (The Eternal Eclipse) environment profile.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.WorldEnvironmentController:ApplyEnvironment (int) (at Assets/_Scripts/Environment/WorldEnvironmentController.cs:236)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:393)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Environment/WorldEnvironmentController.cs Line: 236)
+
+  ✓ World 5: 100% active, zero leakage
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:407)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[WorldEnvironmentController] Applied WORLD 1 (The Cursed Farm) environment profile.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.WorldEnvironmentController:ApplyEnvironment (int) (at Assets/_Scripts/Environment/WorldEnvironmentController.cs:413)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:410)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Environment/WorldEnvironmentController.cs Line: 413)
+
+  ✓ World 5 unlock requirement verified (requires World 4 completion)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:420)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[TEST 5/6 PASSED] Zero leakage verified across all 5 worlds!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyWorldsRegressionAndProgression (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:422)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:60)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+
+[TEST 6/6] Verifying Meta Upgrades & UI Consistency for World 5...
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyUIAndMetaConsistency (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:428)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:63)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Meta multipliers verified: Power=1.00x, Haste=1.00x, Agility=1.00x, Vitality=+7
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyUIAndMetaConsistency (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:445)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:63)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ World 5 Theme Color: RGBA(0.650, 0.250, 0.850, 1.000)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyUIAndMetaConsistency (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:453)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:63)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[TEST 6/6 PASSED] Meta economy & UI configuration consistent!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:VerifyUIAndMetaConsistency (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:455)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:63)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+
+[QA RESULTS] Tests Passed: 6/6
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:65)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+
+--- CAPTURING WORLD 5 SCREENSHOTS ---
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:68)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[WorldEnvironmentController] Applied WORLD 5 (The Eternal Eclipse) environment profile.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.WorldEnvironmentController:ApplyEnvironment (int) (at Assets/_Scripts/Environment/WorldEnvironmentController.cs:236)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:470)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Environment/WorldEnvironmentController.cs Line: 236)
+
+  ✓ Captured screenshot: World5_ArenaOverview.png (279 KB)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:567)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Captured screenshot: World5_CentralEclipseAltar.png (227 KB)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:567)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Captured screenshot: World5_ObsidianCrater.png (150 KB)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:567)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Captured screenshot: World5_CatacombRuins.png (167 KB)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:567)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Captured screenshot: World5_UmbralShrine.png (156 KB)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:567)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Captured screenshot: World5_MidBoss_Herald.png (144 KB)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:567)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Captured screenshot: World5_FinalBoss_PrimevalHorror.png (161 KB)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:567)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+  ✓ Captured screenshot: World5_Gameplay.png (206 KB)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:567)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[WorldEnvironmentController] Applied WORLD 1 (The Cursed Farm) environment profile.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.WorldEnvironmentController:ApplyEnvironment (int) (at Assets/_Scripts/Environment/WorldEnvironmentController.cs:413)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:580)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Environment/WorldEnvironmentController.cs Line: 413)
+
+[SCREENSHOTS] All 8 World 5 screenshots captured and saved to workspace and brain artifacts!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:CaptureWorld5Screenshots (System.Action`1<string>,System.Action`1<string>) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:583)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:69)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+=================================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:71)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[WORLD 5 QA SUITE] Execution Complete!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:72)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+=================================================================
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:73)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+[QA] Log written to world5_qa_log.txt
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:23)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+CursedHarvest.Editor.World5SetupAndQA/<>c__DisplayClass2_0:<RunSetupAndQA>b__0 (string) (at Assets/_Scripts/Editor/World5SetupAndQA.cs:22)
+CursedHarvest.Editor.World5SetupAndQA:RunSetupAndQA () (at Assets/_Scripts/Editor/World5SetupAndQA.cs:82)
+
+(Filename: Assets/_Scripts/Editor/World5SetupAndQA.cs Line: 22)
+
+Thread 0xc7f66f000 may have been prematurely finalized
+Batchmode quit successfully invoked - shutting down!
+Killing ADB server in 0.038285 seconds.
+Importing 'GUID: 55b6a6098e1f4d44486ac3652a215970 - Path: Assets/Synty/PolygonGeneric/Materials/Generic_Plaster.mat' with importer (NativeFormatImporter)
+Imported 'GUID: 55b6a6098e1f4d44486ac3652a215970' -> (Import Result ID: 'c6c2c03dfbd571bbcf269d938ba91e7b') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=d247f63b0620574f9906b52e7f9ea5ef DependenciesID=847bb3beac92da61cf2ad271b1ae0c4a StaticDependenciesID=4dcc910757b8dc84b09e4c9fde7a7dfa 
+Importing 'GUID: db8c29b5f8b2a2e40b477b54206d0456 - Path: Assets/Synty/PolygonGeneric/Materials/Generic_Concrete.mat' with importer (NativeFormatImporter)
+Imported 'GUID: db8c29b5f8b2a2e40b477b54206d0456' -> (Import Result ID: 'be23532ef4d73972f8706374a5719232') in 0.000 seconds [static dependencies only]. Details - ImportResultOutputID=0cfdc228977681d127aabeaec14b5715 DependenciesID=d4e2dd1f3366f1219d1ef93462d8548b StaticDependenciesID=55cc5d298001ae419a5fa3f7f210eff1 
+Importing 'GUID: ce0a83df77763204a92ca89f1eb6e21c - Path: Assets/Synty/PolygonGeneric/Materials/Generic_Brick.mat' with importer (NativeFormatImporter)
+Imported 'GUID: ce0a83df77763204a92ca89f1eb6e21c' -> (Import Result ID: 'ed8dbcdf3e32dcae2615e2d45809b953') in 0.000 seconds [static dependencies only]. Details - ImportResultOutputID=cc59043632c7887e7609f7cd30c66bd0 DependenciesID=1e9c2adcd0779aeb4398a3fd6154e3f7 StaticDependenciesID=c17e7c45399700a6b2b70822517833df 
+Thread 0xc5eb8b000 may have been prematurely finalized
+Asset Pipeline Refresh (id=0a8828094535440cea8f1d23894b6dd6): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+Apagando Servidor de MSBuild...
+Apagando Servidor del compilador de VB o C#...
+Servidor del compilador de VB o C# se apagó correctamente.
+Thread 0x16cb13000 may have been prematurely finalized
+Thread 0x16ccb7000 may have been prematurely finalized
+Thread 0x16c9fb000 may have been prematurely finalized
+Thread 0x16ca87000 may have been prematurely finalized
+Thread 0x16cd43000 may have been prematurely finalized
+Thread 0x16cb9f000 may have been prematurely finalized
+Thread 0x16cc2b000 may have been prematurely finalized
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+[Licensing::IpcConnector] LicenseClient-logmat-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-logmat channel disconnected successfully.
+Servidor de MSBuild se apagó correctamente.
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+Shut down UDS service system complete
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+debugger-agent: Unable to listen on 45
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0
+[Package Manager] Server process was shutdown

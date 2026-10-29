@@ -21,11 +21,12 @@ namespace CursedHarvest
         public static readonly Color ColBackground = new Color(0.07f, 0.08f, 0.06f, 0.98f);    // #121510
         public static readonly Color ColDarkPanel = new Color(0.11f, 0.13f, 0.10f, 0.96f);     // #1B211A
         public static readonly Color ColElevated = new Color(0.15f, 0.17f, 0.13f, 0.98f);      // #252C22
-        public static readonly Color ColTextPrimary = new Color(0.94f, 0.91f, 0.84f, 1.0f);    // #EFE7D5
-        public static readonly Color ColTextMuted = new Color(0.69f, 0.65f, 0.58f, 1.0f);      // #AFA795
-        public static readonly Color ColHarvestGold = new Color(0.84f, 0.60f, 0.22f, 1.0f);    // #D59A38
-        public static readonly Color ColCursedGreen = new Color(0.45f, 0.53f, 0.29f, 1.0f);    // #74884B
-        public static readonly Color ColDanger = new Color(0.64f, 0.28f, 0.24f, 1.0f);         // #A4473D
+        // v1.1.2 contrast-audited palette (see UIFonts): all >= 7:1 on ColDarkPanel
+        public static readonly Color ColTextPrimary = new Color(0.96f, 0.93f, 0.84f, 1.0f);    // warm bone
+        public static readonly Color ColTextMuted = new Color(0.80f, 0.76f, 0.66f, 1.0f);      // aged parchment (was dim #AFA795)
+        public static readonly Color ColHarvestGold = new Color(1.00f, 0.78f, 0.30f, 1.0f);    // bright harvest gold (was #D59A38)
+        public static readonly Color ColCursedGreen = new Color(0.62f, 0.85f, 0.45f, 1.0f);    // readable green (was muted #74884B)
+        public static readonly Color ColDanger = new Color(1.00f, 0.45f, 0.38f, 1.0f);         // readable red (was #A4473D)
 
         [Header("Screen Roots")]
         [SerializeField] private GameObject homeScreenRoot;
@@ -168,8 +169,7 @@ namespace CursedHarvest
         {
             if (cachedFont == null)
             {
-                cachedFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                if (cachedFont == null) cachedFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                cachedFont = UIFonts.Body;
             }
         }
 
@@ -532,7 +532,15 @@ namespace CursedHarvest
                     card.difficultyBadgeText.text = config != null ? config.difficultyTier : "NORMAL";
                     card.difficultyBadgeText.color = GetTierColor(config != null ? config.difficultyTier : "");
                 }
-                if (card.arenaSummaryText != null) card.arenaSummaryText.text = "5 Unique Arenas  •  Wave 5 Boss Encounter";
+                if (card.arenaSummaryText != null)
+                {
+                    int doneArenas = 0;
+                    if (GameSession.Instance != null)
+                    {
+                        for (int a = 1; a <= 5; a++) if (GameSession.Instance.IsArenaCompleted((wId - 1) * 5 + a)) doneArenas++;
+                    }
+                    card.arenaSummaryText.text = $"{doneArenas}/5 Arenas cleared  •  {(wId == 3 ? "15 Waves" : "10 Waves")}";
+                }
 
                 if (card.statusBadgeText != null)
                 {
@@ -677,7 +685,12 @@ namespace CursedHarvest
             }
             if (selectedArenaBossSummaryText != null && selectedArena != null && selectedArena.bossEncounters != null && selectedArena.bossEncounters.Length > 0)
             {
-                selectedArenaBossSummaryText.text = $"WAVE 5 BOSS: {selectedArena.bossEncounters[0].bossName} ({selectedArena.bossEncounters[0].bossTitle})";
+                var finalEnc = selectedArena.bossEncounters[selectedArena.bossEncounters.Length - 1];
+                if (selectedArena.worldId == 3)
+                    selectedArenaBossSummaryText.text = $"15 WAVES  •  MID-BOSS: WAVE 10  •  FINAL BOSS: WAVE 15 — {finalEnc.bossName}";
+                else
+                    selectedArenaBossSummaryText.text = $"10 WAVES  •  FINAL BOSS: WAVE 10 — {finalEnc.bossName}";
+                selectedArenaBossSummaryText.color = ColDanger;
             }
             if (startRunButton != null)
             {
@@ -867,7 +880,6 @@ namespace CursedHarvest
             Image bannerImg = topBanner.AddComponent<Image>();
             FolkHorrorUITheme.StylePanel(bannerImg, true);
 
-            CreateLabel(topBanner.transform, "StudioLabel", "LOGMAT PRESENTS", 22, FontStyle.Bold, ColTextMuted, new Vector2(0f, 106f), new Vector2(880f, 34f));
 
             Text titleText = CreateLabel(topBanner.transform, "TitleText", "CURSED HARVEST.", 74, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 38f), new Vector2(940f, 92f));
             Outline titleOutline = titleText.gameObject.AddComponent<Outline>();
@@ -906,7 +918,7 @@ namespace CursedHarvest
             homeSettingsButton = CreateMenuButton(deckObj.transform, "SettingsButton", "SETTINGS", new Vector2(0f, -74f), new Vector2(780f, 96f), ColElevated, 30);
             homeCreditsButton = CreateMenuButton(deckObj.transform, "CreditsButton", "CREDITS", new Vector2(0f, -192f), new Vector2(780f, 92f), ColElevated, 28);
 
-            CreateLabel(parent, "VersionText", "LOGMAT  •  CURSED HARVEST. v1.1.0  •  ANDROID PORTRAIT EDITION", 18, FontStyle.Normal, ColTextMuted, new Vector2(0f, -915f), new Vector2(960f, 36f));
+            CreateLabel(parent, "VersionText", "v1.1.2", 18, FontStyle.Normal, ColTextMuted, new Vector2(0f, -915f), new Vector2(960f, 36f));
         }
 
         private void BuildWorldSelectScreenContent(Transform parent)
@@ -981,7 +993,7 @@ namespace CursedHarvest
                 Text tWNum = CreateLabel(cardObj.transform, "WorldNumber", $"WORLD {worldId}", 24, FontStyle.Bold, ColHarvestGold, new Vector2(0f, 96f), new Vector2(400f, 32f), TextAnchor.MiddleLeft);
                 Text tWName = CreateLabel(cardObj.transform, "WorldName", cfg != null ? cfg.displayName : $"WORLD {worldId}", 34, FontStyle.Bold, ColTextPrimary, new Vector2(100f, 44f), new Vector2(600f, 44f), TextAnchor.MiddleLeft);
                 Text tDiff = CreateLabel(cardObj.transform, "DifficultyBadge", cfg != null ? cfg.difficultyTier : "NORMAL", 24, FontStyle.Bold, GetTierColor(cfg != null ? cfg.difficultyTier : ""), new Vector2(340f, 96f), new Vector2(240f, 32f), TextAnchor.MiddleRight);
-                Text tArenas = CreateLabel(cardObj.transform, "ArenaSummary", "5 Unique Arenas  •  Wave 5 Boss Encounter", 22, FontStyle.Normal, ColTextMuted, new Vector2(100f, -14f), new Vector2(600f, 34f), TextAnchor.MiddleLeft);
+                Text tArenas = CreateLabel(cardObj.transform, "ArenaSummary", "5 Arenas  •  10 / 10 / 15 Waves", 22, FontStyle.Normal, ColTextMuted, new Vector2(100f, -14f), new Vector2(600f, 34f), TextAnchor.MiddleLeft);
                 Text tStat = CreateLabel(cardObj.transform, "StatusBadge", worldId == 1 ? "★ UNLOCKED — TAP TO CHOOSE ARENA" : $"LOCKED (Complete World {worldId - 1})", 22, FontStyle.Bold, worldId == 1 ? ColHarvestGold : ColDanger, new Vector2(100f, -76f), new Vector2(600f, 34f), TextAnchor.MiddleLeft);
 
                 WorldCardUIElements elem = new WorldCardUIElements
@@ -1089,7 +1101,7 @@ namespace CursedHarvest
             FolkHorrorUITheme.StylePanel(detailsBg, true);
 
             selectedArenaDescText = CreateLabel(detailsObj.transform, "ArenaDesc", "A moonlit rural farm under eerie quietude.", 22, FontStyle.Normal, ColTextPrimary, new Vector2(0f, 38f), new Vector2(900f, 60f), TextAnchor.MiddleLeft);
-            selectedArenaBossSummaryText = CreateLabel(detailsObj.transform, "BossSummary", "WAVE 5 BOSS: THE LAST HARVEST", 24, FontStyle.Bold, ColDanger, new Vector2(0f, -32f), new Vector2(900f, 40f), TextAnchor.MiddleLeft);
+            selectedArenaBossSummaryText = CreateLabel(detailsObj.transform, "BossSummary", "FINAL BOSS: WAVE 10", 24, FontStyle.Bold, ColDanger, new Vector2(0f, -32f), new Vector2(900f, 40f), TextAnchor.MiddleLeft);
 
             startRunButton = CreateMenuButton(parent, "StartRunButton", "ENTER ARENA", new Vector2(0f, -720f), new Vector2(940f, 126f), ColHarvestGold, 38);
             startRunButtonText = startRunButton.GetComponentInChildren<Text>();
@@ -1325,20 +1337,20 @@ namespace CursedHarvest
             FolkHorrorUITheme.StylePanel(cardBg, true);
 
             string creditsText =
-                "CURSED HARVEST. — MOBILE v1.1.0\n" +
-                "RELEASE EDITION\n\n" +
-                "DEVELOPED & PUBLISHED BY\n" +
+                "CURSED HARVEST.\n" +
+                "v1.1.2\n\n" +
+                "DEVELOPED BY\n" +
                 "LOGMAT\n\n" +
-                "CORE GAME ARCHITECTURE\n" +
-                "LOGMAT Interactive Systems\n\n" +
-                "3D ASSETS & ARTISTRY\n" +
-                "Synty Studios (Polygon Generic, Halloween Masks)\n" +
-                "Original Dark Folk-Horror Mobile Branding\n\n" +
-                "AUDIO & ATMOSPHERE\n" +
+                "SYNTY SPOOKY JAM\n" +
+                "Originally created for the Synty Spooky Jam 2026.\n" +
+                "Final placement: #40.\n\n" +
+                "3D ASSETS\n" +
+                "Synty Studios (Polygon Generic, Halloween Masks, Pumpkins)\n\n" +
+                "TYPOGRAPHY\n" +
+                "Cinzel — Natanael Gama (SIL OFL 1.1)\n" +
+                "Inter — Rasmus Andersson (SIL OFL 1.1)\n\n" +
+                "AUDIO\n" +
                 "Folk Horror Drone & Procedural Synthesizer\n\n" +
-                "MOBILE ARCHITECTURE\n" +
-                "Native Android Portrait Pipeline\n" +
-                "Touch-First Mobile Navigation & Controls\n\n" +
                 "DEDICATED TO ALL OCCULT ROGUELIKE HARVESTERS";
 
             Text tCredits = CreateLabel(cardObj.transform, "CreditsBody", creditsText, 24, FontStyle.Normal, ColTextPrimary, Vector2.zero, new Vector2(880f, 1300f), TextAnchor.MiddleCenter);
@@ -1401,9 +1413,10 @@ namespace CursedHarvest
             rt.sizeDelta = size;
 
             Text t = obj.AddComponent<Text>();
-            t.font = cachedFont;
+            t.font = UIFonts.ForSize(fontSize, style);
             t.fontSize = fontSize;
-            t.fontStyle = style;
+            t.fontStyle = (fontSize >= 40) ? FontStyle.Normal : style; // Cinzel Bold is already bold
+            t.supportRichText = false;
             t.alignment = align;
             t.color = color;
             t.text = content;

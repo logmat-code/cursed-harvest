@@ -1,0 +1,209 @@
+-------------------
+Folder Name: Prefabs
+-------------------
+Prefab Name: SM_Plague_Mask_01
+    Mesh Name: SM_Plague_Mask_01
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Plague_Mask_Strap
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+
+Prefab Name: SM_Prop_Alpaca_Mask_01_Angel
+    Mesh Name: SM_Prop_Alpaca_Mask_01_Angel
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Devil_Ears
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Glasses
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Halo
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Mohawk
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Eyepatch
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Witch_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+
+Prefab Name: SM_Prop_Alpaca_Mask_01_Devil
+    Mesh Name: SM_Prop_Alpaca_Mask_01_Devil
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Devil_Ears
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Glasses
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Halo
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Mohawk
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Eyepatch
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Witch_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+
+Prefab Name: SM_Prop_Alpaca_Mask_01_Pirate
+    Mesh Name: SM_Prop_Alpaca_Mask_01_Pirate
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Devil_Ears
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Glasses
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Halo
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Mohawk
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Eyepatch
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Witch_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+
+Prefab Name: SM_Prop_Alpaca_Mask_01_Rockstar
+    Mesh Name: SM_Prop_Alpaca_Mask_01_Rockstar
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Devil_Ears
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Glasses
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Halo
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Mohawk
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Eyepatch
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Witch_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+
+Prefab Name: SM_Prop_Alpaca_Mask_01_Witch
+    Mesh Name: SM_Prop_Alpaca_Mask_01_Witch
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Devil_Ears
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Glasses
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Halo
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Mohawk
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Eyepatch
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Pirate_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Alpaca_Witch_Hat
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+
+Prefab Name: SM_Prop_Demonic_Mask_01
+    Mesh Name: SM_Prop_Demonic_Mask_01
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_Demonic_Mask_Strap
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+
+Prefab Name: SM_Prop_LED_Mask_01
+    Mesh Name: SM_Prop_LED_Mask_01
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+    Mesh Name: SM_Prop_LED_Mask_Strap
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+
+Prefab Name: SM_Prop_Pumpkin_Mask_01
+    Mesh Name: SM_Prop_Pumpkin_Mask_01
+        Slot: PolygonHalloweenMasks_01
+            Albedo: PolygonHalloweenMask_01.png (_Albedo_Map)
+            Emission: PolygonHalloweenMask_01_Emissive.png (_Emission_Map)
+

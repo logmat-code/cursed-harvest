@@ -178,7 +178,7 @@ namespace CursedHarvest
             if (resumeButton != null) { resumeButton.onClick.RemoveAllListeners(); resumeButton.onClick.AddListener(ResumeGame); }
             if (restartButton != null) { restartButton.onClick.RemoveAllListeners(); restartButton.onClick.AddListener(RestartRun); }
             if (pauseSettingsButton != null) { pauseSettingsButton.onClick.RemoveAllListeners(); pauseSettingsButton.onClick.AddListener(OpenSettingsModal); }
-            if (pauseWorldSelectButton != null) { pauseWorldSelectButton.onClick.RemoveAllListeners(); pauseWorldSelectButton.onClick.AddListener(ReturnToWorldSelect); }
+            if (pauseWorldSelectButton != null) { pauseWorldSelectButton.onClick.RemoveAllListeners(); pauseWorldSelectButton.onClick.AddListener(ReturnToArenaSelect); }
             if (pauseHomeButton != null) { pauseHomeButton.onClick.RemoveAllListeners(); pauseHomeButton.onClick.AddListener(ReturnToHome); }
 
             if (settingsMusicToggleButton != null) { settingsMusicToggleButton.onClick.RemoveAllListeners(); settingsMusicToggleButton.onClick.AddListener(ToggleMusicSetting); }
@@ -376,6 +376,7 @@ namespace CursedHarvest
         private void Update()
         {
             UpdateTouchControlsVisibility();
+            if (pendingLevelUps > 0) TryOpenQueuedLevelUp();
 
             // Android Back Button / Escape Routing
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -517,7 +518,12 @@ namespace CursedHarvest
 
             if (healthText != null)
             {
-                healthText.text = $"{Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
+                int ci = Mathf.CeilToInt(current), mi = Mathf.CeilToInt(max);
+                if (ci != _cacheHpCur || mi != _cacheHpMax)
+                {
+                    _cacheHpCur = ci; _cacheHpMax = mi;
+                    healthText.text = $"{ci} / {mi}";
+                }
             }
         }
 
@@ -620,24 +626,50 @@ namespace CursedHarvest
 
         public void UpdateSeedCountHUD(int count)
         {
-            if (seedCountText != null)
+            if (seedCountText != null && count != _cacheSeeds)
             {
+                _cacheSeeds = count;
                 seedCountText.text = $"✦ {count}";
                 seedCountText.color = count > 0 ? new Color(0.35f, 0.95f, 0.55f) : new Color(0.65f, 0.72f, 0.65f);
             }
         }
 
-        // ==================== LEVEL UP MODAL ====================
+        // ==================== LEVEL UP MODAL (v1.1.2: queued, paced, boss-safe) ====================
+        private const float MinSecondsBetweenQueuedLevelUps = 9f; // gameplay seconds between chained upgrade windows
+        private float nextLevelUpAllowedTime = 0f;
+        private SpawnDirector cachedSpawnDirector;
+        private float levelUpGateLogTimer;
+
+        /// <summary>True when a queued Level Up may be shown right now (never over boss intros, modals, ads or end screens).</summary>
+        private bool CanOpenQueuedLevelUp()
+        {
+            if (IsModalOpen || isPaused) return false;
+            if (Time.timeScale <= 0f) return false;
+            if (Time.time < nextLevelUpAllowedTime) return false;
+            if (AdsManager.Instance != null && AdsManager.Instance.IsAdShowing) return false;
+            if (cachedSpawnDirector == null) cachedSpawnDirector = FindAnyObjectByType<SpawnDirector>();
+            if (cachedSpawnDirector != null)
+            {
+                if (cachedSpawnDirector.IsBossIntro) return false;
+                // Also hold the window while the boss is just spawning in (intro just finished, boss not alive yet)
+                if (cachedSpawnDirector.IsBossWave && !cachedSpawnDirector.BossSpawned) return false;
+            }
+            return true;
+        }
+
+        private void TryOpenQueuedLevelUp()
+        {
+            if (pendingLevelUps <= 0) return;
+            if (!CanOpenQueuedLevelUp()) return;
+            pendingLevelUps--;
+            OpenLevelUpModal();
+        }
+
         public void ShowLevelUp(int newLevel)
         {
             SetLevelText(newLevel);
-            if (levelUpModal != null && levelUpModal.activeSelf)
-            {
-                pendingLevelUps++;
-                return;
-            }
-
-            OpenLevelUpModal();
+            pendingLevelUps++;        // always queue; Update() opens it as soon as it is safe
+            TryOpenQueuedLevelUp();
         }
 
         public void OpenLevelUpModal()
@@ -728,9 +760,8 @@ namespace CursedHarvest
 
             if (pendingLevelUps > 0)
             {
-                pendingLevelUps--;
-                OpenLevelUpModal();
-                return;
+                // Do NOT chain windows back-to-back: return to gameplay, next queued upgrade comes after a pacing gap
+                nextLevelUpAllowedTime = Time.time + MinSecondsBetweenQueuedLevelUps;
             }
 
             if (levelUpModal != null) levelUpModal.SetActive(false);
@@ -788,12 +819,21 @@ namespace CursedHarvest
             UpdateIntermissionHUD(seconds);
         }
 
+        private int _cacheWave = -1, _cacheRemaining = -1, _cacheTotalWaves = -1;
+        private int _cacheHpCur = -1, _cacheHpMax = -1;
+        private int _cacheSeeds = -1;
+        private float _cacheXpPct = -1f;
+
         public void UpdateWaveHUD(int wave, int remaining, int total)
         {
             WorldConfig cfg = (GameSession.Instance != null && GameSession.Instance.CurrentWorldConfig != null)
                 ? GameSession.Instance.CurrentWorldConfig
                 : WorldConfig.GetConfig(1);
             int totalArenaWaves = (cfg != null && cfg.activeArena != null) ? cfg.activeArena.totalWaves : ((cfg != null) ? cfg.totalWaves : 10);
+
+            // Skip string rebuilds / canvas dirtying when nothing changed
+            if (wave == _cacheWave && remaining == _cacheRemaining && totalArenaWaves == _cacheTotalWaves) return;
+            _cacheWave = wave; _cacheRemaining = remaining; _cacheTotalWaves = totalArenaWaves;
 
             if (waveText != null)
             {
@@ -830,6 +870,7 @@ namespace CursedHarvest
         {
             AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
             isPaused = !isPaused;
+            if (isPaused) { RefreshPauseInfo(); if (virtualJoystick != null) virtualJoystick.ResetJoystick(true); }
             if (pauseModal != null) pauseModal.SetActive(isPaused);
             if (!isPaused && settingsModal != null) settingsModal.SetActive(false);
             Time.timeScale = isPaused ? 0f : 1f;
@@ -840,6 +881,8 @@ namespace CursedHarvest
         {
             if (IsModalOpen) return;
             isPaused = true;
+            RefreshPauseInfo();
+            if (virtualJoystick != null) virtualJoystick.ResetJoystick(true);
             if (pauseModal != null) pauseModal.SetActive(true);
             Time.timeScale = 0f;
             UpdateTouchControlsVisibility();
@@ -935,6 +978,15 @@ namespace CursedHarvest
             {
                 UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             }
+        }
+
+        public void ReturnToArenaSelect()
+        {
+            AudioManager.Instance?.PlaySound(SoundType.ButtonClick);
+            Time.timeScale = 1f;
+            if (virtualJoystick != null) virtualJoystick.ResetJoystick(true);
+            if (GameSession.Instance != null) GameSession.Instance.ReturnToArenaSelect();
+            else ExecuteReturnToWorldSelect();
         }
 
         public void ReturnToWorldSelect()
@@ -1257,6 +1309,8 @@ namespace CursedHarvest
                 safeAreaRoot = existingSafe.GetComponent<RectTransform>();
                 virtualJoystick.EnsureChildVisuals();
                 dashTouchButton.EnsureChildVisuals();
+                RectTransform dashRt = dashTouchButton.GetComponent<RectTransform>();
+                if (dashRt != null) { dashRt.sizeDelta = new Vector2(214, 214); dashRt.anchoredPosition = new Vector2(-190, 250); }
                 return;
             }
 
@@ -1435,19 +1489,17 @@ namespace CursedHarvest
             RectTransform rtTouch = touchControlsRoot.GetComponent<RectTransform>();
             StretchFull(rtTouch);
 
-            // Virtual Joystick (Bottom-Left: 240x240 at (195, 225))
+            // Floating joystick: this object is now a large invisible MOVE ZONE (EnsureChildVisuals sets its anchors)
             GameObject joyObj = new GameObject("VirtualJoystick", typeof(RectTransform));
             joyObj.transform.SetParent(touchControlsRoot.transform, false);
-            RectTransform rtJoy = joyObj.GetComponent<RectTransform>();
-            SetRect(rtJoy, new Vector2(0, 0), new Vector2(0, 0), new Vector2(0.5f, 0.5f), new Vector2(240, 240), new Vector2(195, 225));
             virtualJoystick = joyObj.AddComponent<VirtualJoystickUI>();
             virtualJoystick.EnsureChildVisuals();
 
-            // Dash Touch Button (Bottom-Right: 172x172 at (-175, 225))
+            // Dash Touch Button (fixed, Bottom-Right) - v1.1.2: larger 214x214 (was 172) for comfortable right-thumb reach
             GameObject dashObj = new GameObject("DashTouchButton", typeof(RectTransform));
             dashObj.transform.SetParent(touchControlsRoot.transform, false);
             RectTransform rtDash = dashObj.GetComponent<RectTransform>();
-            SetRect(rtDash, new Vector2(1, 0), new Vector2(1, 0), new Vector2(0.5f, 0.5f), new Vector2(172, 172), new Vector2(-175, 225));
+            SetRect(rtDash, new Vector2(1, 0), new Vector2(1, 0), new Vector2(0.5f, 0.5f), new Vector2(214, 214), new Vector2(-190, 250));
             dashTouchButton = dashObj.AddComponent<DashTouchButtonUI>();
             dashTouchButton.EnsureChildVisuals();
 
@@ -1564,53 +1616,83 @@ namespace CursedHarvest
             return card;
         }
 
+        // v1.1.2 PAUSE — fully redesigned composition: scrim + banner panel, title/context block,
+        // dominant RESUME CTA, secondary row (RESTART | SETTINGS), quiet exit row (ARENA SELECT | HOME).
+        private Text pauseInfoText;
+
         private GameObject CreatePortraitPauseModal(Font font)
         {
-            GameObject modal = CreateBox(transform, "PauseModal", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero, new Color(0.03f, 0.04f, 0.06f, 0.92f));
+            // Dim scrim (no boxy gray panel): heavy dark vignette over the frozen gameplay
+            GameObject modal = CreateBox(transform, "PauseModal", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero, new Color(0.02f, 0.015f, 0.025f, 0.86f));
+            Image scrimImg = modal.GetComponent<Image>();
+            scrimImg.sprite = null; // flat scrim, not a bordered 9-slice
+            scrimImg.color = new Color(0.02f, 0.015f, 0.025f, 0.86f);
 
+            // Ritual banner: a tall, narrow dark parchment-wood banner, slim gold trim on top and bottom only
             GameObject panel = CreateBox(modal.transform, "Panel",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(820, 940), Vector2.zero,
-                new Color(0.42f, 0.33f, 0.20f, 1f));
+                new Vector2(900, 1180), new Vector2(0, 20),
+                new Color(0.55f, 0.40f, 0.16f, 1f));
 
             GameObject body = CreateBox(panel.transform, "Body",
                 Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f),
-                new Vector2(-6, -6), Vector2.zero,
-                new Color(0.08f, 0.09f, 0.12f, 0.98f));
+                new Vector2(-8, -8), Vector2.zero,
+                new Color(0.075f, 0.06f, 0.07f, 0.97f));
 
-            Text title = CreateLabel(body.transform, "Title", "PAUSED", 54, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(1f, 0.84f, 0.28f), font);
-            SetRect(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(700, 70), new Vector2(0, 340));
+            Text title = CreateLabel(body.transform, "Title", "PAUSED", 76, FontStyle.Bold, TextAnchor.MiddleCenter, UIFonts.Currency, font);
+            SetRect(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(800, 100), new Vector2(0, 470));
 
-            Text sub = CreateLabel(body.transform, "Subtitle", "CURSED HARVEST.", 24, FontStyle.Bold, TextAnchor.MiddleCenter, new Color(0.82f, 0.78f, 0.70f), font);
-            SetRect(sub.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(700, 36), new Vector2(0, 280));
+            // Thin ornamental divider
+            GameObject divider = CreateBox(body.transform, "Divider",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(520, 4), new Vector2(0, 410), new Color(0.85f, 0.62f, 0.22f, 0.9f));
+            Image divImg = divider.GetComponent<Image>();
+            divImg.sprite = null;
+            divImg.color = new Color(0.85f, 0.62f, 0.22f, 0.9f);
 
+            pauseInfoText = CreateLabel(body.transform, "PauseInfo", "WORLD 1  •  ARENA 1-1  •  WAVE 1 / 10", 28, FontStyle.Bold, TextAnchor.MiddleCenter, UIFonts.Primary, font);
+            SetRect(pauseInfoText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(820, 44), new Vector2(0, 350));
+
+            // PRIMARY CTA — RESUME (big, gold)
             resumeButton = CreateSimpleButton(body.transform, "ResumeButton", "RESUME",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(640, 92), new Vector2(0, 155),
-                new Color(0.22f, 0.58f, 0.30f), Color.white, 30, font).GetComponent<Button>();
+                new Vector2(760, 150), new Vector2(0, 190),
+                new Color(0.85f, 0.60f, 0.16f), new Color(0.10f, 0.06f, 0.02f), 46, font).GetComponent<Button>();
 
-            restartButton = CreateSimpleButton(body.transform, "RestartButton", "RESTART RUN",
+            // SECONDARY ROW — RESTART ARENA | SETTINGS
+            restartButton = CreateSimpleButton(body.transform, "RestartButton", "RESTART ARENA",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(640, 92), new Vector2(0, 35),
-                new Color(0.62f, 0.40f, 0.16f), Color.white, 30, font).GetComponent<Button>();
+                new Vector2(370, 108), new Vector2(-195, 20),
+                new Color(0.26f, 0.22f, 0.16f), UIFonts.Primary, 29, font).GetComponent<Button>();
 
             pauseSettingsButton = CreateSimpleButton(body.transform, "SettingsButton", "SETTINGS",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(640, 92), new Vector2(0, -85),
-                new Color(0.26f, 0.28f, 0.35f), Color.white, 30, font).GetComponent<Button>();
+                new Vector2(370, 108), new Vector2(195, 20),
+                new Color(0.26f, 0.22f, 0.16f), UIFonts.Primary, 29, font).GetComponent<Button>();
 
-            pauseWorldSelectButton = CreateSimpleButton(body.transform, "WorldSelectButton", "WORLD SELECT",
+            // QUIET EXIT ROW — ARENA SELECT | HOME (clear, less dominant)
+            pauseWorldSelectButton = CreateSimpleButton(body.transform, "WorldSelectButton", "ARENA SELECT",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(640, 92), new Vector2(0, -205),
-                new Color(0.22f, 0.32f, 0.48f), Color.white, 30, font).GetComponent<Button>();
+                new Vector2(370, 96), new Vector2(-195, -300),
+                new Color(0.16f, 0.14f, 0.15f), UIFonts.Secondary, 27, font).GetComponent<Button>();
 
             pauseHomeButton = CreateSimpleButton(body.transform, "HomeButton", "HOME",
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                new Vector2(640, 92), new Vector2(0, -325),
-                new Color(0.52f, 0.20f, 0.20f), Color.white, 30, font).GetComponent<Button>();
+                new Vector2(370, 96), new Vector2(195, -300),
+                new Color(0.16f, 0.14f, 0.15f), UIFonts.Secondary, 27, font).GetComponent<Button>();
 
             modal.SetActive(false);
             return modal;
+        }
+
+        private void RefreshPauseInfo()
+        {
+            if (pauseInfoText == null) return;
+            ArenaConfig arena = (GameSession.Instance != null) ? GameSession.Instance.CurrentArenaConfig : null;
+            if (cachedSpawnDirector == null) cachedSpawnDirector = FindAnyObjectByType<SpawnDirector>();
+            int wave = cachedSpawnDirector != null ? cachedSpawnDirector.CurrentWave : 1;
+            if (arena != null)
+                pauseInfoText.text = $"WORLD {arena.worldId}  •  ARENA {arena.worldId}-{arena.arenaIndexInWorld}  •  WAVE {wave} / {arena.totalWaves}";
         }
 
         private GameObject CreatePortraitSettingsModal(Font font)
@@ -1778,11 +1860,13 @@ namespace CursedHarvest
             GameObject go = new GameObject(name, typeof(RectTransform), typeof(Text));
             go.transform.SetParent(parent, false);
             Text t = go.GetComponent<Text>();
-            t.font = font;
+            t.font = UIFonts.ForSize(fontSize, style); // v1.1.2: Cinzel (titles >= 40) / Inter (everything else)
             t.text = text;
             t.fontSize = fontSize;
-            t.fontStyle = style;
+            t.fontStyle = (fontSize >= 40) ? FontStyle.Normal : style;
             t.alignment = align;
+            // Contrast guard: lift any dim text color toward the parchment palette so it stays readable on dark panels
+            if (color.grayscale < 0.62f) color = Color.Lerp(color, UIFonts.Secondary, 0.55f);
             t.color = color;
             return t;
         }

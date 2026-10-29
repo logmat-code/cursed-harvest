@@ -1,0 +1,302 @@
+-------------------
+Folder Name: Characters
+-------------------
+Prefab Name: SM_Bean_Cop_01
+    Mesh Name: SM_Bean_Cop_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Bean_Cowboy_01
+    Mesh Name: SM_Bean_Cowboy_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Bean_Female_01
+    Mesh Name: SM_Bean_Female_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Bean_Town_Female_01
+    Mesh Name: SM_Bean_Town_Female_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Character_Female_01
+    Mesh Name: Character_Female_Face_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Character_Male_Face_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Character_Hair_Female_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Character_Hair_Male_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Character_Male_01
+    Mesh Name: Character_Female_Face_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Character_Male_Face_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Character_Hair_Female_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Character_Hair_Male_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+-------------------
+Folder Name: Prefabs
+-------------------
+Prefab Name: SM_Bld_Door_01
+    Mesh Name: SM_Bld_Door_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_CloudRing_01
+    Mesh Name: SM_Generic_CloudRing_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Ground_01
+    Mesh Name: SM_Generic_Ground_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Ground_02
+    Mesh Name: SM_Generic_Ground_02
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Ground_03
+    Mesh Name: SM_Generic_Ground_03
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Ground_04
+    Mesh Name: SM_Generic_Ground_04
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Ground_Flat_01
+    Mesh Name: SM_Generic_Ground_Flat_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Mountains_Grass_02
+    Mesh Name: SM_Generic_Mountains_Grass_02
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Mountains_Soft_01
+    Mesh Name: SM_Generic_Mountains_Soft_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Small_Rocks_01
+    Mesh Name: SM_Generic_Small_Rocks_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Small_Rocks_02
+    Mesh Name: SM_Generic_Small_Rocks_02
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Small_Rocks_03
+    Mesh Name: SM_Generic_Small_Rocks_03
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Small_Rocks_04
+    Mesh Name: SM_Generic_Small_Rocks_04
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Small_Rocks_05
+    Mesh Name: SM_Generic_Small_Rocks_05
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_TreeDead_01
+    Mesh Name: SM_Generic_TreeDead_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_TreeStump_01
+    Mesh Name: SM_Generic_TreeStump_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Tree_01
+    Mesh Name: SM_Generic_Tree_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Tree_02
+    Mesh Name: SM_Generic_Tree_02
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Tree_03
+    Mesh Name: SM_Generic_Tree_03
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Generic_Tree_04
+    Mesh Name: SM_Generic_Tree_04
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonApocalypse_Bld_House_01
+    Mesh Name: SM_PolygonApocalypse_Bld_House_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonCity_Veh_Car_Small_01
+    Mesh Name: SM_PolygonCity_Veh_Car_Small_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: SM_PolygonCity_Veh_Car_Small_Glass
+        Slot: PolygonStarter_Mat_01_Glass (PolygonStarter_Texture_01)
+    Mesh Name: SM_PolygonCity_Veh_Car_Small_Plates
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: SM_PolygonCity_Veh_Car_Small_SteeringW
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: SM_PolygonCity_Veh_Car_Small_Wheel_fl
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: SM_PolygonCity_Veh_Car_Small_Wheel_fr
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: SM_PolygonCity_Veh_Car_Small_Wheel_rl
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: SM_PolygonCity_Veh_Car_Small_Wheel_rr
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_Block_1x1_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_Block_1x1_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_Column_2x3_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_Column_2x3_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_DoorFrame_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_DoorFrame_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_Floor_1x1_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_Floor_1x1_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_Floor_5x5_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_Floor_5x5_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_Ramp_25_1x1_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_Ramp_25_1x1_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_Ramp_45_1x1_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_Ramp_45_1x1_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_Stairs_1x1_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_Stairs_1x1_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_Stairs_1x3_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_Stairs_1x3_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_WallDoor_2x3_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_WallDoor_2x3_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Buildings_WallWindow_2x3_01P
+    Mesh Name: SM_PolygonPrototype_Buildings_WallWindow_2x3_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Icon_Arrow_Small_01
+    Mesh Name: SM_PolygonPrototype_Icon_Arrow_Small_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Icon_Coin_01
+    Mesh Name: SM_PolygonPrototype_Icon_Coin_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Icon_Letter_Question_01
+    Mesh Name: SM_PolygonPrototype_Icon_Letter_Question_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Primitive_Cone_01P
+    Mesh Name: SM_PolygonPrototype_Primitive_Cone_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Primitive_Cylander_01P
+    Mesh Name: SM_PolygonPrototype_Primitive_Cylander_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Primitive_Sphere_01P
+    Mesh Name: SM_PolygonPrototype_Primitive_Sphere_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Primitive_Tube_01P
+    Mesh Name: SM_PolygonPrototype_Primitive_Tube_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Prop_Cone_01
+    Mesh Name: SM_PolygonPrototype_Prop_Cone_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Prop_Crate_03
+    Mesh Name: SM_PolygonPrototype_Prop_Crate_03
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Prop_Ladder_1x2_01P
+    Mesh Name: SM_PolygonPrototype_Prop_Ladder_1x2_01P
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Prop_Sword_01
+    Mesh Name: SM_PolygonPrototype_Prop_Sword_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_PolygonPrototype_Prop_Target_03
+    Mesh Name: SM_PolygonPrototype_Prop_Target_03
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Prop_Plane_Ring_01
+    Mesh Name: SM_Prop_Plane_Ring_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_SimpleSky_Dome_01
+    Mesh Name: SM_SimpleSky_Dome_01
+        Slot: PolygonStarter_SimpleSky_01 (Uses custom shader)
+
+Prefab Name: SM_Veh_Plane_Stunt_01
+    Mesh Name: SM_Veh_Plane_Stunt_01
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Cockpit_Stick
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Crop_Duster
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Flap_fl_01
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Flap_fl_02
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Flap_fr_01
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Flap_fr_02
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Flap_rl_01
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Flap_rr_01
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Flap_Tail
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Glass
+        Slot: PolygonStarter_Mat_01_Glass (PolygonStarter_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Prop
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+    Mesh Name: SM_Veh_Plane_Stunt_01_Wheels
+        Slot: PolygonStarter_Mat_Plane_01 (Polygon_Plane_Texture_01)
+
+Prefab Name: SM_Wep_Shield_04
+    Mesh Name: SM_Wep_Shield_04
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Wep_Watergun_01
+    Mesh Name: SM_Wep_Watergun_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Watergun_01_Pump
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Watergun_01_Refill
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Watergun_01_Trigger
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Wep_Watergun_02
+    Mesh Name: SM_Wep_Watergun_02
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Watergun_02_Pump
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Watergun_02_Refill
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: Watergun_02_Trigger
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+
+Prefab Name: SM_Wep_WaterPistol_01
+    Mesh Name: SM_Wep_WaterPistol_01
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+    Mesh Name: WaterPistol_01_Trigger
+        Slot: PolygonStarter_Mat_01 (PolygonStarter_Texture_01)
+

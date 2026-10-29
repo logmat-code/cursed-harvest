@@ -1,0 +1,35 @@
+-------------------
+Folder Name: Prefabs
+-------------------
+Prefab Name: SM_Prop_Arrow_01
+    Mesh Name: SM_Prop_Arrow_01
+        Slot: PolygonBowCrossbow_01
+            Albedo: PolygonBowCrossbow_01.png (_Albedo_Map)
+
+Prefab Name: SM_Prop_Arrow_NativeAmerican_01
+    Mesh Name: SM_Prop_Arrow_NativeAmerican_01
+        Slot: PolygonBowCrossbow_01
+            Albedo: PolygonBowCrossbow_01.png (_Albedo_Map)
+
+Prefab Name: SM_Wep_Crossbow_Bolt_01
+    Mesh Name: SM_Wep_Crossbow_Bolt_01
+        Slot: PolygonBowCrossbow_01
+            Albedo: PolygonBowCrossbow_01.png (_Albedo_Map)
+
+Prefab Name: SM_Wep_Rigged_Bow_01
+    Mesh Name: SK_Bow_01
+        Slot: PolygonBowCrossbow_01
+            Albedo: PolygonBowCrossbow_01.png (_Albedo_Map)
+
+Prefab Name: SM_Wep_Rigged_Bow_NativeAmerican_01
+    Mesh Name: SK_Bow_NativeAmerican_01
+        Slot: PolygonBowCrossbow_01
+            Albedo: PolygonBowCrossbow_01.png (_Albedo_Map)
+
+Prefab Name: SM_Wep_Rigged_CrossBow_01
+    Mesh Name: SM_Wep_Crossbow_01
+        Slot: PolygonBowCrossbow_01
+            Albedo: PolygonBowCrossbow_01.png (_Albedo_Map)
+        Slot: PolygonBowCrossbow_01
+            Albedo: PolygonBowCrossbow_01.png (_Albedo_Map)
+

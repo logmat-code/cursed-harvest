@@ -95,6 +95,7 @@ namespace CursedHarvest
         public float PostWave10Growth => postWave10Growth;
         public void SetPostWave10Growth(float growth) => postWave10Growth = growth;
         public bool IsBossWave => isBossWave;
+        public bool IsBossIntro => isBossIntro;
         public bool IsBossAlive => isBossAlive;
         public bool BossDefeatedThisWave => bossDefeatedThisWave;
         public bool BossSpawned => bossSpawned;
@@ -233,7 +234,23 @@ namespace CursedHarvest
             spawnInterval = 0.35f;
         }
 
-        public GameObject SpawnBoss(BossEncounterConfig bossEnc = null)
+        // v1.1.2: boss prewarm - the boss is instantiated (inactive) one wave early so the boss spawn frame does not hitch.
+        private GameObject prewarmedBoss;
+        private GameObject prewarmedBossPrefab;
+
+        private void PrewarmBossForWave(int bossWave)
+        {
+            if (prewarmedBoss != null) return;
+            BossEncounterConfig enc = ActiveWorldConfig != null ? ActiveWorldConfig.GetBossEncounter(bossWave) : null;
+            SpawnBoss(enc, true);
+        }
+
+        private void OnDestroy()
+        {
+            if (prewarmedBoss != null) Destroy(prewarmedBoss);
+        }
+
+        public GameObject SpawnBoss(BossEncounterConfig bossEnc = null, bool prewarmOnly = false)
         {
             GameObject prefabToSpawn = bossPrefab;
             if (ActiveWorldConfig != null && ActiveWorldConfig.worldId == 2)
@@ -344,7 +361,28 @@ namespace CursedHarvest
             spawnPos.z = Mathf.Clamp(spawnPos.z, -arenaHalfBounds + 4f, arenaHalfBounds - 4f);
             spawnPos.y = 0.5f;
 
-            GameObject bossObj = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+            GameObject bossObj;
+            if (prewarmOnly)
+            {
+                prewarmedBoss = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+                prewarmedBoss.SetActive(false);
+                prewarmedBossPrefab = prefabToSpawn;
+                return null;
+            }
+
+            if (prewarmedBoss != null && prewarmedBossPrefab == prefabToSpawn)
+            {
+                bossObj = prewarmedBoss;
+                bossObj.transform.SetPositionAndRotation(spawnPos, Quaternion.identity);
+                bossObj.SetActive(true);
+                prewarmedBoss = null;
+                prewarmedBossPrefab = null;
+            }
+            else
+            {
+                if (prewarmedBoss != null) { Destroy(prewarmedBoss); prewarmedBoss = null; prewarmedBossPrefab = null; }
+                bossObj = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+            }
             if (bossEnc != null)
             {
                 if (bossEnc.bossScale != 1.0f) bossObj.transform.localScale = Vector3.one * bossEnc.bossScale;
@@ -388,6 +426,9 @@ namespace CursedHarvest
 
             OnWaveStarted?.Invoke(currentWave);
             OnWaveUpdated?.Invoke(currentWave, EnemiesRemainingThisWave, totalEnemiesForWave);
+
+            // Prewarm the next boss during the wave before it (Wave 9 -> W1/W2 boss, Wave 9 -> W3 mid-boss, Wave 14 -> W3 final)
+            if (!isBossWave && cfg.IsBossWave(wave + 1)) PrewarmBossForWave(wave + 1);
 
             if (isBossWave)
             {

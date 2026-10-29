@@ -1,0 +1,10 @@
+=================================================================
+[WAVE SYSTEM VERIFICATION] Starting End-to-End Verification...
+=================================================================
+[SETUP] Rebuilding game scene via CoreSetup.BuildCompleteGame()...
+ERROR: [WAVE SYSTEM VERIFICATION] Unexpected exception: This cannot be used during play mode, please use SceneManager.CreateScene() instead.
+  at (wrapper managed-to-native) UnityEditor.SceneManagement.EditorSceneManager.NewScene_Injected(UnityEditor.SceneManagement.NewSceneSetup,UnityEditor.SceneManagement.NewSceneMode,UnityEngine.SceneManagement.Scene&)
+  at UnityEditor.SceneManagement.EditorSceneManager.NewScene (UnityEditor.SceneManagement.NewSceneSetup setup, UnityEditor.SceneManagement.NewSceneMode mode) [0x00000] in <772fd97aff1945b5bf6f1f583bfa93da>:0 
+  at CursedHarvest.Editor.CoreSetup.CreateMainScene (UnityEngine.GameObject playerPrefab, UnityEngine.GameObject boltPrefab, UnityEngine.GameObject gruntPrefab, UnityEngine.GameObject chaserPrefab, UnityEngine.GameObject plaguePrefab, UnityEngine.GameObject chargerPrefab, UnityEngine.GameObject farmerPrefab, UnityEngine.GameObject bossPrefab, UnityEngine.GameObject bombPrefab, UnityEngine.GameObject xpPrefab, UnityEngine.GameObject seedPrefab, UnityEngine.GameObject plotPrefab, UnityEngine.GameObject healthPrefab, UnityEngine.GameObject scarecrowPrefab, UnityEngine.GameObject brutePrefab) [0x00032] in /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Scripts/Editor/CoreSetup.cs:1109 
+  at CursedHarvest.Editor.CoreSetup.BuildCompleteGame () [0x0027d] in /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Scripts/Editor/CoreSetup.cs:136 
+  at CursedHarvest.Editor.WaveSystemVerificationRunner.RunVerification () [0x0005c] in /Users/logmat/Desktop/CLAUDE/CursedHarvest/Assets/_Scripts/Editor/WaveSystemVerificationRunner.cs:59 
